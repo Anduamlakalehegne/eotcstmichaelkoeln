@@ -4,7 +4,7 @@ const clergyMembers = [
   {
     name: "Sample Name",
     title: "Head Priest",
-    image: "/IMG_E2338.jpg",
+    image: "/IMG_E2338.JPG",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   },
   {
@@ -16,13 +16,13 @@ const clergyMembers = [
   {
     name: "Sample Name",
     title: "Deacon",
-    image: "/IMG_5279.jpg",
+    image: "/IMG_5279.JPG",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   },
   {
     name: "Sample Name",
     title: "Deacon",
-    image: "/IMG_E2347.jpg",
+    image: "/IMG_E2347.JPG",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   },
   {
@@ -34,7 +34,7 @@ const clergyMembers = [
   {
     name: "Sample Name",
     title: "Deacon",
-    image: "/IMG_E5314.jpg",
+    image: "/IMG_E5314.JPG",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   },
 ]

@@ -65,8 +65,7 @@ export default function HistoryPage() {
               {
                 year: "1971 – 1973",
                 title: "",
-                description:
-                  "",
+                description:"",
                 icon: "BookOpen",
                 color: "bg-purple-100 text-purple-700",
                 image: "",
@@ -74,8 +73,7 @@ export default function HistoryPage() {
               {
                 year: "1973 – 1975",
                 title: "",
-                description:
-                  "",
+                description:"",
                 icon: "Globe",
                 color: "bg-teal-100 text-teal-700",
                 image: "",
@@ -83,8 +81,7 @@ export default function HistoryPage() {
               {
                 year: "1975 – 1980",
                 title: "",
-                description:
-                  "",
+                description:"",
                 icon: "Building",
                 color: "bg-amber-100 text-amber-700",
                 image: "",
@@ -92,8 +89,7 @@ export default function HistoryPage() {
               {
                 year: "1980 – 1985",
                 title: "",
-                description:
-                  "",
+                description:"",
                 icon: "Building",
                 color: "bg-amber-100 text-amber-700",
                 image: "",
@@ -101,8 +97,7 @@ export default function HistoryPage() {
               {
                 year: "1985 – 1995",
                 title: "",
-                description:
-                  "",
+                description:"",
                 icon: "Building",
                 color: "",
                 image: "",
@@ -110,8 +105,7 @@ export default function HistoryPage() {
               {
                 year: "1995 – 2005",
                 title: "",
-                description:
-                  "",
+                description:"",
                 icon: "Building",
                 color: "bg-amber-100 text-amber-700",
                 image: "",
@@ -119,17 +113,15 @@ export default function HistoryPage() {
               {
                 year: "2005 – 2015",
                 title: "",
-                description:
-                  "",
+                description:"",
                 icon: "Building",
                 color: "bg-amber-100 text-amber-700",
                 image: "",
               },
               {
                 year: "2015 – 2025",
-                title: "Building for the Future",
-                description:
-                  "",
+                title: "",
+                description:"",
                 icon: "Building",
                 color: "bg-amber-100 text-amber-700",
                 image: "",

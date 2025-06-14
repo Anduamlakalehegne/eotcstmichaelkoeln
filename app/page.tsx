@@ -23,10 +23,10 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-12 items-start">
               {/* Image Section */}
-              <div className="sticky top-24">
-                <div className="relative h-[600px] rounded-2xl overflow-hidden shadow-lg">
+              <div className="md:sticky md:top-24">
+                <div className="relative h-[300px] md:h-[600px] rounded-2xl overflow-hidden shadow-lg">
                   <Image
-                    src="/constraction.jpg"
+                    src="/photo_2024-04-28_18-45-26.jpg"
                     alt="Church Building"
                     fill
                     className="object-cover"
@@ -38,9 +38,9 @@ export default function Home() {
 
               {/* Text Content Section */}
               <div className="space-y-8">
-                <h2 className="text-2xl md:text-2xl lg:text-2xl font-bold text-blue-600 leading-tight">
+                <h2 className="text-xl md:text-2xl lg:text-2xl font-bold text-blue-600 leading-tight">
                   ይህ በኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተ ክርስቲያን በጀርመንና አካባቢው ሀገረ ስብከት የኮሎኝ ርእሰ
-                  <br /> አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ይፋዊ ድረ ገጽ ነው።
+                  <br className="hidden md:block" /> አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ይፋዊ ድረ ገጽ ነው።
                 </h2>
                 <div className="prose prose-lg max-w-none">
                   <p className="text-gray-600 leading-relaxed">
@@ -140,19 +140,7 @@ export default function Home() {
         </section>
 
         <div className="w-full h-[400px]">
-          {/* <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2511.1234567890123!2d6.8765432!3d50.9876543!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bf25e5e9e0e0e1%3A0x1234567890abcdef!2sLindweilerweg%2094%2C%2050739%20K%C3%B6ln!5e0!3m2!1sen!2sde!4v1234567890"
-            width="100%"
-            
-            height="100%"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="rounded-lg"
-            title="Church Location"
-          ></iframe> */}
-
+         
           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2511.237020795784!2d6.9000118760123295!3d50.99329207170089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bf301e45ab489d%3A0x7a8cddf4bfecdac9!2zTGluZHdlaWxlcndlZyA5NCwgNTA3MzkgS8O2bG4sIOGMgOGIreGImOGKlQ!5e0!3m2!1sam!2set!4v1749852864486!5m2!1sam!2set"
             width="100%"
             
