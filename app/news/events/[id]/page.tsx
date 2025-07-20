@@ -204,7 +204,7 @@ export default function EventDetailPage() {
                       loading="lazy"
                       allowFullScreen
                       referrerPolicy="no-referrer-when-downgrade"
-                      src={`https://www.google.com/maps?q=${encodeURIComponent(event.address)}&output=embed`}
+                      src={`https://www.google.com/maps?q=${encodeURIComponent(event.address)}&output=embed&hl=de`}
                     />
                   </div>
                 ) : (
