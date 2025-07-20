@@ -120,3 +120,17 @@ export type Archive = {
   created_at: string
   updated_at: string
 }
+
+export type Blog = {
+  id: string
+  title: string
+  content: string
+  excerpt: string
+  image_url: string
+  author: string
+  featured: boolean
+  tags: string[]
+  language: "en" | "am" | "de"
+  created_at: string
+  updated_at: string
+}

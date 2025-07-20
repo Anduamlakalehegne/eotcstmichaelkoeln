@@ -11,10 +11,10 @@ export default function PreviousWebsitePage() {
           <CardHeader className="bg-primary/5">
             <div className="flex items-center gap-3">
               <Archive className="h-6 w-6 text-primary" />
-              <CardTitle>Accessing Our Previous Website</CardTitle>
+              <CardTitle>ወደ ቀደም ያለው ድህረ ገፅ መድረሻ</CardTitle>
             </div>
             <CardDescription>
-              Our previous website remains available for reference and accessing historical content
+              የቀደም ያለው ድህረ ገፅ ለማጣቀሻ እና የታሪክ ይዞታ ለማግኘት አሁንም ይገኛል
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
@@ -22,24 +22,22 @@ export default function PreviousWebsitePage() {
               <div className="relative w-full md:w-1/2 aspect-video rounded-lg overflow-hidden border">
                 <Image
                   src="/placeholder.svg?height=300&width=500"
-                  alt="Previous website screenshot"
+                  alt="የቀደም ያለው ድህረ ገፅ እይታ"
                   fill
                   className="object-cover"
                 />
               </div>
               <div className="w-full md:w-1/2 space-y-4">
                 <p>
-                  Our previous website served our community for many years. While we've moved to this new platform to
-                  better serve you, the previous site remains accessible for historical reference and to access older
-                  content.
+                  የቀደም ያለው ድህረ ገፅ ለብዙ ዓመታት ማህበረሰባችንን አገልግሏል። አሁን ወደዚህ አዲሱ ዌብሳይትይት ተዛውረናል፣ ነገር ግን የቀደም ያለው ድህረ ገፅ ለታሪካዊ ማጣቀሻ እና የቀድሞ ይዞታ ለማግኘት አሁንም ይገኛል።
                 </p>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Clock className="h-4 w-4" />
-                  <span>Last updated: January 2023</span>
+                  <span>መጨረሻ የታደሰበት፡ ጃንዋሪ 2023</span>
                 </div>
                 <Button className="w-full" asChild>
-                  <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                    Visit Previous Website
+                  <a href="https://www.aethiopisch-orthodoxe-kirche-deutschland.de/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                    ወደ ቀደም ያለው ድህረ ገፅ ይጎብኙ
                     <ExternalLink className="h-4 w-4 ml-auto" />
                   </a>
                 </Button>

@@ -150,9 +150,9 @@ Submitted on: ${new Date().toLocaleString()}
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-12 text-center">
-          <h1 className="text-3xl font-bold mb-4">Kirstina (Baptism) Registration</h1>
+          <h1 className="text-3xl font-bold mb-4">የክርስትና (ጥምቀት) መመዝገቢያ</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Complete this form to register baptism information at St. Michael Ethiopian Orthodox Church in Cologne.
+            በኮሎኝ ቅዱስ ሚካኤል የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተክርስቲያን የጥምቀት መመዝገብ ለማድረግ ይህን ቅፅ ይሙሉ።
           </p>
         </div>
 
@@ -160,15 +160,15 @@ Submitted on: ${new Date().toLocaleString()}
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="form">
               <FileText className="mr-2 h-4 w-4" />
-              Registration Form
+              መመዝገቢያ ቅፅ
             </TabsTrigger>
             {/* <TabsTrigger value="requirements">
               <Info className="mr-2 h-4 w-4" />
-              Requirements
+              መስፈርቶች
             </TabsTrigger>
             <TabsTrigger value="schedule">
               <Calendar className="mr-2 h-4 w-4" />
-              Baptism Schedule
+              የጥምቀት መርሃግብር
             </TabsTrigger> */}
           </TabsList>
 
@@ -191,11 +191,11 @@ Submitted on: ${new Date().toLocaleString()}
                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    Baptism Registration Submitted Successfully!
+                    የጥምቀት መመዝገብዎ በተሳካ ሁኔታ ተልኳል!
                   </CardTitle>
-                  <CardDescription className="text-green-600">
-                    Your registration has been sent via email
-                  </CardDescription>
+                  {/* <CardDescription className="text-green-600">
+                    መመዝገብዎ በኢሜይል ተልኳል
+                  </CardDescription> */}
                 </CardHeader>
                 {/* <CardContent className="pt-6">
                   <p className="mb-4">
@@ -234,7 +234,7 @@ Submitted on: ${new Date().toLocaleString()}
                       form.reset()
                     }}
                   >
-                    Submit Another Registration
+                    ሌላ መመዝገብ ላክ
                   </Button>
                 </CardFooter>
               </Card>
@@ -435,7 +435,7 @@ Submitted on: ${new Date().toLocaleString()}
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Email *</FormLabel>
+                              <FormLabel>ኢሜል/Email *</FormLabel>
                               <FormControl>
                                 <Input type="email" placeholder="your@email.com" {...field} />
                               </FormControl>
@@ -467,10 +467,9 @@ Submitted on: ${new Date().toLocaleString()}
                                 <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                               </FormControl>
                               <div className="space-y-1 leading-none">
-                                <FormLabel>I confirm the accuracy of this information *</FormLabel>
+                                <FormLabel>የሰጠኋትን መረጃ ትክክለኛነቱን አረጋግጫለሁ *</FormLabel>
                                 <FormDescription>
-                                  By checking this box, you confirm that all the information provided is accurate and
-                                  complete.
+                                  የሰጡት መረጃ ትክክለኛና ተሟልቷ መሆኑን ያረጋግጡ።
                                 </FormDescription>
                               </div>
                               <FormMessage />
@@ -484,12 +483,12 @@ Submitted on: ${new Date().toLocaleString()}
                         {isSubmitting ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Sending Email...
+                            በማስገባት ላይ...
                           </>
                         ) : (
                           <>
                             <Send className="mr-2 h-4 w-4" />
-                            Submit Registration
+                            መመዝገብ ላክ
                           </>
                         )}
                       </Button>
@@ -503,8 +502,8 @@ Submitted on: ${new Date().toLocaleString()}
           <TabsContent value="requirements">
             <Card>
               <CardHeader>
-                <CardTitle>Baptism Requirements</CardTitle>
-                <CardDescription>Information about the baptism requirements and preparations</CardDescription>
+                <CardTitle>የጥምቀት መስፈርቶች</CardTitle>
+                <CardDescription>ስለ ጥምቀት መስፈርቶች እና አዘጋጅቶች መረጃ</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
@@ -517,60 +516,58 @@ Submitted on: ${new Date().toLocaleString()}
                     />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-4">About Orthodox Baptism</h3>
+                    <h3 className="text-xl font-semibold mb-4">ስለ ኦርቶዶክስ ጥምቀት</h3>
                     <p className="text-gray-600 mb-4">
-                      In the Ethiopian Orthodox Tewahedo Church, baptism (Kirstina) is one of the seven sacraments and
-                      represents spiritual rebirth and entry into the Christian community.
+                      በኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተክርስቲያን ጥምቀት (ክርስትና) ከሰባቱ ቅዱሳን ምስጢሮች አንዱ ሲሆን መንፈሳዊ ዳግም ልደትን እና ወደ ክርስቲያናዊ ማህበረሰብ መግባትን ይወክላል።
                     </p>
                     <p className="text-gray-600">
-                      The ceremony includes prayers, anointings, and the threefold immersion in blessed water,
-                      symbolizing death and resurrection with Christ.
+                      ስነ-ሥርዓቱ ጸሎቶች፣ ቅባቶች እና በተባረከ ውሃ ሶስት ጊዜ መጠመቅን ያካትታል፣ ይህም ከክርስቶስ ጋር ሞትን እና ትንሣኤን ይወክላል።
                     </p>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold mb-4">Required Items</h3>
+                  <h3 className="text-xl font-semibold mb-4">የሚያስፈልጉ ነገሮች</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-medium mb-2">For the Child</h4>
+                      <h4 className="font-medium mb-2">ለሕፃኑ</h4>
                       <ul className="space-y-2 pl-5 list-disc text-gray-600">
-                        <li>White baptismal garment</li>
-                        <li>Small cross necklace</li>
-                        <li>Baptismal candle</li>
-                        <li>Soft towel</li>
-                        <li>Change of clothes</li>
+                        <li>ነጭ የጥምቀት ልብስ</li>
+                        <li>ትንሽ መስቀል ሐተታ</li>
+                        <li>የጥምቀት ሻማ</li>
+                        <li>ለስላሳ ታፋ</li>
+                        <li>ልብስ ለመቀየር</li>
                       </ul>
                     </div>
                     <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-medium mb-2">For the Godparent</h4>
+                      <h4 className="font-medium mb-2">ለክርስትና አባት/እናት</h4>
                       <ul className="space-y-2 pl-5 list-disc text-gray-600">
-                        <li>Orthodox prayer book</li>
-                        <li>Icon for the child</li>
-                        <li>Baptismal cross (optional)</li>
+                        <li>የኦርቶዶክስ ጸሎት መጽሐፍ</li>
+                        <li>ለሕፃኑ ምስል</li>
+                        <li>የጥምቀት መስቀል (አማራጭ)</li>
                       </ul>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold mb-4">Documentation Required</h3>
+                  <h3 className="text-xl font-semibold mb-4">የሚያስፈልጉ ሰነዶች</h3>
                   <ul className="space-y-2 pl-5 list-disc text-gray-600">
-                    <li>Birth certificate</li>
-                    <li>Parents' identification</li>
-                    <li>Godparents' identification</li>
-                    <li>Completed registration form</li>
+                    <li>የትውልድ ወረቀት</li>
+                    <li>የወላጆች መታወቂያ</li>
+                    <li>የክርስትና አባቶች/እናቶች መታወቂያ</li>
+                    <li>ተሟልቷ የቀረበ መመዝገቢያ ቅፅ</li>
                   </ul>
                 </div>
 
                 <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
-                  <h3 className="text-xl font-semibold text-blue-800 mb-4">Important Guidelines</h3>
+                  <h3 className="text-xl font-semibold text-blue-800 mb-4">አስፈላጊ መመሪያዎች</h3>
                   <div className="space-y-3 text-blue-700">
-                    <p>• Godparents must be baptized Orthodox Christians</p>
-                    <p>• All information must be accurate and verifiable</p>
-                    <p>• Original documents may be required for verification</p>
-                    <p>• Registration must be completed before certificate issuance</p>
-                    <p>• Contact the church office for any questions or clarifications</p>
+                    <p>• ክርስትና አባቶች/እናቶች የተጠመቁ ኦርቶዶክስ ክርስቲያናን መሆን አለባቸው</p>
+                    <p>• ሁሉም መረጃዎች ትክክለኛና ማረጋገጫ የሚችሉ መሆን አለባቸው</p>
+                    <p>• የመጀመሪያ ሰነዶች ለማረጋገጥ ሊያስፈልጉ ይችላሉ</p>
+                    <p>• ማረጋገጫ ሰነድ ከሚሰጥ በፊት መመዝገቡ መተግበር አለበት</p>
+                    <p>• ለማንኛውም ጥያቄ ወደ ቤተክርስቲያኑ ቢሮ ያናግሩ</p>
                   </div>
                 </div>
               </CardContent>
@@ -580,64 +577,64 @@ Submitted on: ${new Date().toLocaleString()}
           <TabsContent value="schedule">
             <Card>
               <CardHeader>
-                <CardTitle>Baptism Schedule</CardTitle>
-                <CardDescription>Information about baptism registration and scheduling</CardDescription>
+                <CardTitle>የጥምቀት መርሃግብር</CardTitle>
+                <CardDescription>ስለ ጥምቀት መመዝገብ እና መርሃግብር መረጃ</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold mb-4">Registration Process</h3>
+                  <h3 className="text-xl font-semibold mb-4">የመመዝገብ ሂደት</h3>
                   <div className="bg-gray-50 rounded-lg p-6">
                     <p className="mb-4 text-gray-600">
-                      The baptism registration process at St. Michael Ethiopian Orthodox Church includes:
+                      በኮሎኝ ቅዱስ ሚካኤል የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተክርስቲያን የጥምቀት መመዝገብ ሂደት ይህንን ያካትታል፦
                     </p>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold">
                           1
                         </div>
-                        <span>Complete the registration form</span>
+                        <span>መመዝገቢያ ቅፅ ሙሉ</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold">
                           2
                         </div>
-                        <span>Submit required documentation</span>
+                        <span>የሚያስፈልጉ ሰነዶችን አስረክብ</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold">
                           3
                         </div>
-                        <span>Review and verification by church office</span>
+                        <span>በቤተክርስቲያኑ ቢሮ እይታ እና ማረጋገጥ</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold">
                           4
                         </div>
-                        <span>Certificate preparation and issuance</span>
+                        <span>ማረጋገጫ ሰነድ አዘጋጅት እና መስጠት</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-4">Office Hours</h3>
+                  <h3 className="text-xl font-semibold mb-4">የቢሮ ሰዓታት</h3>
                   <p className="text-gray-600 mb-4">
-                    The church office is available for baptism registration inquiries during:
+                    ቤተክርስቲያኑ ቢሮ ስለ ጥምቀት መመዝገብ ጥያቄዎች በዚህ ሰዓት ይገኛል፦
                   </p>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="bg-white p-4 rounded-lg border border-gray-200">
                       <div className="flex items-center gap-3 mb-2">
                         <Calendar className="h-5 w-5 text-blue-600" />
-                        <h4 className="font-medium">Weekdays</h4>
+                        <h4 className="font-medium">ሳምንታዊ ቀናት</h4>
                       </div>
-                      <p className="text-gray-600">Monday - Friday: 9:00 AM - 5:00 PM</p>
+                      <p className="text-gray-600">ሰኞ - አርብ፡ 3፡00 ጠዋት - 11፡00 ከሰዓት</p>
                     </div>
                     <div className="bg-white p-4 rounded-lg border border-gray-200">
                       <div className="flex items-center gap-3 mb-2">
                         <Calendar className="h-5 w-5 text-blue-600" />
-                        <h4 className="font-medium">Weekends</h4>
+                        <h4 className="font-medium">የሳምንቱ መጨረሻ</h4>
                       </div>
-                      <p className="text-gray-600">Saturday: 10:00 AM - 2:00 PM</p>
+                      <p className="text-gray-600">ቅዳሜ፡ 4፡00 ጠዋት - 8፡00 ከሰዓት</p>
                     </div>
                   </div>
                 </div>

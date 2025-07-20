@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
+import { useLocale } from "@/contexts/locale-context"
 
 interface Event {
   id: number
@@ -17,6 +18,8 @@ interface Event {
 type EventType = "upcoming" | "past" | "all"
 
 export default function EventSlider() {
+  const { locale } = useLocale();
+  const [rawEvents, setRawEvents] = useState<any[]>([])
   const [events, setEvents] = useState<Event[]>([])
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([])
   const [currentEventPage, setCurrentEventPage] = useState(0)
@@ -27,46 +30,78 @@ export default function EventSlider() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Get unique years and months from events
-  const years = ["all", ...new Set(events.map(event => event.date.year))]
-  const months = [
-    "all",
+  // Amharic and English months
+  const amMonths = [
+    "መስከረም", "ጥቅምት", "ኅዳር", "ታኅሣሥ", "ጥር", "የካቲት", "መጋቢት", "ሚያዝያ", "ግንቦት", "ሰኔ", "ሀምሌ", "ነሐሴ"
+  ];
+  const enMonths = [
     "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
     "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
-  ]
+  ];
+  // Correct mapping from Gregorian month index to Amharic month
+  const gregorianToAmharicMonth = [
+    4, // Jan → ጥር
+    5, // Feb → የካቲት
+    6, // Mar → መጋቢት
+    7, // Apr → ሚያዝያ
+    8, // May → ግንቦት
+    9, // Jun → ሰኔ
+    10, // Jul → ሀምሌ
+    11, // Aug → ነሐሴ
+    0, // Sep → መስከረም
+    1, // Oct → ጥቅምት
+    2, // Nov → ኅዳር
+    3, // Dec → ታኅሣሥ
+  ];
+  const months = [
+    "all",
+    ...(locale === "am" ? amMonths : enMonths)
+  ];
 
-useEffect(() => {
-  async function fetchEvents() {
-    try {
-      const response = await fetch("/api/events")
-      if (!response.ok) {
-        throw new Error("Failed to fetch events")
+  // Get unique years from events
+  const years = ["all", ...new Set(events.map(event => event.date.year))]
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await fetch("/api/events")
+        if (!response.ok) {
+          throw new Error("Failed to fetch events")
+        }
+        const data = await response.json()
+        setRawEvents(data)
+      } catch (err) {
+        setError("Failed to load events. Please try again later.")
+        console.error(err)
+      } finally {
+        setLoading(false)
       }
+    }
+    fetchEvents()
+  }, [])
 
-      const data = await response.json()
-
-        const formattedEvents = data.map((event: any) => ({
+  // Remap events to current locale whenever rawEvents or locale changes
+  useEffect(() => {
+    const mapped = rawEvents.map((event: any) => {
+      const dateObj = new Date(event.date);
+      let month;
+      if (locale === "am") {
+        month = amMonths[gregorianToAmharicMonth[dateObj.getMonth()]];
+      } else {
+        month = dateObj.toLocaleString("default", { month: "short" }).toUpperCase();
+      }
+      return {
         ...event,
         date: {
-          day: new Date(event.date).getDate().toString().padStart(2, "0"),
-          month: new Date(event.date).toLocaleString("default", { month: "short" }).toUpperCase(),
-          year: new Date(event.date).getFullYear().toString(),
+          day: dateObj.getDate().toString().padStart(2, "0"),
+          month,
+          year: dateObj.getFullYear().toString(),
         },
-          rawDate: new Date(event.date)
-      }))
-
-      setEvents(formattedEvents)
-        setFilteredEvents(formattedEvents)
-    } catch (err) {
-      setError("Failed to load events. Please try again later.")
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  fetchEvents()
-}, [])
+        rawDate: dateObj
+      };
+    });
+    setEvents(mapped)
+  }, [rawEvents, locale])
 
   // Filter events when year, month, or event type changes
   useEffect(() => {
@@ -128,15 +163,15 @@ useEffect(() => {
   const pageCount = Math.ceil(filteredEvents.length / eventsPerPage)
 
   if (loading) {
-    return <div className="text-center">Loading events...</div>
+    return <div className="text-center">ተግባራዊ ክስተቶችን በመጫን ላይ...</div>
   }
 
   if (error) {
-    return <div className="text-center text-red-500">Error: {error}</div>
+    return <div className="text-center text-red-500">ስህተት፡ {error}</div>
   }
 
   if (events.length === 0) {
-    return <div className="text-center text-gray-500">No events found</div>
+    return <div className="text-center text-gray-500">ምንም ክስተት አልተገኘም</div>
   }
 
   // Check if there are any upcoming events
@@ -152,12 +187,12 @@ useEffect(() => {
   if (!hasUpcomingEvents && eventType === "upcoming") {
     return (
       <div className="text-center space-y-4">
-        <p className="text-gray-500 text-lg">No upcoming events available</p>
+        <p className="text-gray-500 text-lg">ምንም የሚመጡ ክስተቶች አልተገኙም</p>
         <button
           onClick={() => setEventType("past")}
           className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
         >
-          View Past Events
+          የተያረፉትን ክስተቶች ይመልከቱ
         </button>
       </div>
     )
@@ -175,7 +210,7 @@ useEffect(() => {
               eventType === "upcoming" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-200"
             }`}
           >
-            Upcoming
+            የሚመጡ
           </button>
           <button
             onClick={() => setEventType("past")}
@@ -183,7 +218,7 @@ useEffect(() => {
               eventType === "past" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-200"
             }`}
           >
-            Past
+            ያለፉ
           </button>
           <button
             onClick={() => setEventType("all")}
@@ -191,7 +226,7 @@ useEffect(() => {
               eventType === "all" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-200"
             }`}
           >
-            All
+            ሁሉም
           </button>
         </div>
 
@@ -202,7 +237,7 @@ useEffect(() => {
         >
           {years.map((year) => (
             <option key={year} value={year}>
-              {year === "all" ? "All Years" : year}
+              {year === "all" ? "ሁሉም ዓመታት" : year}
             </option>
           ))}
         </select>
@@ -214,7 +249,7 @@ useEffect(() => {
         >
           {months.map((month) => (
             <option key={month} value={month}>
-              {month === "all" ? "All Months" : month}
+              {month === "all" ? "ሁሉም ወራቶች" : month}
             </option>
           ))}
         </select>
@@ -251,7 +286,7 @@ useEffect(() => {
                     href={`/news/events/${event.id}`}
                     className="inline-flex text-blue-600 hover:text-blue-700 text-sm font-medium items-center gap-1"
                   >
-                    Detail
+                    ዝርዝር
                   </Link>
                 </div>
               ))}

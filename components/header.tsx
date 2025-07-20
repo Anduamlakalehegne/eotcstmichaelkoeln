@@ -110,14 +110,14 @@ const menuItems: MenuItem[] = [
 
 const languages = [
   { code: "en", name: "English" },
-  { code: "am", name: "አማርኛ" },
+  { code: "am", name: "አማ" },
   { code: "de", name: "Deutsch" },
 ]
 
 export default function Header() {
   const { locale, setLocale, translations } = useLocale()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState(null)
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -130,8 +130,10 @@ export default function Header() {
         return "EN"
       case "de":
         return "DE"
+      case "am":
+        return "አማ"
       default:
-        return "am"
+        return localeCode.toUpperCase()
     }
   }
 
@@ -349,9 +351,24 @@ export default function Header() {
                 <div key={item.name} className="nav-item">
                   {item.submenu ? (
                     <div className="dropdown">
+                      {item.name === "Service" ? (
+                        <div className="flex items-center gap-1 py-2 text-gray-700 hover:text-blue-600 transition-colors">
+                          <Link href={item.href} className="font-medium">{translateMenuItem(item.name)}</Link>
+                          <button
+                            onClick={() => setActiveSubmenu(activeSubmenu === item.name ? null : (item.name as string))}
+                            aria-expanded={activeSubmenu === item.name}
+                            aria-haspopup="true"
+                          >
+                            <ChevronDown
+                              size={14}
+                              className={`transition-transform ${activeSubmenu === item.name ? "rotate-180" : ""}`}
+                            />
+                          </button>
+                        </div>
+                      ) : (
                       <button
                         className="flex items-center gap-1 py-2 text-gray-700 hover:text-blue-600 transition-colors"
-                        onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
+                          onClick={() => setActiveDropdown(activeDropdown === item.name ? null : (item.name as string))}
                         aria-expanded={activeDropdown === item.name}
                         aria-haspopup="true"
                       >
@@ -361,6 +378,7 @@ export default function Header() {
                           className={`transition-transform ${activeDropdown === item.name ? "rotate-180" : ""}`}
                         />
                       </button>
+                      )}
 
                       {/* First level dropdown */}
                       <div className="dropdown-menu">
@@ -455,10 +473,33 @@ export default function Header() {
                 <div key={item.name} className="border-b border-gray-100 last:border-0">
                   {item.submenu ? (
                     <div>
+                      {item.name === "Service" ? (
+                        <div className="flex items-center justify-between w-full py-3 text-gray-700 hover:text-blue-600">
+                          <Link
+                            href={item.href}
+                            className="font-medium"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {translateMenuItem(item.name)}
+                          </Link>
                       <button
-                        className="flex items-center justify-between w-full py-3 text-gray-700 hover:text-blue-600"
-                        onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
+                            className="px-2 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                            onClick={() => setActiveDropdown(activeDropdown === item.name ? null : (item.name as string))}
                         aria-expanded={activeDropdown === item.name}
+                          >
+                            <ChevronDown
+                              size={16}
+                              className={`transition-transform ${activeDropdown === item.name ? "rotate-180" : ""}`}
+                            />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between w-full py-3 text-gray-700 hover:text-blue-600">
+                          <button
+                            className="font-medium"
+                            onClick={() => setActiveDropdown(activeDropdown === item.name ? null : (item.name as string))}
+                            aria-expanded={activeDropdown === item.name}
+                            aria-haspopup="true"
                       >
                         {translateMenuItem(item.name)}
                         <ChevronDown
@@ -466,6 +507,8 @@ export default function Header() {
                           className={`transition-transform ${activeDropdown === item.name ? "rotate-180" : ""}`}
                         />
                       </button>
+                        </div>
+                      )}
                       <AnimatePresence>
                         {activeDropdown === item.name && (
                           <motion.div

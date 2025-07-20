@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { supabaseClient } from "@/lib/supabase-client"
 import { PhotoPreview } from "@/components/PhotoPreview"
 import Image from "next/image"
-import { Loader2 } from "lucide-react"
+import { Loader2, Folder, ArrowLeft } from "lucide-react"
 
 interface Photo {
   id: number
@@ -15,35 +15,61 @@ interface Photo {
   display_order: number
   created_at: string
   updated_at: string
+  folder_id?: number | null
+}
+
+interface FolderType {
+  id: number
+  name: string
+  parent_id: number | null
+  created_at: string
 }
 
 export default function PhotosPage() {
   const [photos, setPhotos] = useState<Photo[]>([])
+  const [folders, setFolders] = useState<FolderType[]>([])
+  const [currentFolder, setCurrentFolder] = useState<FolderType | null>(null)
+  const [folderStack, setFolderStack] = useState<FolderType[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
-    const fetchPhotos = async () => {
-      try {
-        const { data, error } = await supabaseClient
-          .from("gallery")
-          .select("*")
-          .order("display_order", { ascending: true })
-
-        if (error) throw error
-        setPhotos(data || [])
-      } catch (err) {
-        setError("Failed to load photos. Please try again later.")
-        console.error("Error loading photos:", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
+    fetchFolders()
     fetchPhotos()
-  }, [])
+    // eslint-disable-next-line
+  }, [currentFolder])
+
+  const fetchFolders = async () => {
+    setLoading(true)
+    try {
+      const parent_id = currentFolder ? currentFolder.id : null
+      const url = parent_id ? `/api/gallery/folders?parent_id=${parent_id}` : "/api/gallery/folders"
+      const res = await fetch(url)
+      const data = await res.json()
+      setFolders(data)
+    } catch (err: any) {
+      setError("Failed to load folders")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchPhotos = async () => {
+    setLoading(true)
+    try {
+      const folder_id = currentFolder ? currentFolder.id : null
+      const url = folder_id ? `/api/gallery?folder_id=${folder_id}` : "/api/gallery"
+      const res = await fetch(url)
+      const data = await res.json()
+      setPhotos(data)
+    } catch (err: any) {
+      setError("Failed to load photos")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handlePhotoClick = (photo: Photo, index: number) => {
     setSelectedPhoto(photo)
@@ -68,6 +94,18 @@ export default function PhotosPage() {
     setSelectedPhoto(photos[newIndex])
   }
 
+  const handleOpenFolder = (folder: FolderType) => {
+    setFolderStack([...folderStack, folder])
+    setCurrentFolder(folder)
+  }
+
+  const handleBack = () => {
+    const newStack = [...folderStack]
+    newStack.pop()
+    setFolderStack(newStack)
+    setCurrentFolder(newStack.length > 0 ? newStack[newStack.length - 1] : null)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -89,8 +127,30 @@ export default function PhotosPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8">Photo Gallery</h1>
-      
+      <div className="flex items-center gap-2 mb-8">
+        {currentFolder && (
+          <button onClick={handleBack} className="mr-2 px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 flex items-center">
+            <ArrowLeft className="h-4 w-4 mr-1" /> Back
+          </button>
+        )}
+        <h1 className="text-3xl font-bold text-center flex-1">Photo Gallery</h1>
+      </div>
+
+      {/* Folders */}
+      {folders.length > 0 && (
+        <div className="mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {folders.map(folder => (
+              <div key={folder.id} className="flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-gray-50" onClick={() => handleOpenFolder(folder)}>
+                <Folder className="h-5 w-5 text-primary" />
+                <span className="flex-1">{folder.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Photos */}
       {photos.length === 0 ? (
         <div className="text-center text-gray-500">
           <p>No photos available at this time.</p>

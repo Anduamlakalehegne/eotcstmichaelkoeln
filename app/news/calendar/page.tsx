@@ -14,20 +14,21 @@ import { createClient } from "@/lib/supabase/client"
 
 // Ethiopian calendar conversion utilities
 const ethiopianMonths = [
-  "Meskerem",
-  "Tikimt",
-  "Hidar",
-  "Tahsas",
-  "Tir",
-  "Yekatit",
-  "Megabit",
-  "Miyazya",
-  "Ginbot",
-  "Sene",
-  "Hamle",
+  "መስከረም",
+  "ጥቅምት",
+  "ህዳር",
+  "ታሳስ",
+  "ጥር",
+  "የካቲት",
+  "መጋቢት",
+  "ሚያዝያ",
+  "ግንቦት",
+  "ሰኔ",
+  "ሃምሌ",
   "Nehase",
-  "Pagume",
+  "ጳጉሜን",
 ]
+
 
 // Function to convert Gregorian date to Ethiopian date
 function toEthiopianDate(gregorianDate: Date): { year: number; month: number; day: number } {
@@ -237,6 +238,7 @@ export default function CalendarPage() {
   const [currentCalendar, setCurrentCalendar] = useState<ChurchCalendar | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
+  const today = new Date();
 
   useEffect(() => {
     fetchCurrentCalendar()
@@ -333,11 +335,14 @@ export default function CalendarPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-4">Church Calendar</h1>
-        <p className="text-gray-600 mb-6">View our church events in both Gregorian and Ethiopian calendars</p>
+        {/* <h1 className="text-3xl font-bold mb-4">Church Calendar</h1>
+        <p className="text-gray-600 mb-6">View our church events in both Gregorian and Ethiopian calendars</p> */}
+
+        <h1 className="text-3xl font-bold mb-4">የቤተክርስቲያን የቀን መቁጠሪያ</h1>
+        <p className="text-gray-600 mb-6">የቤተክርስቲያኑን ዝግጅቶች በግሪጎሪያንና በኢትዮጵያ የቀን መቁጠሪያ ይመልከቱ</p>
 
         <div className="flex flex-wrap items-center gap-4">
-          <Select value={view} onValueChange={(value: "month" | "week" | "day") => setView(value)}>
+          {/* <Select value={view} onValueChange={(value: "month" | "week" | "day") => setView(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select view" />
             </SelectTrigger>
@@ -346,15 +351,15 @@ export default function CalendarPage() {
               <SelectItem value="week">Week View</SelectItem>
               <SelectItem value="day">Day View</SelectItem>
             </SelectContent>
-          </Select>
+          </Select> */}
 
           <Select value={calendarType} onValueChange={(value: "gregorian" | "ethiopian") => setCalendarType(value)}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[230px]">
               <SelectValue placeholder="Calendar type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="gregorian">Gregorian Calendar</SelectItem>
-              <SelectItem value="ethiopian">Ethiopian Calendar</SelectItem>
+              {/* <SelectItem value="gregorian">Gregorian Calendar</SelectItem> */}
+              <SelectItem value="ethiopian">ወደ ኢትዮጵያ ቀን መቁጠሪያ መቀየሪያ</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -402,22 +407,20 @@ export default function CalendarPage() {
                 <div className="space-y-6">
                   <div className="bg-gray-50 rounded-lg p-6 pb-10">
                     <h3 className="text-lg font-semibold mb-4">የኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተክርስቲያን የቀን መቁጠሪያ</h3>
-                    
+
                     <div className="bg-blue-50 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold mb-4">የዛሬ ቀን በኢትዮጵያ ካሌንዳር</h3>
-                    {date && (
+                      <h3 className="text-lg font-semibold mb-4">የዛሬ ቀን በኢትዮጵያ ካሌንዳር</h3>
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-blue-800">{formatEthiopianDate(date)}</p>
+                        <p className="text-2xl font-bold text-blue-800">{formatEthiopianDate(today)}</p>
                         <p className="text-gray-600 mt-2">
-                          {format(date, "MMMM d, yyyy")} (Gregorian Calendar)
+                          {format(today, "MMMM d, yyyy")} (Gregorian Calendar)
                         </p>
                       </div>
-                    )}
-                  </div>
+                    </div>
                     <p className="text-gray-600 mb-4">
                       የኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተክርስቲያን የቀን መቁጠሪያ በራሱ የሚለየው የሆነ የቀን መቁጠሪያ ሲሆን፣ ከግሪጎሪያን ካሌንዳር ከ 7 ወይም 8 ዓመት ይቀየራል። ይህ የቀን መቁጠሪያ በኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተክርስቲያን ውስጥ ለሃይማኖታዊ በዓላት እና ለሌሎች አስፈላጊ ቀናት ይጠቀማል።
                     </p>
-                    
+
                     <div className="grid md:grid-cols-2 gap-6 mt-6">
                       <div>
                         <h4 className="font-semibold mb-2">የኢትዮጵያ የቀን መቁጠሪያ ባህሪያት</h4>
@@ -428,7 +431,7 @@ export default function CalendarPage() {
                           <li>የጸደቀ የቤተክርስቲያን የቀን መቁጠሪያ ነው</li>
                         </ul>
                       </div>
-                      
+
                       {/* <div>
                         <h4 className="font-semibold mb-2">ዋና ዋና በዓላት</h4>
                         <ul className="list-disc list-inside space-y-2 text-gray-600">
@@ -442,7 +445,7 @@ export default function CalendarPage() {
                     </div>
                   </div>
 
-                  
+
                 </div>
               </TabsContent>
 

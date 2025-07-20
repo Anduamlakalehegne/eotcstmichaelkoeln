@@ -303,7 +303,7 @@ export default function ChurchNewsPage() {
                     <SelectValue placeholder={t.category} />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories.map((category) => (
+                    {categories.filter(Boolean).map((category) => (
                       <SelectItem key={category} value={category}>
                         {category}
                       </SelectItem>
@@ -319,7 +319,7 @@ export default function ChurchNewsPage() {
                     <SelectValue placeholder={t.year} />
                   </SelectTrigger>
                   <SelectContent>
-                    {years.map((year) => (
+                    {years.filter(Boolean).map((year) => (
                       <SelectItem key={year} value={year}>
                         {year}
                       </SelectItem>
@@ -335,7 +335,7 @@ export default function ChurchNewsPage() {
                     <SelectValue placeholder={t.month} />
                   </SelectTrigger>
                   <SelectContent>
-                    {months.map((month) => (
+                    {months.filter(Boolean).map((month) => (
                       <SelectItem key={month} value={month}>
                         {month}
                       </SelectItem>

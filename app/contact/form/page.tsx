@@ -52,15 +52,15 @@ export default function ContactFormPage() {
             <div className="flex justify-center mb-4">
               <CheckCircle2 className="h-16 w-16 text-green-500" />
             </div>
-            <h2 className="text-2xl font-bold text-green-800 mb-4">Message Sent Successfully!</h2>
+            <h2 className="text-2xl font-bold text-green-800 mb-4">መልእክትዎ በተሳካ ሁኔታ ተልኳል!</h2>
             <p className="text-green-700 mb-6">
-              Thank you for contacting us. We will get back to you as soon as possible.
+              ስለሚያግኙን እናመሰግናለን። በቅርቡ እንመልስልዎታለን።
             </p>
             <button
               onClick={() => setIsSuccess(false)}
               className="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors"
             >
-              Send Another Message
+              ሌላ መልእክት ላክ
             </button>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function ContactFormPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Contact Us</h1>
+      <h1 className="text-3xl font-bold mb-8">ያግኙን</h1>
       <div className="max-w-2xl mx-auto">
         <form 
           onSubmit={handleSubmit} 
@@ -85,7 +85,7 @@ export default function ContactFormPage() {
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                Name
+                ስም
               </label>
               <input
                 type="text"
@@ -97,7 +97,7 @@ export default function ContactFormPage() {
             </div>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email
+                ኢሜይል
               </label>
               <input
                 type="email"
@@ -111,7 +111,7 @@ export default function ContactFormPage() {
 
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-              Phone Number
+              ስልክ ቁጥር
             </label>
             <input
               type="tel"
@@ -123,7 +123,7 @@ export default function ContactFormPage() {
 
           <div>
             <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-              Subject
+              ርዕስ
             </label>
             <select
               id="subject"
@@ -131,17 +131,17 @@ export default function ContactFormPage() {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               required
             >
-              <option value="">Select a subject</option>
-              <option value="general">General Inquiry</option>
-              <option value="services">Church Services</option>
-              <option value="events">Events</option>
-              <option value="other">Other</option>
+              <option value="">ርዕስ ይምረጡ</option>
+              <option value="general">አጠቃላይ ጥያቄ</option>
+              <option value="services">የቤተክርስቲያን አገልግሎቶች</option>
+              <option value="events">ዝግጅቶች</option>
+              <option value="other">ሌላ</option>
             </select>
           </div>
 
           <div>
             <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-              Message
+              መልእክት
             </label>
             <textarea
               id="message"
@@ -157,7 +157,7 @@ export default function ContactFormPage() {
             disabled={isSubmitting}
             className="w-full bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Sending..." : "Send Message"}
+            {isSubmitting ? "በማስገባት ላይ..." : "መልእክት ላክ"}
           </button>
         </form>
       </div>

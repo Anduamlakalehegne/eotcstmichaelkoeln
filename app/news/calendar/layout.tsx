@@ -7,7 +7,7 @@ export default function CalendarLayout({
 }) {
   return (
     <div className="min-h-screen">
-      <main className="py-16">{children}</main>
+      <main className="py-1">{children}</main>
     </div>
   )
 }

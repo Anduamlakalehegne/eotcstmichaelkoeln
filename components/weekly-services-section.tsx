@@ -13,7 +13,7 @@ const weeklyServices = [
   {
     day: "ወርሃዊ",
     services: [{ time: "ከምሸቱ 18:00-20:00", name: "ወርሃዊ ጸሎት", attendees: "ዘወትር በዕለተ ቅዱስ ሚካኤል" }],
-    highlight: false,
+    highlight: true,
   },
   // {
   //   day: "ልዩ ልዩ",
@@ -71,7 +71,7 @@ export default function WeeklyServicesSection() {
 
               {day.highlight && (
                 <div className="bg-gray-50 p-3 text-center">
-                  <span className="text-sm text-blue-600 font-medium">Main Service Day</span>
+                  {/* <span className="text-sm text-blue-600 font-medium">Main Service Day</span> */}
                 </div>
               )}
             </div>

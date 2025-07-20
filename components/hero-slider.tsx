@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useLocale } from "@/contexts/locale-context"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface SlideImage {
   url: string
@@ -16,6 +17,7 @@ interface SlideImage {
 
 export default function HeroSlider() {
   const { locale, translations } = useLocale()
+  const isMobile = useIsMobile()
   
   const slides: SlideImage[] = [
     {
@@ -82,7 +84,13 @@ export default function HeroSlider() {
   }
 
   return (
-    <section className="relative h-screen w-full">
+    <section
+      className={
+        isMobile
+          ? "relative h-[40vh] min-h-[250px] w-full"
+          : "relative h-screen min-h-[400px] w-full"
+      }
+    >
       {/* Slide Background with Transition */}
       <div className="absolute inset-0 z-0 transition-opacity duration-500 ease-in-out">
         <Image
@@ -91,48 +99,38 @@ export default function HeroSlider() {
           fill
           className="object-cover"
           priority
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
         />
-        <div className="absolute inset-0 bg-black/60 z-0"></div>
-      </div>
-
-      {/* Hero Content */}
-      <div className="relative z-1 h-full flex items-center justify-center">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center text-white">
-            {/* <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-              {getWelcomeText().title}
-            </h1> */}
-          </div>
-        </div>
+        <div className="absolute z-0"></div>
       </div>
 
       {/* Slider Navigation */}
-      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+      <div className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10">
         <button
           onClick={prevSlide}
-          className="bg-white/20 p-2 rounded-full text-white hover:bg-white/30 transition-colors"
+          className="bg-white/20 p-1 sm:p-2 rounded-full text-white hover:bg-white/30 transition-colors"
           aria-label="Previous slide"
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft size={isMobile ? 18 : 24} />
         </button>
       </div>
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10">
+      <div className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10">
         <button
           onClick={nextSlide}
-          className="bg-white/20 p-2 rounded-full text-white hover:bg-white/30 transition-colors"
+          className="bg-white/20 p-1 sm:p-2 rounded-full text-white hover:bg-white/30 transition-colors"
           aria-label="Next slide"
         >
-          <ChevronRight size={24} />
+          <ChevronRight size={isMobile ? 18 : 24} />
         </button>
       </div>
 
       {/* Slider Pagination */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-3">
+      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2 sm:gap-3">
         {slides.map((_, slideIndex) => (
           <button
             key={slideIndex}
             onClick={() => goToSlide(slideIndex)}
-            className={`w-3 h-3 rounded-full transition-colors ${
+            className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-colors ${
               currentIndex === slideIndex ? "bg-white" : "bg-white/50"
             }`}
             aria-label={`Go to slide ${slideIndex + 1}`}

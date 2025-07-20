@@ -1,21 +1,17 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Loader2, ArrowLeft } from "lucide-react"
-import { supabaseClient } from "@/lib/supabase-client"
+import { uploadFile } from "@/lib/supabase-client"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const categories = [
   "Church Services",
@@ -26,10 +22,21 @@ const categories = [
   "Other",
 ]
 
+interface Folder {
+  id: number
+  name: string
+  parent_id: number | null
+  created_at: string
+}
+
 export default function CreateVideoPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const initialFolderId = searchParams.get("folder_id") ? parseInt(searchParams.get("folder_id")!) : undefined
+  const showFolderDropdown = initialFolderId === undefined;
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [folders, setFolders] = useState<Folder[]>([])
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -37,7 +44,32 @@ export default function CreateVideoPage() {
     thumbnail_url: "",
     duration: "",
     category: "",
+    folder_id: initialFolderId,
+    display_order: 0,
   })
+  const [videoInputType, setVideoInputType] = useState<'upload' | 'url'>("upload")
+  const [videoPreview, setVideoPreview] = useState<string>("")
+  const [thumbnailInputType, setThumbnailInputType] = useState<'upload' | 'url'>("upload")
+  const [thumbnailPreview, setThumbnailPreview] = useState<string>("")
+
+  useEffect(() => {
+    if (showFolderDropdown) fetchFolders()
+    // eslint-disable-next-line
+  }, [])
+
+  useEffect(() => {
+    // If video source changes, reset thumbnail input type and preview
+    setThumbnailInputType(videoInputType)
+    setThumbnailPreview("")
+    setFormData((prev) => ({ ...prev, thumbnail_url: "" }))
+    // eslint-disable-next-line
+  }, [videoInputType])
+
+  const fetchFolders = async () => {
+    const res = await fetch("/api/videos/folders")
+    const data = await res.json()
+    setFolders(data)
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -45,134 +77,240 @@ export default function CreateVideoPage() {
     setError(null)
 
     try {
-      const { error } = await supabaseClient.from("videos").insert([
-        {
-          ...formData,
-          created_at: new Date().toISOString(),
-        },
-      ])
+      const response = await fetch("/api/videos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
 
-      if (error) throw error
+      if (!response.ok) throw new Error("Failed to create video")
 
-      router.push("/admin/videos")
-      router.refresh()
-    } catch (err) {
-      console.error("Error creating video:", err)
+      // Redirect to the current folder if present
+      if (initialFolderId) {
+        router.push(`/admin/videos?folder_id=${initialFolderId}`)
+      } else {
+        router.push("/admin/videos")
+      }
+    } catch (err: any) {
       setError("Failed to create video. Please try again.")
     } finally {
       setLoading(false)
     }
   }
 
+  const handleVideoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setLoading(true)
+    setError(null)
+    try {
+      // Only allow video files
+      if (!file.type.startsWith("video/")) {
+        setError("Please select a valid video file.")
+        setLoading(false)
+        return
+      }
+      // Optional: limit file size (e.g., 100MB)
+      if (file.size > 100 * 1024 * 1024) {
+        setError("Video size should be less than 100MB.")
+        setLoading(false)
+        return
+      }
+      // Upload to Supabase
+      const url = await uploadFile(file, "videos", formData.folder_id ? `videos/${formData.folder_id}` : "videos")
+      setFormData({ ...formData, video_url: url })
+      setVideoPreview(url)
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleVideoUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, video_url: e.target.value })
+    setVideoPreview(e.target.value)
+  }
+
+  const handleThumbnailFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setLoading(true)
+    setError(null)
+    try {
+      if (!file.type.startsWith("image/")) {
+        setError("Please select a valid image file.")
+        setLoading(false)
+        return
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Thumbnail size should be less than 5MB.")
+        setLoading(false)
+        return
+      }
+      const url = await uploadFile(file, "videos", formData.folder_id ? `thumbnails/${formData.folder_id}` : "thumbnails")
+      setFormData({ ...formData, thumbnail_url: url })
+      setThumbnailPreview(url)
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleThumbnailUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, thumbnail_url: e.target.value })
+    setThumbnailPreview(e.target.value)
+  }
+
   return (
-    <div>
-      <div className="flex items-center gap-4 mb-6">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/admin/videos">
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-        </Button>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">Add New Video</h1>
+        <Button variant="outline" onClick={() => router.back()}>
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back
+        </Button>
       </div>
-
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
-        <div className="space-y-2">
-          <Label htmlFor="title">Title</Label>
-          <Input
-            id="title"
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="video_url">Video URL</Label>
-          <Input
-            id="video_url"
-            type="url"
-            value={formData.video_url}
-            onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-            required
-            placeholder="https://youtube.com/watch?v=..."
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="thumbnail_url">Thumbnail URL</Label>
-          <Input
-            id="thumbnail_url"
-            type="url"
-            value={formData.thumbnail_url}
-            onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
-            required
-            placeholder="https://..."
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="duration">Duration</Label>
-          <Input
-            id="duration"
-            value={formData.duration}
-            onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-            required
-            placeholder="5:30"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="category">Category</Label>
-          <Select
-            value={formData.category}
-            onValueChange={(value) => setFormData({ ...formData, category: value })}
-            required
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex gap-4">
-          <Button type="submit" disabled={loading}>
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              "Save Video"
+      {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">{error}</div>}
+      <Card>
+        <CardHeader>
+          <CardTitle>Video Details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Input
+                id="description"
+                value={formData.description || ""}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select
+                value={formData.category || ""}
+                onValueChange={(value) => setFormData({ ...formData, category: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {showFolderDropdown && (
+              <div className="space-y-2">
+                <Label htmlFor="folder">Folder</Label>
+                <Select
+                  value={formData.folder_id ? String(formData.folder_id) : ""}
+                  onValueChange={value => setFormData({ ...formData, folder_id: value ? parseInt(value) : undefined })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select folder (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {folders.map(folder => (
+                      <SelectItem key={folder.id} value={String(folder.id)}>{folder.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             )}
-          </Button>
-          <Button type="button" variant="outline" asChild>
-            <Link href="/admin/videos">Cancel</Link>
-          </Button>
-        </div>
-      </form>
+            <div className="space-y-2">
+              <Label htmlFor="display_order">Display Order</Label>
+              <Input
+                id="display_order"
+                type="number"
+                value={formData.display_order || 0}
+                onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) })}
+              />
+            </div>
+            {/* Video Source and Thumbnail sections (as previously enhanced) */}
+            <div className="space-y-2">
+              <Label>Video Source</Label>
+              <Tabs defaultValue={videoInputType} onValueChange={val => setVideoInputType(val as 'upload' | 'url')} className="mb-2">
+                <TabsList>
+                  <TabsTrigger value="upload">Upload Video</TabsTrigger>
+                  <TabsTrigger value="url">Video URL</TabsTrigger>
+                </TabsList>
+              </Tabs>
+              {videoInputType === "upload" && (
+                <div className="space-y-2">
+                  <Input
+                    id="video_file"
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoFileChange}
+                  />
+                </div>
+              )}
+              {videoInputType === "url" && (
+                <div className="space-y-2">
+                  <Input
+                    id="video_url"
+                    type="url"
+                    placeholder="https://..."
+                    value={formData.video_url || ""}
+                    onChange={handleVideoUrlChange}
+                  />
+                </div>
+              )}
+              {videoPreview && (
+                <video src={videoPreview} controls className="w-full max-h-64 mt-2 rounded border" />
+              )}
+            </div>
+            <div className="space-y-2 mt-4">
+              <Label>Thumbnail</Label>
+              {thumbnailInputType === "upload" && (
+                <div className="space-y-2">
+                  <Input
+                    id="thumbnail_file"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleThumbnailFileChange}
+                  />
+                </div>
+              )}
+              {thumbnailInputType === "url" && (
+                <div className="space-y-2">
+                  <Input
+                    id="thumbnail_url"
+                    type="url"
+                    placeholder="https://..."
+                    value={formData.thumbnail_url || ""}
+                    onChange={handleThumbnailUrlChange}
+                  />
+                </div>
+              )}
+              {thumbnailPreview && (
+                <img src={thumbnailPreview} alt="Thumbnail Preview" className="w-48 h-32 object-cover rounded border mt-2" />
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button type="submit" disabled={loading}>
+                {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                Create Video
+              </Button>
+              <Button type="button" variant="outline" onClick={() => router.back()}>
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   )
 } 

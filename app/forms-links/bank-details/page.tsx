@@ -84,7 +84,7 @@ export default function BankDetailsPage() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">Bank Name</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">የባንክ ስም</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.domestic.bankName}</span>
                         <Button
@@ -103,7 +103,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">Account Name</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">የአካውንት ስም</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.domestic.accountName}</span>
                         <Button
@@ -163,7 +163,7 @@ export default function BankDetailsPage() {
 
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">Beneficiary Sddress</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">የተቀባዩ አድራሻ</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.domestic.beneficiaryaddress}</span>
                         <Button
@@ -182,7 +182,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">Beneficial Phone</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">የተቀባዩ ስልክ</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.domestic.beneficialPhone}</span>
                         <Button
@@ -202,7 +202,7 @@ export default function BankDetailsPage() {
 
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">Beneficial Email</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">የተቀባዩ ኢሜይል</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.domestic.beneficialEmail}</span>
                         <Button
@@ -251,15 +251,15 @@ export default function BankDetailsPage() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Landmark className="mr-2 h-5 w-5 text-blue-600" />
-                  International Bank Account Details
+                  ዓለም አቀፍ የባንክ አካውንት መረጃ
                 </CardTitle>
-                <CardDescription>Use these details for transfers from outside Germany</CardDescription>
+                <CardDescription>ከጀርመን ውጭ ለሚሰጡ ቅድሚያዎች ይህን መረጃ ይጠቀሙ</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">Bank Name</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">የባንክ ስም</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.international.bankName}</span>
                         <Button
@@ -278,7 +278,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">Account Name</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">የአካውንት ስም</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.international.accountName}</span>
                         <Button
@@ -297,7 +297,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">Bank Address</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">የባንክ አድራሻ</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.international.address}</span>
                         <Button
@@ -356,7 +356,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">Correspondent Bank</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">የተጨማሪ ባንክ</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.international.correspondentBank}</span>
                         <Button

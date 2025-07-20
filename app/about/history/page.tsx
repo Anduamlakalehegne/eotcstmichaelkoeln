@@ -5,15 +5,15 @@ import { Clock, MapPin, Users, BookOpen, Church, Landmark, Home, Globe, Building
 
 export default function HistoryPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-2 sm:px-4 py-6 md:py-8">
       <div className="">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">የኮሎኝ ቅዱስ ሚካኤል ቤተ ክርስቲያን ታሪክ</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-center">የኮሎኝ ቅዱስ ሚካኤል ቤተ ክርስቲያን ታሪክ</h1>
 
         {/* Introduction Section */}
-        <div className="mb-12 flex flex-col md:flex-row gap-8 items-start">
+        <div className="mb-8 md:mb-12 flex flex-col md:flex-row gap-6 md:gap-8 items-start">
           {/* Image Container */}
-          <div className="w-full ">
-            <div className="relative h-[400px] w-[75%] m-auto mb-12 rounded-lg overflow-hidden shadow-md">
+          <div className="w-full">
+            <div className="relative h-40 xs:h-48 sm:h-64 md:h-[400px] w-full sm:w-4/5 md:w-3/4 m-auto mb-1 md:mb-6 rounded-lg overflow-hidden shadow-md">
               <Image
                 src="/20201213_130221 (2).jpg"
                 alt="Church History"
@@ -21,8 +21,14 @@ export default function HistoryPage() {
                 className="object-cover"
               />
             </div>
+            {/* Caption Section */}
+            <div className="py-1 flex flex-col items-center">
+              <span className="block text-center text-base xs:text-lg sm:text-xl md:text-2xl font-semibold text-blue-700 bg-white/80 rounded-lg px-2 xs:px-4 sm:px-6 py-2 sm:py-3 shadow-md border border-blue-100 tracking-wide mb-2">
+                ቦታው እንዲገዛ ሲወሰን በነበረን ስብሰባ ላይ የተነሳነው የፎቶ ማስታዎሻ
+              </span>
+            </div>
 
-            <p className="text-lg mb-4 text-gray-700 leading-relaxed px-20 py-2">
+            <p className="text-sm xs:text-base sm:text-lg mb-4 text-gray-700 leading-relaxed px-2 xs:px-4 sm:px-6 md:px-20 py-2 text-justify">
               ቀዳሚ ገጽአሁን በመላው አውሮፓ፥ በአፍሪካ፥ በአሜሪካ፥ በካናዳና በአውስትራልያ ከተቋቋሙት ቀደምት አብያተ ክርስቲያናት መካከል የመጀመሪያው ቀዳማዊና ፋና ወጊው ቤተ ክርስቲያን የኮሎኝ ርእሰ አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ነው። ቤተ ክርስቲያናችን በሊቀ ካህናት ዶክተር መርዓዊ ተበጀ ፊት አውራሪነት፥ በብፁዕ ወቅዱስ አቡነ ተክለሃይማኖት አባታዊ ፈቃድ በዚያን ጊዜ በጅቡቲና በምሥራቅ አፍሪካ ሊቀ ጳጳስ በነበሩት፥ በአሁኑ ጊዜ ደግሞ የኖርዲክ እና ግሪክ ሀገረ ስብከት ሊቀ ጳጳስ በኾኑተ በብፁዕ አቡነ ኤልያስ ተባርኮ ተከፈተ።
 
               <p className="py-2">አመሠራረቱም እንደሚከተለው ነው።</p>
@@ -32,7 +38,7 @@ export default function HistoryPage() {
                 ከዚህ በኋላ ሁኔታዎች ሁሉ መልክ መልክ መያዝ ጀመሩ። የምእመናኑም ቁጥር እየጨመረ ሄደ። በአውሮፓውያኑ የሰማኒያዎቹ ዓመታት ላይ አያሌ ኢትዮጵያውያንና ኤርትራውያን ወደ ጀርመን በብዛት የገቡበት ጊዜ ነበር። በተለይም " Landesarbeitsgemeinschaft Ausländische Flüchtlinge Nordrhein-Westfalen in Düsseldorf e.V." የሚባል በመንግሥት በጀት የሚደጎም ማኅበር ተቋቁሞ የስደተኞችን ጉዳይ ይከታተል ስለነበር የኢትዮጵያን ስደተኞች የሚመለከት ዐውደ ጥናት ከመሰረም 8-11፥1973 በዱስልዶርፍ ከተማ ተካሄደ። የቤተ ክርስቲያናችን መሥራቾችም ከፕሮፌሰራቸው ከዶ/ር ሃየር ጋር ጸሎት እንዲያደርጉና ትምህርት እንዲሰጡ ተጋበዙ። የእሁዱ መርሃ ግብር የእኛ ብቻ ነበር፧ በጀርመንኛ ለሚቀርበው ጥያቄ በመምህራቸው እየታገዙ፧ ስለ ቤተ ክርስቲያናችን በቂ ግንዛቤ ለማስጨበጥ ችለዋል። ከሀገሩ ከወጣ በኋላ እንድ ቀን እንኳ ቃለ እግዚአብሔር ሰምቶ ያማያውቀው ሁሉ ያነባ ነበር። በተለይ ፕሮፌሰር ሃየር እኛን ለመርዳት ቆርጠው የተነሡት የዚያን ሕዝብ ስሜት ከተመለከቱ በኋላ ነበር ማለት ይቻላል።
               </p>
               <p className="py-2">
-              ቤተ ክርስቲያን ለምን አናቋቁምም የሚለው ጥያቄ የዕለት ከዕለት ጥያቄ ሆኖ መቅረብ ጀመረ። ለዚህም አንድ አመች ዕድል ተፈጠረ። ከላይ በተጠቀሰው በ 1973 ዓ.ም. የኢትዮጵያ ፓትርያርክ ብፁዕ ወቅዱስ አቡነ ተክለሃይማኖት የጀርመን ወንጌላዊት ቤተ ክርስቲያን ባደረገችላቸው ጥሪ መሠረት ጀርመንን ሲጎበኙ፥ ቤተ ክርስቲያን እድናቋቁም ፈቃዳቸው ይሆን ዘንድ ፍራንክፈርት ላይ ጥያቄ ቀረበ። ቅዱስነታቸውም ጥቂት ካሰቡ በኋላ ተማሪዎቹን ካህናት «ትምህርታችሁን ጨርሳችሁ ለምን ወደ ሀገራችሁ አትመለሱም» አሉዋቸው። እነርሱም «ቅዱስ አባታችን ከሀገሩ የወጣው ሕዝብ ብዙ ስለሆነ፧ እንደሌሎቹ ኦርቶዶክሳውያን የእኛም አማንያን ቤተ ክርስቲያን ያስፈልጋቸዋል» የሚል መልስ ሰጡ። አስከትለዋቸው የመጡት ብፁዓን ሊቃነ ጳጳሳት አቡነ ዜና ማርቆስ፣ አቡነ ጎርጎርዮስ፣ አቡነ ኤልያስ እና የጠቅላይ ቤተ ክህነት ዋና ሥራ አስኪያጅ ሊቀ ማእምራን አበባው ይግዛው በውጭ ሀገር ትምህርታቸውን ተከታትለው የጨረሱ፧ በዝርዎት ያሉትን የግሪካውያንንና የሌሎቹንም ኦርቶዶክሳውያን አብያተ ክርስቲያናት ሁኔታ ስለሚያውቁ ለሀሳቡ ላይ ድጋፍ ሰጥተዋል። በመጨረሻም «ለማናቸውም ደብዳቤ ጻፉ» ብለው ካረፉበት ክፍል ቡራኬ ተቀብለው ወጡ።
+                ቤተ ክርስቲያን ለምን አናቋቁምም የሚለው ጥያቄ የዕለት ከዕለት ጥያቄ ሆኖ መቅረብ ጀመረ። ለዚህም አንድ አመች ዕድል ተፈጠረ። ከላይ በተጠቀሰው በ 1973 ዓ.ም. የኢትዮጵያ ፓትርያርክ ብፁዕ ወቅዱስ አቡነ ተክለሃይማኖት የጀርመን ወንጌላዊት ቤተ ክርስቲያን ባደረገችላቸው ጥሪ መሠረት ጀርመንን ሲጎበኙ፥ ቤተ ክርስቲያን እድናቋቁም ፈቃዳቸው ይሆን ዘንድ ፍራንክፈርት ላይ ጥያቄ ቀረበ። ቅዱስነታቸውም ጥቂት ካሰቡ በኋላ ተማሪዎቹን ካህናት «ትምህርታችሁን ጨርሳችሁ ለምን ወደ ሀገራችሁ አትመለሱም» አሉዋቸው። እነርሱም «ቅዱስ አባታችን ከሀገሩ የወጣው ሕዝብ ብዙ ስለሆነ፧ እንደሌሎቹ ኦርቶዶክሳውያን የእኛም አማንያን ቤተ ክርስቲያን ያስፈልጋቸዋል» የሚል መልስ ሰጡ። አስከትለዋቸው የመጡት ብፁዓን ሊቃነ ጳጳሳት አቡነ ዜና ማርቆስ፣ አቡነ ጎርጎርዮስ፣ አቡነ ኤልያስ እና የጠቅላይ ቤተ ክህነት ዋና ሥራ አስኪያጅ ሊቀ ማእምራን አበባው ይግዛው በውጭ ሀገር ትምህርታቸውን ተከታትለው የጨረሱ፧ በዝርዎት ያሉትን የግሪካውያንንና የሌሎቹንም ኦርቶዶክሳውያን አብያተ ክርስቲያናት ሁኔታ ስለሚያውቁ ለሀሳቡ ላይ ድጋፍ ሰጥተዋል። በመጨረሻም «ለማናቸውም ደብዳቤ ጻፉ» ብለው ካረፉበት ክፍል ቡራኬ ተቀብለው ወጡ።
               </p>
             </p>
           </div>
@@ -65,7 +71,7 @@ export default function HistoryPage() {
               {
                 year: "1971 – 1973",
                 title: "",
-                description:"",
+                description: "",
                 icon: "BookOpen",
                 color: "bg-purple-100 text-purple-700",
                 image: "",
@@ -73,7 +79,7 @@ export default function HistoryPage() {
               {
                 year: "1973 – 1975",
                 title: "",
-                description:"",
+                description: "",
                 icon: "Globe",
                 color: "bg-teal-100 text-teal-700",
                 image: "",
@@ -81,7 +87,7 @@ export default function HistoryPage() {
               {
                 year: "1975 – 1980",
                 title: "",
-                description:"",
+                description: "",
                 icon: "Building",
                 color: "bg-amber-100 text-amber-700",
                 image: "",
@@ -89,7 +95,7 @@ export default function HistoryPage() {
               {
                 year: "1980 – 1985",
                 title: "",
-                description:"",
+                description: "",
                 icon: "Building",
                 color: "bg-amber-100 text-amber-700",
                 image: "",
@@ -97,7 +103,7 @@ export default function HistoryPage() {
               {
                 year: "1985 – 1995",
                 title: "",
-                description:"",
+                description: "",
                 icon: "Building",
                 color: "",
                 image: "",
@@ -105,7 +111,7 @@ export default function HistoryPage() {
               {
                 year: "1995 – 2005",
                 title: "",
-                description:"",
+                description: "",
                 icon: "Building",
                 color: "bg-amber-100 text-amber-700",
                 image: "",
@@ -113,7 +119,7 @@ export default function HistoryPage() {
               {
                 year: "2005 – 2015",
                 title: "",
-                description:"",
+                description: "",
                 icon: "Building",
                 color: "bg-amber-100 text-amber-700",
                 image: "",
@@ -121,7 +127,7 @@ export default function HistoryPage() {
               {
                 year: "2015 – 2025",
                 title: "",
-                description:"",
+                description: "",
                 icon: "Building",
                 color: "bg-amber-100 text-amber-700",
                 image: "",
@@ -174,7 +180,7 @@ export default function HistoryPage() {
                   {/* Right side (empty for layout purposes) */}
                   <div className={`hidden md:block ${index % 2 === 1 ? "md:col-start-2" : "md:col-start-1"}`}></div>
                 </div>
-                
+
               </div>
             ))}
           </div>
@@ -186,7 +192,7 @@ export default function HistoryPage() {
             {/* Decorative Elements */}
             <div className="absolute -top-4 -left-4 w-24 h-24 border-t-4 border-l-4 border-blue-600"></div>
             <div className="absolute -bottom-4 -right-4 w-24 h-24 border-b-4 border-r-4 border-blue-600"></div>
-            
+
             <div className="bg-gradient-to-br from-blue-50 to-white p-8 rounded-lg shadow-xl">
               {/* Section Title */}
               <div className="text-center mb-12">
@@ -214,7 +220,7 @@ export default function HistoryPage() {
                 <h3 className="text-xl font-semibold text-gray-800 mb-6 text-center">
                   አሁን ያሉ የሰበካ ጉባኤ አስተዳደር (2016-2019 ዓ.ም.)
                 </h3>
-                
+
                 <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                   <div className="space-y-4">
                     {[
@@ -223,7 +229,7 @@ export default function HistoryPage() {
                       "አቶ ቴዎድሮስ ሣህሉ",
                       "አቶ በላይ ሶሎሞን"
                     ].map((name, index) => (
-                      <div 
+                      <div
                         key={index}
                         className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 flex items-center space-x-3 group"
                       >
@@ -242,7 +248,7 @@ export default function HistoryPage() {
                       "ወይዘሮ መሠረት",
                       "ወይዘሮ ዮርዳኖስ"
                     ].map((name, index) => (
-                      <div 
+                      <div
                         key={index}
                         className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 flex items-center space-x-3 group"
                       >

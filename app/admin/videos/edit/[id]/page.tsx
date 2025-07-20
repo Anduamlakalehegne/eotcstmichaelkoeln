@@ -1,21 +1,17 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Loader2, ArrowLeft } from "lucide-react"
-import { supabaseClient } from "@/lib/supabase-client"
+import { uploadFile } from "@/lib/supabase-client"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const categories = [
   "Church Services",
@@ -26,6 +22,13 @@ const categories = [
   "Other",
 ]
 
+interface Folder {
+  id: number
+  name: string
+  parent_id: number | null
+  created_at: string
+}
+
 interface Video {
   id: number
   title: string
@@ -34,7 +37,9 @@ interface Video {
   thumbnail_url: string
   duration: string
   category: string
+  folder_id?: number | null
   created_at: string
+  display_order?: number
 }
 
 export default function EditVideoPage({ params }: { params: { id: string } }) {
@@ -42,24 +47,48 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [folders, setFolders] = useState<Folder[]>([])
   const [video, setVideo] = useState<Video | null>(null)
+  const [videoInputType, setVideoInputType] = useState<'upload' | 'url'>("upload")
+  const [videoPreview, setVideoPreview] = useState<string>("")
+  const [thumbnailInputType, setThumbnailInputType] = useState<'upload' | 'url'>("upload")
+  const [thumbnailPreview, setThumbnailPreview] = useState<string>("")
 
   useEffect(() => {
+    fetchFolders()
     fetchVideo()
+    // eslint-disable-next-line
   }, [params.id])
+
+  useEffect(() => {
+    if (video && video.video_url) {
+      setVideoPreview(video.video_url)
+      // If the video_url is not a local file, default to URL tab
+      if (video.video_url && !video.video_url.startsWith("https://")) {
+        setVideoInputType("upload")
+      } else {
+        setVideoInputType("url")
+      }
+    }
+    setThumbnailInputType(videoInputType)
+    setThumbnailPreview("")
+    setVideo((prev) => prev ? { ...prev, thumbnail_url: "" } : prev)
+    // eslint-disable-next-line
+  }, [videoInputType])
+
+  const fetchFolders = async () => {
+    const res = await fetch("/api/videos/folders")
+    const data = await res.json()
+    setFolders(data)
+  }
 
   async function fetchVideo() {
     try {
-      const { data, error } = await supabaseClient
-        .from("videos")
-        .select("*")
-        .eq("id", params.id)
-        .single()
-
-      if (error) throw error
+      const res = await fetch(`/api/videos/${params.id}`)
+      if (!res.ok) throw new Error("Failed to load video")
+      const data = await res.json()
       setVideo(data)
     } catch (err) {
-      console.error("Error fetching video:", err)
       setError("Failed to load video")
     } finally {
       setLoading(false)
@@ -74,33 +103,90 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
     setError(null)
 
     try {
-      const { error } = await supabaseClient
-        .from("videos")
-        .update({
-          title: video.title,
-          description: video.description,
-          video_url: video.video_url,
-          thumbnail_url: video.thumbnail_url,
-          duration: video.duration,
-          category: video.category,
-        })
-        .eq("id", video.id)
-
-      if (error) throw error
-
+      const response = await fetch(`/api/videos/${video.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(video),
+      })
+      if (!response.ok) throw new Error("Failed to update video")
       router.push("/admin/videos")
-      router.refresh()
     } catch (err) {
-      console.error("Error updating video:", err)
       setError("Failed to update video. Please try again.")
     } finally {
       setSaving(false)
     }
   }
 
+  const handleVideoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setSaving(true)
+    setError(null)
+    try {
+      // Only allow video files
+      if (!file.type.startsWith("video/")) {
+        setError("Please select a valid video file.")
+        setSaving(false)
+        return
+      }
+      // Optional: limit file size (e.g., 100MB)
+      if (file.size > 100 * 1024 * 1024) {
+        setError("Video size should be less than 100MB.")
+        setSaving(false)
+        return
+      }
+      // Upload to Supabase
+      const url = await uploadFile(file, "videos", video?.folder_id ? `videos/${video.folder_id}` : "videos")
+      setVideo({ ...video, video_url: url })
+      setVideoPreview(url)
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleVideoUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!video) return
+    setVideo({ ...video, video_url: e.target.value })
+    setVideoPreview(e.target.value)
+  }
+
+  const handleThumbnailFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setSaving(true)
+    setError(null)
+    try {
+      if (!file.type.startsWith("image/")) {
+        setError("Please select a valid image file.")
+        setSaving(false)
+        return
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Thumbnail size should be less than 5MB.")
+        setSaving(false)
+        return
+      }
+      const url = await uploadFile(file, "videos", video?.folder_id ? `thumbnails/${video.folder_id}` : "thumbnails")
+      setVideo((prev) => prev ? { ...prev, thumbnail_url: url } : prev)
+      setThumbnailPreview(url)
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleThumbnailUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!video) return
+    setVideo({ ...video, thumbnail_url: e.target.value })
+    setThumbnailPreview(e.target.value)
+  }
+
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-32">
+      <div className="flex justify-center items-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
@@ -115,114 +201,151 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div>
-      <div className="flex items-center gap-4 mb-6">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/admin/videos">
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-        </Button>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">Edit Video</h1>
+        <Button variant="outline" onClick={() => router.back()}>
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back
+        </Button>
       </div>
-
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
-        <div className="space-y-2">
-          <Label htmlFor="title">Title</Label>
-          <Input
-            id="title"
-            value={video.title}
-            onChange={(e) => setVideo({ ...video, title: e.target.value })}
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            value={video.description}
-            onChange={(e) => setVideo({ ...video, description: e.target.value })}
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="video_url">Video URL</Label>
-          <Input
-            id="video_url"
-            type="url"
-            value={video.video_url}
-            onChange={(e) => setVideo({ ...video, video_url: e.target.value })}
-            required
-            placeholder="https://youtube.com/watch?v=..."
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="thumbnail_url">Thumbnail URL</Label>
-          <Input
-            id="thumbnail_url"
-            type="url"
-            value={video.thumbnail_url}
-            onChange={(e) => setVideo({ ...video, thumbnail_url: e.target.value })}
-            required
-            placeholder="https://..."
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="duration">Duration</Label>
-          <Input
-            id="duration"
-            value={video.duration}
-            onChange={(e) => setVideo({ ...video, duration: e.target.value })}
-            required
-            placeholder="5:30"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="category">Category</Label>
-          <Select
-            value={video.category}
-            onValueChange={(value) => setVideo({ ...video, category: value })}
-            required
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex gap-4">
-          <Button type="submit" disabled={saving}>
-            {saving ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              "Save Changes"
-            )}
-          </Button>
-          <Button type="button" variant="outline" asChild>
-            <Link href="/admin/videos">Cancel</Link>
-          </Button>
-        </div>
-      </form>
+      {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">{error}</div>}
+      <Card>
+        <CardHeader>
+          <CardTitle>Video Details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                value={video.title}
+                onChange={(e) => setVideo({ ...video, title: e.target.value })}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Input
+                id="description"
+                value={video.description || ""}
+                onChange={(e) => setVideo({ ...video, description: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select
+                value={video.category || ""}
+                onValueChange={(value) => setVideo({ ...video, category: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="folder">Folder</Label>
+              <Select
+                value={video.folder_id ? String(video.folder_id) : ""}
+                onValueChange={value => setVideo({ ...video, folder_id: value ? parseInt(value) : undefined })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select folder (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {folders.map(folder => (
+                    <SelectItem key={folder.id} value={String(folder.id)}>{folder.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="display_order">Display Order</Label>
+              <Input
+                id="display_order"
+                type="number"
+                value={video.display_order || 0}
+                onChange={(e) => setVideo({ ...video, display_order: parseInt(e.target.value) })}
+              />
+            </div>
+            {/* Video Source and Thumbnail sections (as previously enhanced) */}
+            <div className="space-y-2">
+              <Label>Video Source</Label>
+              <Tabs defaultValue={videoInputType} onValueChange={val => setVideoInputType(val as 'upload' | 'url')} className="mb-2">
+                <TabsList>
+                  <TabsTrigger value="upload">Upload Video</TabsTrigger>
+                  <TabsTrigger value="url">Video URL</TabsTrigger>
+                </TabsList>
+              </Tabs>
+              {videoInputType === "upload" && (
+                <div className="space-y-2">
+                  <Input
+                    id="video_file"
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoFileChange}
+                  />
+                </div>
+              )}
+              {videoInputType === "url" && (
+                <div className="space-y-2">
+                  <Input
+                    id="video_url"
+                    type="url"
+                    placeholder="https://..."
+                    value={video?.video_url || ""}
+                    onChange={handleVideoUrlChange}
+                  />
+                </div>
+              )}
+              {videoPreview && (
+                <video src={videoPreview} controls className="w-full max-h-64 mt-2 rounded border" />
+              )}
+            </div>
+            <div className="space-y-2 mt-4">
+              <Label>Thumbnail</Label>
+              {thumbnailInputType === "upload" && (
+                <div className="space-y-2">
+                  <Input
+                    id="thumbnail_file"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleThumbnailFileChange}
+                  />
+                </div>
+              )}
+              {thumbnailInputType === "url" && (
+                <div className="space-y-2">
+                  <Input
+                    id="thumbnail_url"
+                    type="url"
+                    placeholder="https://..."
+                    value={video?.thumbnail_url || ""}
+                    onChange={handleThumbnailUrlChange}
+                  />
+                </div>
+              )}
+              {thumbnailPreview && (
+                <img src={thumbnailPreview} alt="Thumbnail Preview" className="w-48 h-32 object-cover rounded border mt-2" />
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button type="submit" disabled={saving}>
+                {saving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                Update Video
+              </Button>
+              <Button type="button" variant="outline" onClick={() => router.back()}>
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   )
 } 

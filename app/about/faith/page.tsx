@@ -83,6 +83,7 @@ export default function FaithPage() {
             <h2 className="text-2xl font-bold mb-6 flex items-center">
               <History className="mr-2 text-blue-600" />
               {language === "en" ? "History of the Ethiopian Orthodox Church" : "የኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተ ክርስቲያን ታሪክ በአጭሩ"}
+
             </h2>
 
             {language === "en" ? (
@@ -145,6 +146,8 @@ export default function FaithPage() {
               </div>
             ) : (
               <div className="space-y-4">
+
+                ምንጭ:<a href="https://stmaryeotctoronto.com/am/our-history">https://stmaryeotctoronto.com/am/our-history</a>
                 <p>
                   ኢትዮጵያ የጁዲዮ የክርስትያን እምነትና ባሕል ያላት ጥንታዊት አገር ስትሆን የክርስትና እምነት ተከታዮች በብዛት የሚግኙባት ነች። አስገራሚ ታሪክ፣ ድንቅ ሥልጣኔዋ፣ባሕልና
                   ሃይማኖታዊ የሆነው የሕዝቧችዋ አኗኗር ልዩ ያደርጋታል። በኦሪት ዘፍጥረት እንደተጻፈው “የሁለተኛው ወንዝ ስም ግዮን ነው፣እርሱም የኢትዮጵያን ምድር ሁሉ ይከብባል።” (ዘፍ. 2፥13)
@@ -198,7 +201,6 @@ export default function FaithPage() {
                 </p>
                 <p>
                   ስለዚህ ነው ከ4ኛው መቶ ክፍለ ዘመን እስከ 7ኛው ክፍለ ዘመን ያለው ጊዜ ወርቃማው ተብሎ የሚታወቀው። በነዚህ ዘመናት ውስጥ ብዙ የስብከት ወንጌል ሥራዎች ተስፋፍተዋል፣ ልዩ ልዩ መንፈሣዊ ሥራዎችና ጽሑፎች የተከናወኑበት ጊዜ ነው። በአውሮፓ ያሉ ገዳማት የምዕራባውያንን ባሕል በመካከላለኛው ክፍለ ዘመን እንዲስፋፋና እንዲጠበቅ እንዳደረጉት ሁሉ በኢትዮጵያም የኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተ ክርስቲያን ገዳማትም የእውቀትና የሥልጣኔ ማዕከል በመሆን ሥነ ጽሑፎችን፣ ሥነ ሕንፃን፣ ቅኔዎችን፣ ዜማዎችን፣ ዝማሬዎችንና መንፈሣዊ ትምህርቶች እንዲዳብሩ አድርገዋል። በ5ኛው ክፍለ ዘመን የታወቀው የቤተ ክርስቲያን ሊቅ ቅዱስ ያሬድ በመጽሐፍ ቅዱስ ላይ የተመሠረተ የቅድሴ ዜማዎችን፣ ዝማሬዎችንና ውዝዋዜዎችን በመፍጠር ለቤተ ክርስቲያን ያበረከተ ሲሆን በአሁኑ ጊዜ ይህ ለጆሮ ክፍተኛ ጣዕም ያለውን የምስጋናና የጸሎት ሥርዓት ያላትና የምትጠቀም በዓለም ያለች ብቸኛ ቤተ ክርስቲያን አድርጓታል።
-                  <br />ምንጭ:<a href="https://stmaryeotctoronto.com/am/our-history">https://stmaryeotctoronto.com/am/our-history</a>
                 </p>
               </div>
             )}

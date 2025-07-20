@@ -43,3 +43,19 @@ export async function uploadImage(file: File, bucketName: string, folder: string
 
   return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${data.path}`
 }
+
+export async function uploadFile(file: File, bucketName: string, folder: string): Promise<string> {
+  const fileName = `${folder}/${Date.now()}-${file.name}`
+
+  const { data, error } = await supabaseClient.storage.from(bucketName).upload(fileName, file, {
+    cacheControl: "3600",
+    upsert: false,
+  })
+
+  if (error) {
+    console.error("Supabase upload error:", error)
+    throw new Error(`Failed to upload file: ${error.message}`)
+  }
+
+  return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${data.path}`
+}

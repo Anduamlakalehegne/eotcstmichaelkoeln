@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -9,21 +9,47 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ImageUpload } from "@/components/image-upload"
 import { Loader2, ArrowLeft } from "lucide-react"
-import type { Gallery } from "@/lib/supabase"
+import type { Gallery as GalleryBase } from "@/lib/supabase"
+
+interface Gallery extends GalleryBase {
+  folder_id?: number
+}
+
+interface Folder {
+  id: number
+  name: string
+  parent_id: number | null
+  created_at: string
+}
 
 const categories = ["Church Service", "Community Gathering", "Youth Event", "Cultural Celebration", "Church Festival", "Special Service"]
 
 export default function CreateGalleryPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const initialFolderId = searchParams.get("folder_id") ? parseInt(searchParams.get("folder_id")!) : undefined
+  const showFolderDropdown = initialFolderId === undefined;
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [folders, setFolders] = useState<Folder[]>([])
   const [formData, setFormData] = useState<Partial<Gallery>>({
     title: "",
     description: "",
     image_url: "",
     category: "",
     display_order: 0,
+    folder_id: initialFolderId,
   })
+
+  useEffect(() => {
+    fetchFolders()
+  }, [])
+
+  const fetchFolders = async () => {
+    const res = await fetch("/api/gallery/folders")
+    const data = await res.json()
+    setFolders(data)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -43,7 +69,12 @@ export default function CreateGalleryPage() {
         throw new Error("Failed to create photo")
       }
 
-      router.push("/admin/gallery")
+      // Redirect to the current folder if present
+      if (initialFolderId) {
+        router.push(`/admin/gallery?folder_id=${initialFolderId}`)
+      } else {
+        router.push("/admin/gallery")
+      }
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -105,6 +136,25 @@ export default function CreateGalleryPage() {
                 </SelectContent>
               </Select>
             </div>
+
+            {showFolderDropdown && (
+              <div className="space-y-2">
+                <Label htmlFor="folder">Folder</Label>
+                <Select
+                  value={formData.folder_id ? String(formData.folder_id) : ""}
+                  onValueChange={value => setFormData({ ...formData, folder_id: value ? parseInt(value) : undefined })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select folder (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {folders.map(folder => (
+                      <SelectItem key={folder.id} value={String(folder.id)}>{folder.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="display_order">Display Order</Label>

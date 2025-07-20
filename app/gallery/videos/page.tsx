@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Loader2, X, Image as ImageIcon } from "lucide-react"
+import { Loader2, X, Image as ImageIcon, Folder, ArrowLeft } from "lucide-react"
 import { supabaseClient } from "@/lib/supabase-client"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,32 +22,69 @@ interface Video {
   created_at: string
 }
 
+interface FolderType {
+  id: number
+  name: string
+  parent_id: number | null
+  created_at: string
+}
+
 export default function VideosPage() {
   const [videos, setVideos] = useState<Video[]>([])
+  const [folders, setFolders] = useState<FolderType[]>([])
+  const [currentFolder, setCurrentFolder] = useState<FolderType | null>(null)
+  const [folderStack, setFolderStack] = useState<FolderType[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null)
   const [thumbnailError, setThumbnailError] = useState<{[key: number]: boolean}>({})
 
   useEffect(() => {
+    fetchFolders()
     fetchVideos()
-  }, [])
+    // eslint-disable-next-line
+  }, [currentFolder])
+
+  async function fetchFolders() {
+    setLoading(true)
+    try {
+      const parent_id = currentFolder ? currentFolder.id : null
+      const url = parent_id ? `/api/videos/folders?parent_id=${parent_id}` : "/api/videos/folders"
+      const res = await fetch(url)
+      const data = await res.json()
+      setFolders(data)
+    } catch (err: any) {
+      setError("Failed to load folders")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   async function fetchVideos() {
+    setLoading(true)
     try {
-      const { data, error } = await supabaseClient
-        .from("videos")
-        .select("*")
-        .order("created_at", { ascending: false })
-
-      if (error) throw error
-      setVideos(data || [])
-    } catch (err) {
-      console.error("Error fetching videos:", err)
+      const folder_id = currentFolder ? currentFolder.id : null
+      const url = folder_id ? `/api/videos?folder_id=${folder_id}` : "/api/videos"
+      const res = await fetch(url)
+      const data = await res.json()
+      setVideos(data)
+    } catch (err: any) {
       setError("Failed to load videos")
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleOpenFolder(folder: FolderType) {
+    setFolderStack([...folderStack, folder])
+    setCurrentFolder(folder)
+  }
+
+  function handleBack() {
+    const newStack = [...folderStack]
+    newStack.pop()
+    setFolderStack(newStack)
+    setCurrentFolder(newStack.length > 0 ? newStack[newStack.length - 1] : null)
   }
 
   function getYouTubeEmbedUrl(url: string) {
@@ -105,8 +142,31 @@ export default function VideosPage() {
   }
 
   return (
-    <div className="container mx-auto px-4">
-      <h1 className="text-3xl font-bold mb-8">Video Gallery</h1>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex items-center gap-2 mb-8">
+        {currentFolder && (
+          <button onClick={handleBack} className="mr-2 px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 flex items-center">
+            <ArrowLeft className="h-4 w-4 mr-1" /> Back
+          </button>
+        )}
+        <h1 className="text-3xl font-bold text-center flex-1">Video Gallery</h1>
+      </div>
+
+      {/* Folders */}
+      {folders.length > 0 && (
+        <div className="mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {folders.map(folder => (
+              <div key={folder.id} className="flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-gray-50" onClick={() => handleOpenFolder(folder)}>
+                <Folder className="h-5 w-5 text-primary" />
+                <span className="flex-1">{folder.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Videos */}
       {videos.length === 0 ? (
         <p className="text-gray-500">No videos available at this time.</p>
       ) : (

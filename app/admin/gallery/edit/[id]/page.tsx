@@ -9,26 +9,46 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ImageUpload } from "@/components/image-upload"
 import { Loader2, ArrowLeft } from "lucide-react"
-import type { Gallery } from "@/lib/supabase"
+import type { Gallery as GalleryBase } from "@/lib/supabase"
+
+interface Gallery extends GalleryBase {
+  folder_id?: number
+}
 
 const categories = ["Church Service", "Community Gathering", "Youth Event", "Cultural Celebration", "Church Festival", "Special Service"]
+
+interface Folder {
+  id: number
+  name: string
+  parent_id: number | null
+  created_at: string
+}
 
 export default function EditGalleryPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [folders, setFolders] = useState<Folder[]>([])
   const [formData, setFormData] = useState<Partial<Gallery>>({
     title: "",
     description: "",
     image_url: "",
     category: "",
     display_order: 0,
+    folder_id: undefined,
   })
 
   useEffect(() => {
+    fetchFolders()
     fetchPhoto()
   }, [params.id])
+
+  const fetchFolders = async () => {
+    const res = await fetch("/api/gallery/folders")
+    const data = await res.json()
+    setFolders(data)
+  }
 
   const fetchPhoto = async () => {
     try {
@@ -129,6 +149,23 @@ export default function EditGalleryPage({ params }: { params: { id: string } }) 
                     <SelectItem key={category} value={category}>
                       {category}
                     </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="folder">Folder</Label>
+              <Select
+                value={formData.folder_id ? String(formData.folder_id) : ""}
+                onValueChange={value => setFormData({ ...formData, folder_id: value ? parseInt(value) : undefined })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select folder (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {folders.map(folder => (
+                    <SelectItem key={folder.id} value={String(folder.id)}>{folder.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

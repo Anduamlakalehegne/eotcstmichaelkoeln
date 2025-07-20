@@ -11,8 +11,8 @@ export default function ServiceLayout({
   return (
     <div className="min-h-screen">
       <Header />
-      <PageHero title="" subtitle="" />
-      <main className="py-16">{children}</main>
+      {/* <PageHero title="" subtitle="" /> */}
+      <main className="py-16 mt-16">{children}</main>
       <Footer />
     </div>
   )

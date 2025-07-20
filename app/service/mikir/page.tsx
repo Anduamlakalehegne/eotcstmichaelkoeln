@@ -5,7 +5,7 @@ import { BookOpen, Quote } from "lucide-react"
 
 export default function MikirPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-6">
       {/* Header Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -13,10 +13,10 @@ export default function MikirPage() {
         transition={{ duration: 0.5 }}
         className="text-center mb-12"
       >
-        <h1 className="text-4xl font-bold mb-4">አገልግሎት ምክር</h1>
-        <div className="flex items-center justify-center gap-2 text-gray-600">
-          <BookOpen className="w-5 h-5" />
-          <p>የቅዱሳን ምክሮች</p>
+        <h1 className="text-4xl font-bold mb-4">የምክር አገልግሎት</h1>
+        <div className="flex items-center justify-center gap-2">
+          <BookOpen className="w-15 h-15 " />
+          <p className="text-2xl font-bold">የቅዱሳን ምክሮች</p>
         </div>
       </motion.div>
 

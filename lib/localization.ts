@@ -141,8 +141,8 @@ export const amTranslations: Translations = {
     call: "ስልክ",
     email: "ኢሜይል",
     address: "አድራሻ",
-    resources: "ሀብቶች",
-    usefulLink: "ጠቃሚ አገናኞች",
+    resources: "ጠቃሚ አገናኞች",
+    usefulLink: "",
     contactUs: "ያግኙን",
     copyright: "© ኮሎኝ ኢኦተቤ ቅዱስ ሚካኤል 2025 - መብቱ በህግ የተጠበቀ ነው። በማረፊያቴክ የተዘጋጀ",
     footerLinks: {

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useLocale } from "@/contexts/locale-context"
 
 interface NewsItem {
   id: number
@@ -21,6 +22,8 @@ interface NewsItem {
 }
 
 export default function NewsSlider() {
+  const { locale, translations } = useLocale();
+  const [rawNews, setRawNews] = useState<any[]>([])
   const [news, setNews] = useState<NewsItem[]>([])
   const [filteredNews, setFilteredNews] = useState<NewsItem[]>([])
   const [currentPage, setCurrentPage] = useState(0)
@@ -32,11 +35,38 @@ export default function NewsSlider() {
 
   // Get unique years and months from news
   const years = ["all", ...new Set(news.map(item => item.formattedDate.year))]
-  const months = [
-    "all",
+  // Localized month names
+  const amMonths = [
+    "መስከረም", "ጥቅምት", "ኅዳር", "ታኅሣሥ", "ጥር", "የካቲት", "መጋቢት", "ሚያዝያ", "ግንቦት", "ሰኔ", "ሀምሌ", "ነሐሴ"
+  ];
+  const enMonths = [
     "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
     "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
-  ]
+  ];
+  const months = [
+    "all",
+    ...(locale === "am" ? amMonths : enMonths)
+  ];
+
+  // Correct mapping from Gregorian month index to Amharic month
+  // Gregorian: 0=Jan, 1=Feb, ..., 6=Jul, ..., 11=Dec
+  // Amharic: 0=መስከረም, ..., 10=ሀምሌ, 11=ነሐሴ
+  // For most years, Gregorian July (6) ≈ ሀምሌ (10), August (7) ≈ ነሐሴ (11)
+  // We'll use a static mapping for display, but note that Ethiopian months start ~8th of Gregorian months
+  const gregorianToAmharicMonth = [
+    4, // Jan → ጥር
+    5, // Feb → የካቲት
+    6, // Mar → መጋቢት
+    7, // Apr → ሚያዝያ
+    8, // May → ግንቦት
+    9, // Jun → ሰኔ
+    10, // Jul → ሀምሌ
+    11, // Aug → ነሐሴ
+    0, // Sep → መስከረም
+    1, // Oct → ጥቅምት
+    2, // Nov → ኅዳር
+    3, // Dec → ታኅሣሥ
+  ];
 
   useEffect(() => {
     async function fetchNews() {
@@ -46,23 +76,7 @@ export default function NewsSlider() {
           throw new Error("Failed to fetch news")
         }
         const data = await response.json()
-        
-        const formattedNews = data.map((item: any) => ({
-          ...item,
-          formattedDate: {
-            day: new Date(item.created_at).getDate().toString().padStart(2, "0"),
-            month: new Date(item.created_at).toLocaleString("default", { month: "short" }).toUpperCase(),
-            year: new Date(item.created_at).getFullYear().toString(),
-          },
-          rawDate: new Date(item.created_at)
-        }))
-        
-        // Sort news by created_at in descending order (newest first)
-        formattedNews.sort((a: NewsItem, b: NewsItem) => b.rawDate.getTime() - a.rawDate.getTime())
-        
-        setNews(formattedNews)
-        // Only show the latest two news items by default
-        setFilteredNews(formattedNews.slice(0, 2))
+        setRawNews(data)
       } catch (err) {
         setError("Failed to load news. Please try again later.")
         console.error(err)
@@ -70,9 +84,33 @@ export default function NewsSlider() {
         setLoading(false)
       }
     }
-
     fetchNews()
   }, [])
+
+  // Remap news to current locale whenever rawNews or locale changes
+  useEffect(() => {
+    const mapped = rawNews.map((item: any) => {
+      const dateObj = new Date(item.created_at);
+      let month;
+      if (locale === "am") {
+        month = amMonths[gregorianToAmharicMonth[dateObj.getMonth()]];
+      } else {
+        month = dateObj.toLocaleString("default", { month: "short" }).toUpperCase();
+      }
+      return {
+        ...item,
+        formattedDate: {
+          day: dateObj.getDate().toString().padStart(2, "0"),
+          month,
+          year: dateObj.getFullYear().toString(),
+        },
+        rawDate: dateObj
+      };
+    });
+    // Sort news by created_at in descending order (newest first)
+    mapped.sort((a: NewsItem, b: NewsItem) => b.rawDate.getTime() - a.rawDate.getTime())
+    setNews(mapped)
+  }, [rawNews, locale])
 
   // Filter news when year or month changes
   useEffect(() => {
@@ -139,28 +177,34 @@ export default function NewsSlider() {
         >
           {years.map((year) => (
             <option key={year} value={year}>
-              {year === "all" ? "All Years" : year}
+              {year === "all"
+                ? (locale === "am" ? "ሁሉም ዓመታት" : "All Years")
+                : year}
             </option>
           ))}
         </select>
-
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
           className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          {months.map((month) => (
+          {months.map((month, idx) => (
             <option key={month} value={month}>
-              {month === "all" ? "All Months" : month}
+              {month === "all"
+                ? (locale === "am" ? "ሁሉም ወራቶች" : "All Months")
+                : month}
             </option>
           ))}
         </select>
       </div>
-
       {/* Show message when no news matches the filters */}
       {filteredNews.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-500 text-lg">No news available for the selected filters</p>
+          <p className="text-gray-500 text-lg">
+            {locale === "am"
+              ? "ለተመረጡት ማጣሪያዎች የሚገኙ ዜናዎች የሉም"
+              : "No news available for the selected filters"}
+          </p>
         </div>
       ) : (
       <div className="overflow-hidden">
@@ -190,14 +234,14 @@ export default function NewsSlider() {
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-3">{item.title}</h3>
                   <p className="text-gray-600 text-sm mb-2">
-                      <span className="font-medium">Date:</span> {new Date(item.created_at).toLocaleDateString()}
+                      <span className="font-medium">{locale === "am" ? "ቀን:" : "Date:"}</span> {new Date(item.created_at).toLocaleDateString(locale === "am" ? "am-ET" : undefined)}
                   </p>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">{item.excerpt}</p>
                   <Link
                     href={`/news/church-news/${item.id}`}
                     className="inline-flex text-blue-600 hover:text-blue-700 text-sm font-medium items-center gap-1"
                   >
-                    Read more
+                    {locale === "am" ? "ተጨማሪ ያንብቡ" : "Read more"}
                   </Link>
                 </div>
               </div>
@@ -206,27 +250,25 @@ export default function NewsSlider() {
         </AnimatePresence>
       </div>
       )}
-
       {/* Navigation Buttons */}
       {filteredNews.length > newsPerPage && (
         <>
           <button
             onClick={prevPage}
             className="absolute left-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-50 transition-colors md:left-4"
-            aria-label="Previous page"
+            aria-label={locale === "am" ? "ወደ ቀደም ገፅ" : "Previous page"}
           >
             <ChevronLeft className="w-5 h-5 text-blue-600 md:w-6 md:h-6" />
           </button>
           <button
             onClick={nextPage}
             className="absolute right-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-50 transition-colors md:right-4"
-            aria-label="Next page"
+            aria-label={locale === "am" ? "ወደ ቀጣይ ገፅ" : "Next page"}
           >
             <ChevronRight className="w-5 h-5 text-blue-600 md:w-6 md:h-6" />
           </button>
         </>
       )}
-
       {/* Pagination Dots */}
       {pageCount > 1 && (
         <div className="flex justify-center gap-2 mt-4 md:mt-8">
@@ -237,7 +279,7 @@ export default function NewsSlider() {
               className={`w-2 h-2 rounded-full transition-colors ${
                 currentPage === index ? "bg-blue-600" : "bg-gray-300"
               }`}
-              aria-label={`Go to page ${index + 1}`}
+              aria-label={locale === "am" ? `ወደ ገፅ ${index + 1}` : `Go to page ${index + 1}`}
             />
           ))}
         </div>

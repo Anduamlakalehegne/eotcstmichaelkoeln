@@ -192,13 +192,29 @@ export default function EventDetailPage() {
                 <p className="font-medium">{event.location}</p>
                 <p>{event.address}</p>
 
-                {/* Map placeholder */}
-                <div className="relative h-[300px] bg-gray-100 rounded-lg flex items-center justify-center">
-                  <div className="text-center p-4">
-                    <MapPin className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                    <p className="text-gray-500">Map view would be displayed here</p>
+                {/* Map view */}
+                {event.address ? (
+                  <div className="relative h-[300px] bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                    <iframe
+                      title="Event Location Map"
+                      width="100%"
+                      height="100%"
+                      className="absolute inset-0 w-full h-full border-0 rounded-lg"
+                      style={{ minHeight: 300 }}
+                      loading="lazy"
+                      allowFullScreen
+                      referrerPolicy="no-referrer-when-downgrade"
+                      src={`https://www.google.com/maps?q=${encodeURIComponent(event.address)}&output=embed`}
+                    />
                   </div>
-                </div>
+                ) : (
+                  <div className="relative h-[300px] bg-gray-100 rounded-lg flex items-center justify-center">
+                    <div className="text-center p-4">
+                      <MapPin className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                      <p className="text-gray-500">Map view would be displayed here</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </TabsContent>
 
@@ -217,12 +233,12 @@ export default function EventDetailPage() {
 
         <div className="lg:col-span-1 space-y-6">
           {/* RSVP Form */}
-          <RSVPForm
+          {/* <RSVPForm
             eventId={event.id}
             eventTitle={event.title}
             maxAttendees={event.max_attendees}
             currentAttendees={event.current_attendees}
-          />
+          /> */}
 
           {/* Related Events */}
           {relatedEvents.length > 0 && (

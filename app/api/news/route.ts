@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+import { cookies } from "next/headers"
+import type { Database } from "@/types/supabase"
 
 export async function GET() {
   try {
-    const supabase = createClient()
+    const cookieStore = await cookies();
+    const supabase = createServerComponentClient<Database>({
+      cookies: () => cookieStore,
+    });
     const { data, error } = await supabase
       .from("news")
       .select("*")
@@ -25,7 +30,10 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient()
+    const cookieStore = await cookies();
+    const supabase = createServerComponentClient<Database>({
+      cookies: () => cookieStore,
+    });
     const body = await request.json()
 
     const { data, error } = await supabase

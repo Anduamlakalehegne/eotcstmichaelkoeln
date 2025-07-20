@@ -193,7 +193,7 @@ export default function CreateArchivePage() {
                   onValueChange={(value: "photo" | "document") => setFormData({ ...formData, type: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="photo">Photo</SelectItem>
