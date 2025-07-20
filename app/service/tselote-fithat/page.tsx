@@ -114,7 +114,7 @@ export default function TseloteFithatPage() {
   const activeContent = content[language]
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 text-justify">
       <div className="mb-6 flex justify-end">
         <div className="inline-flex items-center rounded-md border border-input bg-background p-1 text-sm shadow-sm">
           {/* <button

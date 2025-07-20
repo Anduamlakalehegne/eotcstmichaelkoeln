@@ -26,7 +26,7 @@ const churchesData = [
     email: "stgabriel@example.com",
     website: "https://stgabriel-berlin.de",
     region: "Berlin",
-    coordinates: [52.520008, 13.404954], // Berlin coordinates
+    coordinates: [52.520008, 13.404954] as [number, number],
   },
   {
     id: 2,
@@ -36,7 +36,7 @@ const churchesData = [
     email: "aeokd@gmx.de",
     website: "https://eotcstmichaelkoeln.de/",
     region: "cologne",
-    coordinates: [48.137154, 11.576124], // Munich coordinates
+    coordinates: [48.137154, 11.576124] as [number, number],
   },
   {
     id: 3,
@@ -46,7 +46,7 @@ const churchesData = [
     email: "stmary@example.com",
     website: "https://stmary-frankfurt.de",
     region: "Hessen",
-    coordinates: [50.110924, 8.682127], // Frankfurt coordinates
+    coordinates: [50.110924, 8.682127] as [number, number],
   },
   {
     id: 4,
@@ -56,7 +56,7 @@ const churchesData = [
     email: "stgeorge@example.com",
     website: "https://stgeorge-koeln.de",
     region: "Nordrhein-Westfalen",
-    coordinates: [50.935173, 6.953101], // Cologne coordinates
+    coordinates: [50.935173, 6.953101] as [number, number],
   },
   {
     id: 5,
@@ -66,7 +66,7 @@ const churchesData = [
     email: "holytrinity@example.com",
     website: "https://holytrinity-hamburg.de",
     region: "Hamburg",
-    coordinates: [53.551086, 9.993682], // Hamburg coordinates
+    coordinates: [53.551086, 9.993682] as [number, number],
   },
 ]
 
@@ -111,24 +111,24 @@ export default function ChurchesGermanyPage() {
   return (
     <div>
       {/* <PageHero
-        title="Ethiopian Orthodox Churches in Germany"
+        title="የኢትዮጵያ ኦርቶዶክስ ቤተክርስቲያናት በጀርመን"
       /> */}
 
-      <p className="text-center text-2xl font-bold">በጀርመን(፣ ሆላንድ፥ ሰዊዘርላንድ፣ ኦስትርያ) የሚገኙ የኢትዮጵያ ኦርቶዶክስ ተዋህዶ አብያተ ክርስቲያናት</p>
+      <p className="text-center text-2xl font-bold">በጀርመን (፣ ሆላንድ፥ ሰዊዘርላንድ፣ ኦስትርያ) የሚገኙ የኢትዮጵያ ኦርቶዶክስ ተዋህዶ አብያተ ክርስቲያናት</p>
 
       <div className="container mx-auto py-8 px-4">
         <div className="mb-8">
           <form onSubmit={handleSearch} className="flex gap-2 max-w-md mx-auto">
             <Input
               type="text"
-              placeholder="Search by name, region, or address..."
+              placeholder="በስም፣ ክልል፣ ወይም አድራሻ ይፈልጉ..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1"
             />
             <Button type="submit">
               <Search className="h-4 w-4 mr-2" />
-              Search
+              ፈልግ
             </Button>
           </form>
         </div>
@@ -147,7 +147,7 @@ export default function ChurchesGermanyPage() {
           <div className="space-y-4">
             {filteredChurches.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-lg text-gray-600">No churches found matching your search criteria.</p>
+                <p className="text-lg text-gray-600">ምንም ቤተክርስቲያናት አልተገኙም።</p>
               </div>
             ) : (
               filteredChurches.map((church) => (
@@ -168,19 +168,19 @@ export default function ChurchesGermanyPage() {
                         <p className="text-gray-600 mb-4">{church.region}</p>
                         <div className="space-y-2 text-sm">
                           <p>
-                            <strong>Address:</strong> {church.address}
+                            <strong>አድራሻ:</strong> {church.address}
                           </p>
                           <p>
-                            <strong>Phone:</strong> {church.phone}
+                            <strong>ስልክ:</strong> {church.phone}
                           </p>
                           <p>
-                            <strong>Email:</strong>{" "}
+                            <strong>ኢሜይል:</strong>{" "}
                             <a href={`mailto:${church.email}`} className="text-blue-600 hover:underline">
                               {church.email}
                             </a>
                           </p>
                           <p>
-                            <strong>Website:</strong>{" "}
+                            <strong>ድህረ ገፅ:</strong>{" "}
                             <a
                               href={church.website}
                               target="_blank"

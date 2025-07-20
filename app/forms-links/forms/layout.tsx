@@ -19,7 +19,7 @@ export default function FormsLayout({
       <div className="flex flex-col md:flex-row gap-6">
         <div className="md:w-64 flex-shrink-0">
           <div className="sticky top-20">
-            <h2 className="text-xl font-bold mb-4">ቅጾቸ</h2>
+            <h2 className="text-xl font-bold mb-4">ቅጾች</h2>
             <div className="space-y-2">
               <Button variant="ghost" className="w-full justify-start" asChild>
                 <Link href="/forms-links/forms/membership" className="flex items-center gap-2">

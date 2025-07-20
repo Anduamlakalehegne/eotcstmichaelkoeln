@@ -106,7 +106,7 @@ export default function EventDetailPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/news">News</BreadcrumbLink>
+            <BreadcrumbLink href="/news/events">News</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

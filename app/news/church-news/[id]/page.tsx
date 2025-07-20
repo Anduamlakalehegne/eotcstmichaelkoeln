@@ -68,7 +68,7 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbLink href="/news">News</BreadcrumbLink>
+                <BreadcrumbLink href="/news/church-news">News</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>

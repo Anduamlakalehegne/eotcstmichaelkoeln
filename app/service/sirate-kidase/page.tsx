@@ -11,7 +11,7 @@ export default function SirateKidasePage() {
   ]
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 text-justify">
       <Tabs defaultValue="amharic" className="w-full">
         <div className="flex justify-center mb-6">
           <TabsList>

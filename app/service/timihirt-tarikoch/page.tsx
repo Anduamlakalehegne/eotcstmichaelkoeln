@@ -141,7 +141,7 @@ export default function TimihirtTarikochPage() {
 
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 text-justify">
       <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">ትምህርቶችና ታሪኮች</h1>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
         {posts.map((item) => (

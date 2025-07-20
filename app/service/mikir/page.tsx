@@ -5,7 +5,7 @@ import { BookOpen, Quote } from "lucide-react"
 
 export default function MikirPage() {
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-4 py-6 text-justify">
       {/* Header Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}

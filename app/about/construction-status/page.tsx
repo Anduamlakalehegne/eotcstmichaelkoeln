@@ -5,7 +5,7 @@ import { HardHat, Timer, CheckCircle2 } from "lucide-react"
 
 export default function ConstructionStatusPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12 text-justify">
       {/* Header with subtle animation */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}

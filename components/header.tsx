@@ -388,16 +388,25 @@ export default function Header() {
                               {subItem.submenu ? (
                                 <div className="submenu-dropdown">
                                   <div className="flex items-center justify-between">
-                                    <Link
-                                      href={subItem.href}
-                                      className="flex-1 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                                    >
-                                      <span className="flex items-center gap-2">
-                                        {subItem.icon && <subItem.icon size={16} />}
-                                        {translateSubMenuItem(subItem.name)}
+                                    {['Forms', 'Useful Links'].includes(subItem.name) ? (
+                                      <span className="flex-1 px-4 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors cursor-pointer">
+                                        <span className="flex items-center gap-2">
+                                          {subItem.icon && <subItem.icon size={16} />}
+                                          {translateSubMenuItem(subItem.name)}
+                                        </span>
                                       </span>
-                                    </Link>
-                                  <button
+                                    ) : (
+                                      <Link
+                                        href={subItem.href}
+                                        className="flex-1 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                                      >
+                                        <span className="flex items-center gap-2">
+                                          {subItem.icon && <subItem.icon size={16} />}
+                                          {translateSubMenuItem(subItem.name)}
+                                        </span>
+                                      </Link>
+                                    )}
+                                    <button
                                       className="px-2 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                                     onClick={() =>
                                       setActiveSubmenu(activeSubmenu === subItem.name ? null : subItem.name)
@@ -522,24 +531,31 @@ export default function Header() {
                               <div key={subItem.name}>
                                 {subItem.submenu ? (
                                   <>
-                                    <button
-                                      className="flex items-center justify-between w-full py-2 text-sm text-gray-700 hover:text-blue-600"
-                                      onClick={() =>
-                                        setActiveSubmenu(activeSubmenu === subItem.name ? null : subItem.name)
-                                      }
-                                      aria-expanded={activeSubmenu === subItem.name}
-                                    >
-                                      <span className="flex items-center gap-2">
+                                    {['Forms', 'Useful Links'].includes(subItem.name) ? (
+                                      <span className="flex items-center gap-2 py-2 text-sm text-gray-700 hover:text-blue-600 transition-colors cursor-pointer">
                                         {subItem.icon && <subItem.icon size={16} />}
                                         {translateSubMenuItem(subItem.name)}
                                       </span>
-                                      <ChevronDown
-                                        size={14}
-                                        className={`transition-transform ${
-                                          activeSubmenu === subItem.name ? "rotate-180" : ""
-                                        }`}
-                                      />
-                                    </button>
+                                    ) : (
+                                      <button
+                                        className="flex items-center justify-between w-full py-2 text-sm text-gray-700 hover:text-blue-600"
+                                        onClick={() =>
+                                          setActiveSubmenu(activeSubmenu === subItem.name ? null : subItem.name)
+                                        }
+                                        aria-expanded={activeSubmenu === subItem.name}
+                                      >
+                                        <span className="flex items-center gap-2">
+                                          {subItem.icon && <subItem.icon size={16} />}
+                                          {translateSubMenuItem(subItem.name)}
+                                        </span>
+                                        <ChevronDown
+                                          size={14}
+                                          className={`transition-transform ${
+                                            activeSubmenu === subItem.name ? "rotate-180" : ""
+                                          }`}
+                                        />
+                                      </button>
+                                    )}
                                     <AnimatePresence>
                                       {activeSubmenu === subItem.name && (
                                         <motion.div

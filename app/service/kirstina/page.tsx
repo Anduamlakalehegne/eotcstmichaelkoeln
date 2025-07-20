@@ -9,7 +9,7 @@ export default function KirstinaPage() {
   const [language, setLanguage] = useState<"en" | "am">("am")
 
   return (
-    <div className="container mx-auto px-4 pb-12">
+    <div className="container mx-auto px-4 pb-12 text-justify">
       <div className="mb-6 flex justify-end">
         <div className="flex items-center gap-2 rounded-lg border p-1">
           {/* <Button

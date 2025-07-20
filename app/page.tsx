@@ -106,7 +106,7 @@ export default function Home() {
             <div className="container mx-auto px-2">
               <div className="max-w-3xl mx-auto text-center">
                 <div className="text-4xl md:text-8xl text-white/20 font-serif mb-3">"</div>
-                <p className="text-sm md:text-lg text-white font-light leading-relaxed mb-6 md:mb-8">
+                <p className="text-sm md:text-lg text-white font-light leading-relaxed mb-6 md:mb-8 text-justify">
                   "የዚህ አጥቢያ መመሥረት ቤተ ክርስቲያን በሀገረ ጀርመንም ይሁን በመላው አውሮፓ ለደረሰችበት ደረጃ መሠረት የጣለ ነበር። ሊቀ ካህናት ዶ/ር መርዓዊ ተበጀ ከጀርመን አልፎ እንደ ጣልያን፣ ስዊድንና ፈረንሳይ የመሳሰሉት ሀገራት ቤተ ክርስቲያን ትመሠረት ዘንድ የተሳካ ሐዋርያዊ ጉዞ ያደረጉት ከዚህ አጥቢያ ቤተ ክርስቲያን በመነሣት ነበር። በመኾኑም ዛሬ የአንጋፋውን የርእሰ አድባራት ኮለኝ ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ክብረ በዓል ስናከብር የምናዘክረው በጀርመንና በተለያዩ የአውሮፓ ሀገራት የተስፋፋችው የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን በሀገረ ጀርመን ኹነኛ መዋቅሯን ዘርግታ መንቀሳቀስ የጀመረችበትን መኾኑን መገንዘብ ያስፈልጋል።"
                 </p>
                 <p className="text-xs md:text-base text-white font-medium">- ብፁእ አቡነ ዲዮናስዮስ፥ በኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን የጀርመንና አካባቢው እና የምሥራቅ ጎጃም አህጉረ ስብከት ሊቀ ጳጳስ</p>
