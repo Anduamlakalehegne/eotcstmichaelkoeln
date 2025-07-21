@@ -11,8 +11,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { supabaseClient } from "@/lib/supabase-client"
 import type { Archive } from "@/lib/supabase"
+import { useLocale } from "@/contexts/locale-context"
+import { useMemo } from "react"
 
 export default function ArchivePage() {
+  const { locale } = useLocale();
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [archiveItems, setArchiveItems] = useState<Archive[]>([])
@@ -24,6 +27,40 @@ export default function ArchivePage() {
   const [selectedItem, setSelectedItem] = useState<Archive | null>(null)
   const [activeTab, setActiveTab] = useState("grid")
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+
+  // Amharic and English labels
+  const allYearLabel = locale === "am" ? "ሁሉም ዓመታት" : "All Years";
+  const allCategoryLabel = locale === "am" ? "ሁሉም ምድቦች" : "All Categories";
+  const allTypeLabel = locale === "am" ? "ሁሉም አይነቶች" : "All Types";
+  const searchLabel = locale === "am" ? "ፈልግ" : "Search";
+  const filtersLabel = locale === "am" ? "ፊልተሮች" : "Filters";
+  const clearFiltersLabel = locale === "am" ? "ፊልተሮችን አጥፋ" : "Clear Filters";
+  const yearLabel = locale === "am" ? "ዓመት" : "Year";
+  const categoryLabel = locale === "am" ? "ምድብ" : "Category";
+  const typeLabel = locale === "am" ? "አይነት" : "Type";
+  const archiveTitle = locale === "am" ? "የቤተክርስቲያን ማህደር" : "Church Archive";
+  const archiveDesc = locale === "am" ? "የቤተክርስቲያን ታሪካዊ ፎቶዎችና ሰነዶችን ያስሱ" : "Explore our historical photos and documents";
+  const noItemsLabel = locale === "am" ? "ምንም ማህደር አልተገኘም" : "No archive items found with the current filters.";
+  // Category/type translation maps
+  const categoryTranslations: Record<string, string> = {
+    "Historical": "ታሪካዊ",
+    "Administrative": "አስተዳደራዊ",
+    "Worship": "መስገጃ",
+    "Community": "ማህበረሰብ",
+    "Construction": "ሥራ አዳራሽ",
+    "Sacraments": "ቅዳሴዎች",
+    "Holidays": "በዓላት",
+    "Youth": "ወጣቶች",
+    "All Categories": allCategoryLabel
+  };
+  const typeTranslations: Record<string, string> = {
+    "document": locale === "am" ? "ሰነድ" : "Document",
+    "photo": locale === "am" ? "ፎቶ" : "Photo",
+    "image": locale === "am" ? "ምስል" : "Image",
+    "All Types": allTypeLabel
+  };
+  const translateCategory = (cat: string) => locale === "am" ? (categoryTranslations[cat] || cat) : cat;
+  const translateType = (type: string) => locale === "am" ? (typeTranslations[type] || type) : (type.charAt(0).toUpperCase() + type.slice(1));
 
   // Fetch archive items
   useEffect(() => {
@@ -135,14 +172,14 @@ export default function ArchivePage() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Church Archive</h1>
-          <p className="text-gray-600">Explore our historical photos and documents</p>
+          <h1 className="text-3xl font-bold mb-2">{archiveTitle}</h1>
+          <p className="text-gray-600">{archiveDesc}</p>
         </div>
 
         <div className="flex items-center gap-2">
           <Button variant="outline" className="flex items-center gap-2" onClick={() => setIsFilterOpen(!isFilterOpen)}>
             <Filter size={16} />
-            Filters
+            {filtersLabel}
             <ChevronDown size={16} className={`transition-transform ${isFilterOpen ? "rotate-180" : ""}`} />
           </Button>
 
@@ -177,11 +214,11 @@ export default function ArchivePage() {
           >
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
-                <label className="text-sm font-medium mb-1 block">Search</label>
+                <label className="text-sm font-medium mb-1 block">{searchLabel}</label>
                 <div className="relative">
                   <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                   <Input
-                    placeholder="Search archives..."
+                    placeholder={searchLabel}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-8"
@@ -190,60 +227,54 @@ export default function ArchivePage() {
               </div>
 
               <div>
-                <label className="text-sm font-medium mb-1 block">Year</label>
+                <label className="text-sm font-medium mb-1 block">{yearLabel}</label>
                 <Select
                   value={selectedYear || "all-years"}
                   onValueChange={(value) => setSelectedYear(value === "all-years" ? null : value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select year" />
+                    <SelectValue placeholder={yearLabel} />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all-years">All Years</SelectItem>
+                  <SelectContent className="max-h-60 overflow-y-auto">
+                    <SelectItem value="all-years">{allYearLabel}</SelectItem>
                     {years.map((year) => (
-                      <SelectItem key={year} value={year}>
-                        {year}
-                      </SelectItem>
+                      <SelectItem key={year} value={year}>{year}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <label className="text-sm font-medium mb-1 block">Category</label>
+                <label className="text-sm font-medium mb-1 block">{categoryLabel}</label>
                 <Select
                   value={selectedCategory || "all-categories"}
                   onValueChange={(value) => setSelectedCategory(value === "all-categories" ? null : value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
+                    <SelectValue placeholder={categoryLabel} />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all-categories">All Categories</SelectItem>
+                  <SelectContent className="max-h-60 overflow-y-auto">
+                    <SelectItem value="all-categories">{allCategoryLabel}</SelectItem>
                     {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
+                      <SelectItem key={category} value={category}>{translateCategory(category)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <label className="text-sm font-medium mb-1 block">Type</label>
+                <label className="text-sm font-medium mb-1 block">{typeLabel}</label>
                 <Select
                   value={selectedType || "all-types"}
                   onValueChange={(value) => setSelectedType(value === "all-types" ? null : value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
+                    <SelectValue placeholder={typeLabel} />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all-types">All Types</SelectItem>
+                  <SelectContent className="max-h-60 overflow-y-auto">
+                    <SelectItem value="all-types">{allTypeLabel}</SelectItem>
                     {types.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </SelectItem>
+                      <SelectItem key={type} value={type}>{translateType(type)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -253,7 +284,7 @@ export default function ArchivePage() {
             <div className="flex justify-end mt-4">
               <Button variant="outline" onClick={clearFilters} className="flex items-center gap-2">
                 <X size={16} />
-                Clear Filters
+                {clearFiltersLabel}
               </Button>
             </div>
           </motion.div>
@@ -296,11 +327,11 @@ export default function ArchivePage() {
                   <div className="flex items-center gap-2 mb-2">
                     <Badge variant="outline" className="flex items-center gap-1">
                       {getTypeIcon(item.type)}
-                      {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
+                      {translateType(item.type)}
                     </Badge>
                     <Badge variant="outline" className="flex items-center gap-1">
                       {getCategoryIcon(item.category)}
-                      {item.category}
+                      {translateCategory(item.category)}
                     </Badge>
                   </div>
                   <h3 className="font-bold text-lg mb-1">{item.title}</h3>
@@ -311,184 +342,186 @@ export default function ArchivePage() {
           </div>
         ) : (
           <div className="text-center py-12 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">No archive items found with the current filters.</p>
+            <p className="text-gray-500">{noItemsLabel}</p>
             <Button variant="outline" onClick={clearFilters} className="mt-4">
-              Clear Filters
+              {clearFiltersLabel}
             </Button>
           </div>
         )
       ) : // Timeline View
-      filteredItems.length > 0 ? (
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gray-300 transform md:translate-x-[-0.5px]"></div>
+        filteredItems.length > 0 ? (
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gray-300 transform md:translate-x-[-0.5px]"></div>
 
-          <div className="space-y-12">
-            {years
-              .filter((year) => filteredItems.some((item) => item.year === year))
-              .map((year, yearIndex) => (
-                <div key={year} className="relative">
-                  {/* Year marker */}
-                  <div className="flex items-center mb-6 relative z-10">
-                    <div className="md:w-1/2 pr-4 md:text-right hidden md:block">
-                      {yearIndex % 2 === 0 && <h3 className="text-2xl font-bold text-blue-600">{year}</h3>}
+            <div className="space-y-12">
+              {years
+                .filter((year) => filteredItems.some((item) => item.year === year))
+                .map((year, yearIndex) => (
+                  <div key={year} className="relative">
+                    {/* Year marker */}
+                    <div className="flex items-center mb-6 relative z-10">
+                      <div className="md:w-1/2 pr-4 md:text-right hidden md:block">
+                        {yearIndex % 2 === 0 && <h3 className="text-2xl font-bold text-blue-600">{year}</h3>}
+                      </div>
+                      <div className="h-6 w-6 rounded-full bg-blue-600 border-4 border-white shadow-sm"></div>
+                      <div className="md:w-1/2 pl-4">
+                        {yearIndex % 2 !== 0 && <h3 className="text-2xl font-bold text-blue-600 md:hidden">{year}</h3>}
+                        {yearIndex % 2 === 0 && <h3 className="text-2xl font-bold text-blue-600 md:hidden">{year}</h3>}
+                        {yearIndex % 2 !== 0 && (
+                          <h3 className="text-2xl font-bold text-blue-600 hidden md:block">{year}</h3>
+                        )}
+                      </div>
                     </div>
-                    <div className="h-6 w-6 rounded-full bg-blue-600 border-4 border-white shadow-sm"></div>
-                    <div className="md:w-1/2 pl-4">
-                      {yearIndex % 2 !== 0 && <h3 className="text-2xl font-bold text-blue-600 md:hidden">{year}</h3>}
-                      {yearIndex % 2 === 0 && <h3 className="text-2xl font-bold text-blue-600 md:hidden">{year}</h3>}
-                      {yearIndex % 2 !== 0 && (
-                        <h3 className="text-2xl font-bold text-blue-600 hidden md:block">{year}</h3>
-                      )}
-                    </div>
-                  </div>
 
-                  {/* Year items */}
-                  <div className="space-y-6">
-                    {filteredItems
-                      .filter((item) => item.year === year)
-                      .map((item, itemIndex) => (
-                        <div key={item.id} className="relative">
-                          <div className="flex flex-col md:flex-row items-start">
-                            <div className="md:w-1/2 pr-4 md:text-right hidden md:block">
-                              {itemIndex % 2 === 0 && (
-                                <motion.div
-                                  whileHover={{ scale: 1.02 }}
-                                  className="bg-white p-4 rounded-lg shadow-md inline-block cursor-pointer"
-                                  onClick={() => setSelectedItem(item)}
-                                >
-                                  <div className="flex justify-end mb-2">
-                                    <Badge variant="outline" className="flex items-center gap-1">
-                                      {getTypeIcon(item.type)}
-                                      {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
-                                    </Badge>
-                                  </div>
-                                  <h4 className="font-bold mb-1">{item.title}</h4>
-                                  <p className="text-sm text-gray-600">{item.description}</p>
-                                </motion.div>
-                              )}
-                            </div>
-                            <div className="h-4 w-4 rounded-full bg-gray-300 border-2 border-white absolute left-[-2px] md:left-1/2 transform md:translate-x-[-50%] mt-2"></div>
-                            <div className="md:w-1/2 pl-4">
-                              {itemIndex % 2 !== 0 && (
-                                <motion.div
-                                  whileHover={{ scale: 1.02 }}
-                                  className="bg-white p-4 rounded-lg shadow-md inline-block cursor-pointer md:hidden"
-                                  onClick={() => setSelectedItem(item)}
-                                >
-                                  <div className="flex justify-start mb-2">
-                                    <Badge variant="outline" className="flex items-center gap-1">
-                                      {getTypeIcon(item.type)}
-                                      {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
-                                    </Badge>
-                                  </div>
-                                  <h4 className="font-bold mb-1">{item.title}</h4>
-                                  <p className="text-sm text-gray-600">{item.description}</p>
-                                </motion.div>
-                              )}
-                              {itemIndex % 2 === 0 && (
-                                <motion.div
-                                  whileHover={{ scale: 1.02 }}
-                                  className="bg-white p-4 rounded-lg shadow-md inline-block cursor-pointer md:hidden"
-                                  onClick={() => setSelectedItem(item)}
-                                >
-                                  <div className="flex justify-start mb-2">
-                                    <Badge variant="outline" className="flex items-center gap-1">
-                                      {getTypeIcon(item.type)}
-                                      {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
-                                    </Badge>
-                                  </div>
-                                  <h4 className="font-bold mb-1">{item.title}</h4>
-                                  <p className="text-sm text-gray-600">{item.description}</p>
-                                </motion.div>
-                              )}
-                              {itemIndex % 2 !== 0 && (
-                                <motion.div
-                                  whileHover={{ scale: 1.02 }}
-                                  className="bg-white p-4 rounded-lg shadow-md inline-block cursor-pointer hidden md:block"
-                                  onClick={() => setSelectedItem(item)}
-                                >
-                                  <div className="flex justify-start mb-2">
-                                    <Badge variant="outline" className="flex items-center gap-1">
-                                      {getTypeIcon(item.type)}
-                                      {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
-                                    </Badge>
-                                  </div>
-                                  <h4 className="font-bold mb-1">{item.title}</h4>
-                                  <p className="text-sm text-gray-600">{item.description}</p>
-                                </motion.div>
-                              )}
+                    {/* Year items */}
+                    <div className="space-y-6">
+                      {filteredItems
+                        .filter((item) => item.year === year)
+                        .map((item, itemIndex) => (
+                          <div key={item.id} className="relative">
+                            <div className="flex flex-col md:flex-row items-start">
+                              <div className="md:w-1/2 pr-4 md:text-right hidden md:block">
+                                {itemIndex % 2 === 0 && (
+                                  <motion.div
+                                    whileHover={{ scale: 1.02 }}
+                                    className="bg-white p-4 rounded-lg shadow-md inline-block cursor-pointer"
+                                    onClick={() => setSelectedItem(item)}
+                                  >
+                                    <div className="flex justify-end mb-2">
+                                      <Badge variant="outline" className="flex items-center gap-1">
+                                        {getTypeIcon(item.type)}
+                                        {translateType(item.type)}
+                                      </Badge>
+                                    </div>
+                                    <h4 className="font-bold mb-1">{item.title}</h4>
+                                    <p className="text-sm text-gray-600">{item.description}</p>
+                                  </motion.div>
+                                )}
+                              </div>
+                              <div className="h-4 w-4 rounded-full bg-gray-300 border-2 border-white absolute left-[-2px] md:left-1/2 transform md:translate-x-[-50%] mt-2"></div>
+                              <div className="md:w-1/2 pl-4">
+                                {itemIndex % 2 !== 0 && (
+                                  <motion.div
+                                    whileHover={{ scale: 1.02 }}
+                                    className="bg-white p-4 rounded-lg shadow-md inline-block cursor-pointer md:hidden"
+                                    onClick={() => setSelectedItem(item)}
+                                  >
+                                    <div className="flex justify-start mb-2">
+                                      <Badge variant="outline" className="flex items-center gap-1">
+                                        {getTypeIcon(item.type)}
+                                        {translateType(item.type)}
+                                      </Badge>
+                                    </div>
+                                    <h4 className="font-bold mb-1">{item.title}</h4>
+                                    <p className="text-sm text-gray-600">{item.description}</p>
+                                  </motion.div>
+                                )}
+                                {itemIndex % 2 === 0 && (
+                                  <motion.div
+                                    whileHover={{ scale: 1.02 }}
+                                    className="bg-white p-4 rounded-lg shadow-md inline-block cursor-pointer md:hidden"
+                                    onClick={() => setSelectedItem(item)}
+                                  >
+                                    <div className="flex justify-start mb-2">
+                                      <Badge variant="outline" className="flex items-center gap-1">
+                                        {getTypeIcon(item.type)}
+                                        {translateType(item.type)}
+                                      </Badge>
+                                    </div>
+                                    <h4 className="font-bold mb-1">{item.title}</h4>
+                                    <p className="text-sm text-gray-600">{item.description}</p>
+                                  </motion.div>
+                                )}
+                                {itemIndex % 2 !== 0 && (
+                                  <motion.div
+                                    whileHover={{ scale: 1.02 }}
+                                    className="bg-white p-4 rounded-lg shadow-md inline-block cursor-pointer hidden md:block"
+                                    onClick={() => setSelectedItem(item)}
+                                  >
+                                    <div className="flex justify-start mb-2">
+                                      <Badge variant="outline" className="flex items-center gap-1">
+                                        {getTypeIcon(item.type)}
+                                        {translateType(item.type)}
+                                      </Badge>
+                                    </div>
+                                    <h4 className="font-bold mb-1">{item.title}</h4>
+                                    <p className="text-sm text-gray-600">{item.description}</p>
+                                  </motion.div>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">No archive items found with the current filters.</p>
-          <Button variant="outline" onClick={clearFilters} className="mt-4">
-            Clear Filters
-          </Button>
-        </div>
-      )}
+        ) : (
+          <div className="text-center py-12 bg-gray-50 rounded-lg">
+            <p className="text-gray-500">{noItemsLabel}</p>
+            <Button variant="outline" onClick={clearFilters} className="mt-4">
+              {clearFiltersLabel}
+            </Button>
+          </div>
+        )}
 
       {/* Item Detail Dialog */}
       <Dialog open={!!selectedItem} onOpenChange={() => setSelectedItem(null)}>
         <DialogContent className="sm:max-w-[700px]">
           <DialogHeader>
-            <DialogTitle>{selectedItem?.title}</DialogTitle>
-            <DialogDescription>{selectedItem?.description}</DialogDescription>
+            <DialogTitle>{selectedItem?.title || ""}</DialogTitle>
+            <DialogDescription>{selectedItem?.description || ""}</DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col md:flex-row gap-6 mt-4">
-            <div className="relative h-[300px] w-full md:w-1/2 rounded-lg overflow-hidden">
-              <Image
-                src={selectedItem?.image_url || "/placeholder.svg"}
-                alt={selectedItem?.title || "Archive item"}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="w-full md:w-1/2 space-y-4">
-              <div>
-                <h4 className="text-sm font-medium text-gray-500">Year</h4>
-                <p>{selectedItem?.year}</p>
+          {selectedItem && (
+            <div className="flex flex-col md:flex-row gap-6 mt-4">
+              <div className="relative h-[300px] w-full md:w-1/2 rounded-lg overflow-hidden">
+                <Image
+                  src={selectedItem.image_url || "/placeholder.svg"}
+                  alt={selectedItem.title || "Archive item"}
+                  fill
+                  className="object-cover"
+                />
               </div>
-              <div>
-                <h4 className="text-sm font-medium text-gray-500">Type</h4>
-                <p className="flex items-center gap-2">
-                  {selectedItem && getTypeIcon(selectedItem.type)}
-                  {selectedItem?.type.charAt(0).toUpperCase() + selectedItem?.type.slice(1)}
-                </p>
-              </div>
-              <div>
-                <h4 className="text-sm font-medium text-gray-500">Category</h4>
-                <p className="flex items-center gap-2">
-                  {selectedItem && getCategoryIcon(selectedItem.category)}
-                  {selectedItem?.category}
-                </p>
-              </div>
-              {selectedItem?.tags && selectedItem.tags.length > 0 && (
-              <div>
-                <h4 className="text-sm font-medium text-gray-500">Tags</h4>
-                <div className="flex flex-wrap gap-2 mt-1">
-                    {selectedItem.tags.map((tag: string) => (
-                    <Badge key={tag} variant="secondary">
-                      {tag}
-                    </Badge>
-                  ))}
+              <div className="w-full md:w-1/2 space-y-4">
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500">{yearLabel}</h4>
+                  <p>{selectedItem.year}</p>
                 </div>
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500">{typeLabel}</h4>
+                  <p className="flex items-center gap-2">
+                    {getTypeIcon(selectedItem.type)}
+                    {translateType(selectedItem.type)}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500">{categoryLabel}</h4>
+                  <p className="flex items-center gap-2">
+                    {getCategoryIcon(selectedItem.category)}
+                    {translateCategory(selectedItem.category)}
+                  </p>
+                </div>
+                {selectedItem.tags && selectedItem.tags.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500">Tags</h4>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {selectedItem.tags.map((tag: string) => (
+                        <Badge key={tag} variant="secondary">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <Button className="flex items-center gap-2 w-full">
+                  <Download size={16} />
+                  Download {selectedItem.type === "document" ? (locale === "am" ? "ሰነድ" : "Document") : (locale === "am" ? "ፎቶ" : "Image")}
+                </Button>
               </div>
-              )}
-              <Button className="flex items-center gap-2 w-full">
-                <Download size={16} />
-                Download {selectedItem?.type === "document" ? "Document" : "Image"}
-              </Button>
             </div>
-          </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

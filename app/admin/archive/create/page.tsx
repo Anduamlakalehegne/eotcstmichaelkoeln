@@ -11,11 +11,32 @@ import { ImageUpload } from "@/components/image-upload"
 import { Loader2, ArrowLeft, FileText, Upload } from "lucide-react"
 import { supabaseClient } from "@/lib/supabase-client"
 import { toast } from "sonner"
+import { useLocale } from "@/contexts/locale-context"
 
-const categories = ["Historical", "Administrative", "Worship", "Community", "Construction", "Sacraments", "Holidays", "Youth"]
+const categories = [
+  "Historical",
+  "Administrative",
+  "Worship",
+  "Community",
+  "Construction",
+  "Sacraments",
+  "Holidays",
+  "Youth"
+]
+const categoryTranslations: Record<string, string> = {
+  "Historical": "ታሪካዊ",
+  "Administrative": "አስተዳደራዊ",
+  "Worship": "መስገጃ",
+  "Community": "ማህበረሰብ",
+  "Construction": "ሥራ አዳራሽ",
+  "Sacraments": "ቅዳሴዎች",
+  "Holidays": "በዓላት",
+  "Youth": "ወጣቶች"
+};
 const allowedDocumentTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
 
 export default function CreateArchivePage() {
+  const { locale } = useLocale();
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -204,18 +225,22 @@ export default function CreateArchivePage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="category">Category *</Label>
+              <Label htmlFor="category">{locale === "am" ? "ምድብ *" : "Category *"}</Label>
               <Select
                 value={formData.category}
                 onValueChange={(value) => setFormData({ ...formData, category: value })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue placeholder={locale === "am" ? "ምድብ ይምረጡ" : "Select category"}>
+                    {locale === "am"
+                      ? categoryTranslations[formData.category] || formData.category
+                      : formData.category}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
                     <SelectItem key={category} value={category}>
-                      {category}
+                      {locale === "am" ? (categoryTranslations[category] || category) : category}
                     </SelectItem>
                   ))}
                 </SelectContent>

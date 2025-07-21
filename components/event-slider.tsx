@@ -163,7 +163,7 @@ export default function EventSlider() {
   const pageCount = Math.ceil(filteredEvents.length / eventsPerPage)
 
   if (loading) {
-    return <div className="text-center">ተግባራዊ ክስተቶችን በመጫን ላይ...</div>
+    return <div className="text-center">ተግባራዊ ዝግጅቶችን በመጫን ላይ...</div>
   }
 
   if (error) {
@@ -187,12 +187,12 @@ export default function EventSlider() {
   if (!hasUpcomingEvents && eventType === "upcoming") {
     return (
       <div className="text-center space-y-4">
-        <p className="text-gray-500 text-lg">ምንም የሚመጡ ክስተቶች አልተገኙም</p>
+        <p className="text-gray-500 text-lg">ምንም የሚመጡ ዝግጅቶች አልተገኙም</p>
         <button
           onClick={() => setEventType("past")}
           className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
         >
-          የተያረፉትን ክስተቶች ይመልከቱ
+          የተያረፉትን ዝግጅቶች ይመልከቱ
         </button>
       </div>
     )

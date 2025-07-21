@@ -5,6 +5,7 @@ import { supabaseClient } from "@/lib/supabase-client"
 import { PhotoPreview } from "@/components/PhotoPreview"
 import Image from "next/image"
 import { Loader2, Folder, ArrowLeft } from "lucide-react"
+import { useLocale } from "@/contexts/locale-context"
 
 interface Photo {
   id: number
@@ -26,6 +27,7 @@ interface FolderType {
 }
 
 export default function PhotosPage() {
+  const { locale } = useLocale();
   const [photos, setPhotos] = useState<Photo[]>([])
   const [folders, setFolders] = useState<FolderType[]>([])
   const [currentFolder, setCurrentFolder] = useState<FolderType | null>(null)
@@ -133,12 +135,13 @@ export default function PhotosPage() {
             <ArrowLeft className="h-4 w-4 mr-1" /> Back
           </button>
         )}
-        <h1 className="text-3xl font-bold text-center flex-1">Photo Gallery</h1>
+        <h1 className="text-3xl font-bold text-center flex-1">{locale === "am" ? "የፎቶ ማህደር" : "Photo Gallery"}</h1>
       </div>
 
       {/* Folders */}
       {folders.length > 0 && (
         <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">{locale === "am" ? "ፎልደሮች" : "Folders"}</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {folders.map(folder => (
               <div key={folder.id} className="flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-gray-50" onClick={() => handleOpenFolder(folder)}>

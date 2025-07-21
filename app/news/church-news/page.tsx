@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Search, Grid, List, Filter, ArrowUpRight, Loader2 } from "lucide-react"
@@ -30,23 +30,34 @@ export default function ChurchNewsPage() {
   const [selectedMonth, setSelectedMonth] = useState<string>("All")
   const [filteredNews, setFilteredNews] = useState<News[]>([])
   const [allNews, setAllNews] = useState<News[]>([])
-  const [categories, setCategories] = useState<string[]>(["All"])
   const [years, setYears] = useState<string[]>(["All"])
-  const [months] = useState<string[]>([
+  // Amharic and English months
+  const amMonths = [
+    "መስከረም", "ጥቅምት", "ኅዳር", "ታኅሣሥ", "ጥር", "የካቲት", "መጋቢት", "ሚያዝያ", "ግንቦት", "ሰኔ", "ሀምሌ", "ነሐሴ"
+  ];
+  const enMonths = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  // Correct mapping from Gregorian month index to Amharic month
+  const gregorianToAmharicMonth = [
+    4, // Jan → ጥር
+    5, // Feb → የካቲት
+    6, // Mar → መጋቢት
+    7, // Apr → ሚያዝያ
+    8, // May → ግንቦት
+    9, // Jun → ሰኔ
+    10, // Jul → ሀምሌ
+    11, // Aug → ነሐሴ
+    0, // Sep → መስከረም
+    1, // Oct → ጥቅምት
+    2, // Nov → ኅዳር
+    3, // Dec → ታኅሣሥ
+  ];
+  const months = useMemo(() => [
     "All",
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ])
+    ...(locale === "am" ? amMonths : enMonths)
+  ], [locale]);
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest")
   const [activeTab, setActiveTab] = useState<"all" | "featured">("all")
   const [loading, setLoading] = useState(true)
@@ -70,15 +81,15 @@ export default function ChurchNewsPage() {
           year: "ዓመት",
           month: "ወር",
           sortBy: "በየትኛው እንደሚደርጉ",
-          newestFirst: "አዲሶቹ በመጀመሪያ",
-          oldestFirst: "ቆዩት በመጀመሪያ",
+          newestFirst: "አዲሶቹን መጀመሪያ",
+          oldestFirst: "የቆዩትን መጀመሪያ",
           resetFilters: "ፊልተሮችን ዳግም ያዘጋጁ",
           noNews: "ምንም ዜናዎች አልተገኙም",
           tryAdjusting: "ፍለጋዎን ወይም ፊልተሮችዎን ይስሩ",
           clearSearch: "ፍለጋን ያጽዱ",
           readMore: "ተጨማሪ ያንብቡ",
           readFullArticle: "ሙሉውን ጽሑፍ ያንብቡ",
-          featured: "ተስተውሏል",
+          featured: "የተመረጡ",
           allNews: "ሁሉም ዜናዎች",
           by: "በ",
         }
@@ -129,6 +140,24 @@ export default function ChurchNewsPage() {
 
   const t = getTranslations()
 
+  // For translated 'All' labels
+  const allYearLabel = locale === "am" ? "ሁሉም ዓመታት" : "All";
+  const allMonthLabel = locale === "am" ? "ሁሉም ወራቶች" : "All";
+  const allCategoryLabel = locale === "am" ? "ሁሉም ምድቦች" : "All";
+  // Category translation map (add more as needed)
+  const categoryTranslations: Record<string, string> = {
+    "Community": "ማህበረሰብ",
+    "Youth": "ወጣቶች",
+    "Announcements": "ማስታወቂያዎች",
+    "Mesmur": "ሙዚቃ",
+    "Education": "ትምህርት",
+    "Fundraising": "የገንዘብ ማሰባሰቢያ",
+    "Other": "ሌላ",
+    "Blog": "ብሎግ",
+    "All": allCategoryLabel
+  };
+  const translateCategory = (cat: string) => locale === "am" ? (categoryTranslations[cat] || cat) : cat;
+
   // Fetch news data
   useEffect(() => {
     async function fetchNews() {
@@ -142,10 +171,6 @@ export default function ChurchNewsPage() {
         // Filter news based on language
         const languageFilteredData = data.filter((item: News) => item.language === locale)
         setAllNews(languageFilteredData)
-
-        // Extract unique categories
-        const uniqueCategories = ["All", ...new Set(languageFilteredData.map((item: News) => item.category))]
-        setCategories(uniqueCategories as string[])
 
         // Extract unique years
         const uniqueYears = ["All", ...new Set(languageFilteredData.map((item: News) => new Date(item.created_at).getFullYear().toString()))]
@@ -181,18 +206,18 @@ export default function ChurchNewsPage() {
     }
 
     // Filter by category
-    if (selectedCategory !== "All") {
+    if (selectedCategory !== "All" && selectedCategory !== allCategoryLabel) {
       filtered = filtered.filter((item) => item.category === selectedCategory)
     }
 
     // Filter by year
-    if (selectedYear !== "All") {
+    if (selectedYear !== "All" && selectedYear !== allYearLabel) {
       filtered = filtered.filter((item) => new Date(item.created_at).getFullYear().toString() === selectedYear)
     }
 
     // Filter by month
-    if (selectedMonth !== "All") {
-      const monthIndex = months.indexOf(selectedMonth) - 1 // -1 because "All" is at index 0
+    if (selectedMonth !== "All" && selectedMonth !== allMonthLabel) {
+      const monthIndex = months.indexOf(selectedMonth) - 1 // -1 because 'All' is at index 0
       filtered = filtered.filter((item) => new Date(item.created_at).getMonth() === monthIndex)
     }
 
@@ -206,7 +231,7 @@ export default function ChurchNewsPage() {
     setFilteredNews(filtered)
     setTotalPages(Math.ceil(filtered.length / itemsPerPage))
     setCurrentPage(1) // Reset to first page when filters change
-  }, [searchQuery, selectedCategory, selectedYear, selectedMonth, sortOrder, activeTab, allNews, months])
+  }, [searchQuery, selectedCategory, selectedYear, selectedMonth, sortOrder, activeTab, allNews, months, locale])
 
   // Handle pagination
   useEffect(() => {
@@ -302,10 +327,10 @@ export default function ChurchNewsPage() {
                   <SelectTrigger>
                     <SelectValue placeholder={t.category} />
                   </SelectTrigger>
-                  <SelectContent>
-                    {categories.filter(Boolean).map((category) => (
+                  <SelectContent className="max-h-60 overflow-y-auto">
+                    {["All", ...new Set(allNews.map((item: News) => item.category))].filter(Boolean).map((category) => (
                       <SelectItem key={category} value={category}>
-                        {category}
+                        {category === "All" ? allCategoryLabel : translateCategory(category)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -318,10 +343,10 @@ export default function ChurchNewsPage() {
                   <SelectTrigger>
                     <SelectValue placeholder={t.year} />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-60 overflow-y-auto">
                     {years.filter(Boolean).map((year) => (
                       <SelectItem key={year} value={year}>
-                        {year}
+                        {year === "All" ? allYearLabel : year}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -334,10 +359,10 @@ export default function ChurchNewsPage() {
                   <SelectTrigger>
                     <SelectValue placeholder={t.month} />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-60 overflow-y-auto">
                     {months.filter(Boolean).map((month) => (
                       <SelectItem key={month} value={month}>
-                        {month}
+                        {month === "All" ? allMonthLabel : month}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -409,7 +434,7 @@ export default function ChurchNewsPage() {
                     <div className="p-5 flex-1 flex flex-col">
                       <div className="flex items-center justify-between mb-2">
                         <Badge variant="outline" className="text-xs">
-                          {item.category}
+                          {translateCategory(item.category)}
                         </Badge>
                         <span className="text-xs text-gray-500">
                           {new Date(item.created_at).toLocaleDateString()}
@@ -476,7 +501,7 @@ export default function ChurchNewsPage() {
                       </div>
                       <div className="p-6 md:w-2/3">
                         <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                          <Badge variant="outline">{item.category}</Badge>
+                          <Badge variant="outline">{translateCategory(item.category)}</Badge>
                           <span className="text-sm text-gray-500">
                             {new Date(item.created_at).toLocaleDateString()}
                           </span>

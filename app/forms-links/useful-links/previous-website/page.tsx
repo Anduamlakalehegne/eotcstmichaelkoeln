@@ -21,7 +21,7 @@ export default function PreviousWebsitePage() {
             <div className="flex flex-col md:flex-row gap-6 items-center">
               <div className="relative w-full md:w-1/2 aspect-video rounded-lg overflow-hidden border">
                 <Image
-                  src="/placeholder.svg?height=300&width=500"
+                  src="/old-website.jpg"
                   alt="የቀደም ያለው ድህረ ገፅ እይታ"
                   fill
                   className="object-cover"

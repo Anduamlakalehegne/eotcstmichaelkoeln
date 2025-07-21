@@ -22,8 +22,23 @@ import { calculateReadTime } from "@/lib/calculate-read-time"
 import { useToast } from "@/components/ui/use-toast"
 import { useLocale } from "@/contexts/locale-context"
 
-// Sample categories
-const categories = ["Community", "Youth", "Announcements", "Music", "Education", "Fundraising"]
+// Use the same categories as the user-facing news page
+const categories = [
+  "Community",
+  "Youth",
+  "Announcements",
+  "Mesmur",
+  "Education",
+  "Fundraising"
+];
+const categoryTranslations: Record<string, string> = {
+  "Community": "ማህበረሰብ",
+  "Youth": "ወጣቶች",
+  "Announcements": "ማስታወቂያዎች",
+  "Mesmur": "ሙዚቃ",
+  "Education": "ትምህርት",
+  "Fundraising": "የገንዘብ ማሰባሰቢያ"
+};
 
 export default function CreateNewsPage() {
   const router = useRouter()
@@ -309,12 +324,16 @@ export default function CreateNewsPage() {
                 <Label htmlFor="category">{t.categoryLabel} *</Label>
                 <Select value={formData.category} onValueChange={handleSelectChange} required>
                   <SelectTrigger>
-                    <SelectValue placeholder={t.categoryPlaceholder} />
+                    <SelectValue placeholder={t.categoryPlaceholder}>
+                      {locale === "am"
+                        ? categoryTranslations[formData.category] || formData.category
+                        : formData.category}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((category) => (
                       <SelectItem key={category} value={category}>
-                        {category}
+                        {locale === "am" ? (categoryTranslations[category] || category) : category}
                       </SelectItem>
                     ))}
                   </SelectContent>

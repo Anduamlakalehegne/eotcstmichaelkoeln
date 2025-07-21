@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Search, Grid, List, Calendar, Filter, MapPin, Clock, Loader2 } from "lucide-react"
@@ -33,21 +33,33 @@ export default function EventsPage() {
   const [allEvents, setAllEvents] = useState<Event[]>([])
   const [categories, setCategories] = useState<string[]>(["All"])
   const [years, setYears] = useState<string[]>(["All"])
-  const [months] = useState<string[]>([
+  // Amharic and English months
+  const amMonths = [
+    "መስከረም", "ጥቅምት", "ኅዳር", "ታኅሣሥ", "ጥር", "የካቲት", "መጋቢት", "ሚያዝያ", "ግንቦት", "ሰኔ", "ሀምሌ", "ነሐሴ"
+  ];
+  const enMonths = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  // Correct mapping from Gregorian month index to Amharic month
+  const gregorianToAmharicMonth = [
+    4, // Jan → ጥር
+    5, // Feb → የካቲት
+    6, // Mar → መጋቢት
+    7, // Apr → ሚያዝያ
+    8, // May → ግንቦት
+    9, // Jun → ሰኔ
+    10, // Jul → ሀምሌ
+    11, // Aug → ነሐሴ
+    0, // Sep → መስከረም
+    1, // Oct → ጥቅምት
+    2, // Nov → ኅዳር
+    3, // Dec → ታኅሣሥ
+  ];
+  const months = useMemo(() => [
     "All",
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ])
+    ...(locale === "am" ? amMonths : enMonths)
+  ], [locale]);
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -57,6 +69,39 @@ export default function EventsPage() {
   const itemsPerPage = 6
   const [totalPages, setTotalPages] = useState(1)
   const [paginatedEvents, setPaginatedEvents] = useState<Event[]>([])
+
+  // Sync with admin EVENT_CATEGORIES
+  const EVENT_CATEGORIES = [
+    "Church Service",
+    "Holiday",
+    "Community Event",
+    "Prayer Meeting",
+    "Bible Study",
+    "Youth Event",
+    "Children's Event",
+    "Worship Night",
+    "Conference",
+    "Workshop",
+    "Fundraiser",
+    "Other",
+    "All"
+  ];
+  const categoryTranslations: Record<string, string> = {
+    "Church Service": "የቤተክርስቲያን አገልግሎት",
+    "Holiday": "በዓል",
+    "Community Event": "ማህበረሰብ ዝግጅት",
+    "Prayer Meeting": "የጸሎት ስብሰባ",
+    "Bible Study": "የመጽሐፍ ቅዱስ ጥናት",
+    "Youth Event": "የወጣቶች ዝግጅት",
+    "Children's Event": "የህፃናት ዝግጅት",
+    "Worship Night": "የመስገጃ ምሽት",
+    "Conference": "ስብሰባ",
+    "Workshop": "ስልጠና",
+    "Fundraiser": "የገንዘብ ማሰባሰቢያ",
+    "Other": "ሌላ",
+    "All": "ሁሉም"
+  };
+  const translateCategory = (cat: string) => locale === "am" ? (categoryTranslations[cat] || cat) : cat;
 
   // Get translations based on locale
   const getTranslations = () => {
@@ -70,14 +115,14 @@ export default function EventsPage() {
           year: "ዓመት",
           month: "ወር",
           sortBy: "በየትኛው እንደሚደርጉ",
-          upcomingFirst: "የሚመጡ በመጀመሪያ",
-          laterFirst: "የሚቀጥሉ በመጀመሪያ",
+          upcomingFirst: "አዲሶቹን መጀመሪያ",
+          laterFirst: "የቆዩትን መጀመሪያ",
           resetFilters: "ፊልተሮችን ዳግም ያዘጋጁ",
           noEvents: "ምንም ዝግጅቶች አልተገኙም",
           tryAdjusting: "ፍለጋዎን ወይም ፊልተሮችዎን ይስሩ",
           clearSearch: "ፍለጋን ያጽዱ",
           viewDetails: "ዝርዝሮችን ይመልከቱ",
-          featured: "ተስተውሏል",
+          featured: "የተመረጡ",
         }
       case "de":
         return {
@@ -152,6 +197,10 @@ export default function EventsPage() {
     fetchEvents()
   }, [locale])
 
+  // For translated 'All' labels
+  const allYearLabel = locale === "am" ? "ሁሉም ዓመታት" : "All";
+  const allMonthLabel = locale === "am" ? "ሁሉም ወራቶች" : "All";
+
   // Filter and sort events based on search query, category, year, month, and sort order
   useEffect(() => {
     let filtered = [...allEvents]
@@ -172,14 +221,20 @@ export default function EventsPage() {
     }
 
     // Filter by year
-    if (selectedYear !== "All") {
+    if (selectedYear !== "All" && selectedYear !== allYearLabel) {
       filtered = filtered.filter((event) => new Date(event.date).getFullYear().toString() === selectedYear)
     }
 
     // Filter by month
-    if (selectedMonth !== "All") {
-      const monthIndex = months.indexOf(selectedMonth) - 1 // -1 because "All" is at index 0
-      filtered = filtered.filter((event) => new Date(event.date).getMonth() === monthIndex)
+    if (selectedMonth !== "All" && selectedMonth !== allMonthLabel) {
+      filtered = filtered.filter((event) => {
+        const dateObj = new Date(event.date)
+        if (locale === "am") {
+          return amMonths[gregorianToAmharicMonth[dateObj.getMonth()]] === selectedMonth
+        } else {
+          return enMonths[dateObj.getMonth()] === selectedMonth
+        }
+      })
     }
 
     // Sort by date
@@ -192,7 +247,7 @@ export default function EventsPage() {
     setFilteredEvents(filtered)
     setTotalPages(Math.ceil(filtered.length / itemsPerPage))
     setCurrentPage(1) // Reset to first page when filters change
-  }, [searchQuery, selectedCategory, selectedYear, selectedMonth, sortOrder, allEvents, months])
+  }, [searchQuery, selectedCategory, selectedYear, selectedMonth, sortOrder, allEvents, months, locale])
 
   // Handle pagination
   useEffect(() => {
@@ -276,7 +331,7 @@ export default function EventsPage() {
                   <SelectContent>
                     {categories.map((category) => (
                       <SelectItem key={category} value={category}>
-                        {category}
+                        {translateCategory(category)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -292,7 +347,7 @@ export default function EventsPage() {
                   <SelectContent>
                     {years.map((year) => (
                       <SelectItem key={year} value={year}>
-                        {year}
+                        {year === "All" ? allYearLabel : year}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -305,10 +360,10 @@ export default function EventsPage() {
                   <SelectTrigger>
                     <SelectValue placeholder={t.month} />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-60 overflow-y-auto">
                     {months.map((month) => (
                       <SelectItem key={month} value={month}>
-                        {month}
+                        {month === "All" ? allMonthLabel : month}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -378,14 +433,24 @@ export default function EventsPage() {
                     <div className="p-5 flex-1 flex flex-col">
                       <div className="mb-2">
                         <Badge variant="outline" className="text-xs">
-                          {event.category}
+                          {translateCategory(event.category)}
                         </Badge>
                       </div>
                       <h3 className="text-xl font-bold mb-2">{event.title}</h3>
                       <div className="space-y-2 mb-4 text-sm text-gray-600">
                         <div className="flex items-center">
                           <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
-                          <span>{event.date}</span>
+                          <span>{
+                            (() => {
+                              const dateObj = new Date(event.date)
+                              const day = dateObj.getDate().toString().padStart(2, "0")
+                              const year = dateObj.getFullYear().toString()
+                              const month = locale === "am"
+                                ? amMonths[gregorianToAmharicMonth[dateObj.getMonth()]]
+                                : enMonths[dateObj.getMonth()]
+                              return `${day} ${month} ${year}`
+                            })()
+                          }</span>
                         </div>
                         <div className="flex items-center">
                           <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
@@ -456,13 +521,23 @@ export default function EventsPage() {
                       </div>
                       <div className="p-6 md:w-2/3">
                         <div className="flex flex-wrap items-center gap-2 mb-2">
-                          <Badge variant="outline">{event.category}</Badge>
+                          <Badge variant="outline">{translateCategory(event.category)}</Badge>
                         </div>
                         <h3 className="text-xl font-bold mb-2">{event.title}</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 text-sm text-gray-600">
                           <div className="flex items-center">
                             <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
-                            <span>{event.date}</span>
+                            <span>{
+                              (() => {
+                                const dateObj = new Date(event.date)
+                                const day = dateObj.getDate().toString().padStart(2, "0")
+                                const year = dateObj.getFullYear().toString()
+                                const month = locale === "am"
+                                  ? amMonths[gregorianToAmharicMonth[dateObj.getMonth()]]
+                                  : enMonths[dateObj.getMonth()]
+                                return `${day} ${month} ${year}`
+                              })()
+                            }</span>
                           </div>
                           <div className="flex items-center">
                             <Clock className="h-4 w-4 mr-2 flex-shrink-0" />

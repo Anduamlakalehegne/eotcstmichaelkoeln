@@ -255,7 +255,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>የቤተስብ ስም / Familien Name *</FormLabel>
                               <FormControl>
-                                <Input placeholder="Family name" {...field} />
+                                <Input placeholder="የቤተሰብ ስም" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -268,7 +268,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>የተጸውዖ ስም / Vorname *</FormLabel>
                               <FormControl>
-                                <Input placeholder="First name" {...field} />
+                                <Input placeholder="የመጀመሪያ ስም" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -281,7 +281,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>የተጠመቀዉ (ችዉ) ክርስትና ስም / Taufname *</FormLabel>
                               <FormControl>
-                                <Input placeholder="Baptism name" {...field} />
+                                <Input placeholder="የክርስትና ስም" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -294,7 +294,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>የአባት ስም / Name des Vaters *</FormLabel>
                               <FormControl>
-                                <Input placeholder="Father's name" {...field} />
+                                <Input placeholder="የአባት ስም" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -307,7 +307,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>የእናት ስም / Name des Mutter *</FormLabel>
                               <FormControl>
-                                <Input placeholder="Mother's name" {...field} />
+                                <Input placeholder="የእናት ስም" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -320,7 +320,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>የክርስትና አባት (እናት) ስም Godparent's Name *</FormLabel>
                               <FormControl>
-                                <Input placeholder="Godparent's name" {...field} />
+                                <Input placeholder="የክርስትና አባት/እናት ስም" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -333,7 +333,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>ሀገር / Land *</FormLabel>
                               <FormControl>
-                                <Input placeholder="Country" {...field} />
+                                <Input placeholder="ሀገር" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -346,7 +346,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>የተወለደበት ( ችበት) ቦታ / Geburtsadresse *</FormLabel>
                               <FormControl>
-                                <Input placeholder="Birth place" {...field} />
+                                <Input placeholder="የተወለደበት ቦታ" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -359,7 +359,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>የትውልድ ሀገር / Geburtsort *</FormLabel>
                               <FormControl>
-                                <Input placeholder="Birth country" {...field} />
+                                <Input placeholder="የትውልድ ሀገር" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -385,7 +385,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>የተጠመቀበት (ችበት) ቤተ ክርስቲያን / Taufdatum *</FormLabel>
                               <FormControl>
-                                <Input placeholder="Baptism church" {...field} />
+                                <Input placeholder="የቤተ ክርስቲያን ስም" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -411,7 +411,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>ዜግነት / Staatsangehörigkeit *</FormLabel>
                               <FormControl>
-                                <Input placeholder="Nationality" {...field} />
+                                <Input placeholder="ዜግነት" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -424,7 +424,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>አጥማቂው ካህን / Taufe Priester *</FormLabel>
                               <FormControl>
-                                <Input placeholder="Baptizing priest" {...field} />
+                                <Input placeholder="አጥማቂው ካህን" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -437,7 +437,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>ኢሜል/Email *</FormLabel>
                               <FormControl>
-                                <Input type="email" placeholder="your@email.com" {...field} />
+                                <Input type="email" placeholder="ኢሜል" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -450,7 +450,7 @@ Submitted on: ${new Date().toLocaleString()}
                             <FormItem>
                               <FormLabel>Phone *</FormLabel>
                               <FormControl>
-                                <Input placeholder="+49 123 456789" {...field} />
+                                <Input placeholder="ስልክ ቁጥር" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -469,7 +469,7 @@ Submitted on: ${new Date().toLocaleString()}
                               <div className="space-y-1 leading-none">
                                 <FormLabel>የሰጠኋትን መረጃ ትክክለኛነቱን አረጋግጫለሁ *</FormLabel>
                                 <FormDescription>
-                                  የሰጡት መረጃ ትክክለኛና ተሟልቷ መሆኑን ያረጋግጡ።
+                                  የሰጡት መረጃ ትክክለኛና መሆኑን ያረጋግጡ።
                                 </FormDescription>
                               </div>
                               <FormMessage />
