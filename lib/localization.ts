@@ -27,6 +27,11 @@ export interface Translations {
   }
 }
 
+// Helper function to get the current year
+function getCurrentYear() {
+  return new Date().getFullYear();
+}
+
 // English translations
 export const enTranslations: Translations = {
   header: {
@@ -80,7 +85,7 @@ export const enTranslations: Translations = {
     resources: "Resources",
     usefulLink: "Useful Links",
     contactUs: "Contact Us",
-    copyright: "Copyright © 2025 - All rights reserved. Powered by Marefiyatech",
+    copyright: `Copyright © ${getCurrentYear()} - All rights reserved. Powered by Marefiyatech`,
     footerLinks: {
       "ሰንበት ትምህርት ቤት": "Sunday School",
       "በጀርመን ያሉ አብያተ ክርስቲያናት": "Churches in Germany",
@@ -144,7 +149,7 @@ export const amTranslations: Translations = {
     resources: "ጠቃሚ አገናኞች",
     usefulLink: "",
     contactUs: "ያግኙን",
-    copyright: "© ኮሎኝ ኢኦተቤ ቅዱስ ሚካኤል 2025 - መብቱ በህግ የተጠበቀ ነው። በማረፊያቴክ የተዘጋጀ",
+    copyright: `© ቅዱስ ሚካኤል ኢኦተቤ ጀርመን ኮሎኝ ${getCurrentYear()} - መብቱ በህግ የተጠበቀ ነው። በማረፊያቴክ የተዘጋጀ`,
     footerLinks: {
       "ሰንበት ትምህርት ቤት": "ሰንበት ትምህርት ቤት",
       "በጀርመን ያሉ አብያተ ክርስቲያናት": "በጀርመን ያሉ አብያተ ክርስቲያናት",
@@ -208,7 +213,7 @@ export const deTranslations: Translations = {
     resources: "Ressourcen",
     usefulLink: "Nützliche Links",
     contactUs: "Kontaktieren Sie uns",
-    copyright: "Copyright © 2025 - Alle Rechte vorbehalten. Entwickelt von Marefiyatech",
+    copyright: `Copyright © ${getCurrentYear()} - Alle Rechte vorbehalten. Entwickelt von Marefiyatech`,
     footerLinks: {
       "ሰንበት ትምህርት ቤት": "Sonntagsschule",
       "በጀርመን ያሉ አብያተ ክርስቲያናት": "Kirchen in Deutschland",

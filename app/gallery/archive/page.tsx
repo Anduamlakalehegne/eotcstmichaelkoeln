@@ -62,6 +62,9 @@ export default function ArchivePage() {
   const translateCategory = (cat: string) => locale === "am" ? (categoryTranslations[cat] || cat) : cat;
   const translateType = (type: string) => locale === "am" ? (typeTranslations[type] || type) : (type.charAt(0).toUpperCase() + type.slice(1));
 
+  const gridLabel = locale === "am" ? "ወደ ጎን" : "Grid";
+  const timelineLabel = locale === "am" ? "ወደ ታች" : "Timeline";
+
   // Fetch archive items
   useEffect(() => {
     fetchArchiveItems()
@@ -189,14 +192,14 @@ export default function ArchivePage() {
               className="rounded-r-none w-1/2"
               onClick={() => setActiveTab("grid")}
             >
-              Grid
+              {gridLabel}
             </Button>
             <Button
               variant={activeTab === "timeline" ? "default" : "outline"}
               className="rounded-l-none w-1/2"
               onClick={() => setActiveTab("timeline")}
             >
-              Timeline
+              {timelineLabel}
             </Button>
           </div>
         </div>
