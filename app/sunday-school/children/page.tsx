@@ -58,7 +58,7 @@ export default function ChildrenPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <div className="bg-white rounded-lg shadow-lg p-8">
-              <h2 className="text-2xl font-semibold text-blue-600 mb-4">Coming Soon</h2>
+              <h2 className="text-2xl font-semibold text-blue-600 mb-4">{locale === "am" ? "በቅርብ ቀን" : "Coming Soon"}</h2>
               <p className="text-gray-600 mb-6">
                 {getComingSoonText()}
               </p>
