@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Facebook, Instagram, Twitter, Phone, Mail, MapPin } from "lucide-react"
+import { FaFacebook, FaInstagram, FaTiktok, FaTelegram, FaYoutube } from "react-icons/fa6"
 import { useLocale } from "@/contexts/locale-context"
 
 const footerLinks = [
@@ -28,7 +29,7 @@ const contactInfo = {
 }
 
 export default function Footer() {
-  const { translations } = useLocale()
+  const { translations, locale } = useLocale()
 
   return (
     <footer className="bg-[#0a0f2c] text-white">
@@ -132,14 +133,50 @@ export default function Footer() {
                 </Link>
               </p>
               <div className="flex gap-4">
-                <Link href="#" className="hover:text-blue-400 transition-colors">
-                  <Facebook size={20} />
+                <Link
+                  href="https://www.facebook.com/CologneKidusMichael"
+                  className="hover:text-blue-400 transition-colors"
+                  aria-label="Facebook"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaFacebook size={20} />
                 </Link>
-                <Link href="#" className="hover:text-blue-400 transition-colors">
-                  <Instagram size={20} />
+                <Link
+                  href="https://www.youtube.com/@eotcstmichael"
+                  className="hover:text-blue-400 transition-colors"
+                  aria-label="YouTube"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaYoutube size={20} />
                 </Link>
-                <Link href="#" className="hover:text-blue-400 transition-colors">
-                  <Twitter size={20} />
+                <Link
+                  href="https://t.me/colognekidusmichael"
+                  className="hover:text-blue-400 transition-colors"
+                  aria-label="Telegram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaTelegram size={20} />
+                </Link>
+                <Link
+                  href="https://www.tiktok.com/@colognekidusmicha"
+                  className="hover:text-blue-400 transition-colors"
+                  aria-label="TikTok"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaTiktok size={20} />
+                </Link>
+                <Link
+                  href="https://www.instagram.com/colognekidusmichael?igsh=MW9obnFibDNtbzgxaw=="
+                  className="hover:text-blue-400 transition-colors"
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaInstagram size={20} />
                 </Link>
               </div>
             </div>
@@ -162,7 +199,25 @@ export default function Footer() {
       {/* Copyright Section */}
       <div className="border-t border-gray-800 py-4">
         <div className="container mx-auto px-4 text-center text-sm text-gray-400">
-          <p>{translations.footer.copyright}</p>
+          <p
+            dangerouslySetInnerHTML={{
+              __html:
+                (locale === 'en')
+                  ? translations.footer.copyright.replace(
+                      'Powered by Marefiyatech',
+                      '<a href="https://marefiyatech.com" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">Powered by Marefiyatech</a>'
+                    )
+                : (locale === 'am')
+                  ? translations.footer.copyright.replace(
+                      'በማረፊያቴክ የተዘጋጀ',
+                      '<a href="https://marefiyatech.com" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">በማረፊያቴክ የተዘጋጀ</a>'
+                    )
+                : translations.footer.copyright.replace(
+                      'Entwickelt von Marefiyatech',
+                      '<a href="https://marefiyatech.com" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">Entwickelt von Marefiyatech</a>'
+                  ),
+            }}
+          />
         </div>
       </div>
     </footer>

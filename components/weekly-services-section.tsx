@@ -37,7 +37,7 @@ export default function WeeklyServicesSection() {
           </p> */}
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto justify-center">
           {weeklyServices.map((day) => (
             <div
               key={day.day}

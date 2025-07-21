@@ -482,42 +482,20 @@ export default function Header() {
                 <div key={item.name} className="border-b border-gray-100 last:border-0">
                   {item.submenu ? (
                     <div>
-                      {item.name === "Service" ? (
-                        <div className="flex items-center justify-between w-full py-3 text-gray-700 hover:text-blue-600">
-                          <Link
-                            href={item.href}
-                            className="font-medium"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {translateMenuItem(item.name)}
-                          </Link>
-                      <button
-                            className="px-2 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                            onClick={() => setActiveDropdown(activeDropdown === item.name ? null : (item.name as string))}
-                        aria-expanded={activeDropdown === item.name}
-                          >
-                            <ChevronDown
-                              size={16}
-                              className={`transition-transform ${activeDropdown === item.name ? "rotate-180" : ""}`}
-                            />
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-between w-full py-3 text-gray-700 hover:text-blue-600">
-                          <button
-                            className="font-medium"
-                            onClick={() => setActiveDropdown(activeDropdown === item.name ? null : (item.name as string))}
-                            aria-expanded={activeDropdown === item.name}
-                            aria-haspopup="true"
-                      >
-                        {translateMenuItem(item.name)}
-                        <ChevronDown
-                          size={16}
-                          className={`transition-transform ${activeDropdown === item.name ? "rotate-180" : ""}`}
-                        />
-                      </button>
-                        </div>
-                      )}
+                      <div className="w-full">
+                        <button
+                          className="flex items-center justify-between w-full font-medium text-left py-3"
+                          onClick={() => setActiveDropdown(activeDropdown === item.name ? null : (item.name as string))}
+                          aria-expanded={activeDropdown === item.name}
+                          aria-haspopup="true"
+                        >
+                          {translateMenuItem(item.name)}
+                          <ChevronDown
+                            size={16}
+                            className={`transition-transform ${activeDropdown === item.name ? "rotate-180" : ""}`}
+                          />
+                        </button>
+                      </div>
                       <AnimatePresence>
                         {activeDropdown === item.name && (
                           <motion.div
@@ -530,37 +508,26 @@ export default function Header() {
                             {item.submenu.map((subItem) => (
                               <div key={subItem.name}>
                                 {subItem.submenu ? (
-                                  <>
-                                    {['Forms', 'Useful Links'].includes(subItem.name) ? (
-                                      <span className="flex items-center gap-2 py-2 text-sm text-gray-700 hover:text-blue-600 transition-colors cursor-pointer">
+                                  <div className="w-full">
+                                    <button
+                                      className="flex items-center justify-between w-full text-sm text-gray-700 hover:text-blue-600 py-2"
+                                      onClick={() => setActiveSubmenu(activeSubmenu === subItem.name ? null : subItem.name)}
+                                      aria-expanded={activeSubmenu === subItem.name}
+                                    >
+                                      <span className="flex items-center gap-2">
                                         {subItem.icon && <subItem.icon size={16} />}
                                         {translateSubMenuItem(subItem.name)}
                                       </span>
-                                    ) : (
-                                      <button
-                                        className="flex items-center justify-between w-full py-2 text-sm text-gray-700 hover:text-blue-600"
-                                        onClick={() =>
-                                          setActiveSubmenu(activeSubmenu === subItem.name ? null : subItem.name)
-                                        }
-                                        aria-expanded={activeSubmenu === subItem.name}
-                                      >
-                                        <span className="flex items-center gap-2">
-                                          {subItem.icon && <subItem.icon size={16} />}
-                                          {translateSubMenuItem(subItem.name)}
-                                        </span>
-                                        <ChevronDown
-                                          size={14}
-                                          className={`transition-transform ${
-                                            activeSubmenu === subItem.name ? "rotate-180" : ""
-                                          }`}
-                                        />
-                                      </button>
-                                    )}
+                                      <ChevronDown
+                                        size={14}
+                                        className={`transition-transform ${activeSubmenu === subItem.name ? "rotate-180" : ""}`}
+                                      />
+                                    </button>
                                     <AnimatePresence>
                                       {activeSubmenu === subItem.name && (
                                         <motion.div
                                           initial={{ opacity: 0, height: 0 }}
-                                          animate={{ opacity: 1, height: "auto" }}
+                                          animate={{ opacity: 1, height: 'auto' }}
                                           exit={{ opacity: 0, height: 0 }}
                                           transition={{ duration: 0.2 }}
                                           className="pl-4 border-l-2 border-blue-100 ml-2"
@@ -578,7 +545,7 @@ export default function Header() {
                                         </motion.div>
                                       )}
                                     </AnimatePresence>
-                                  </>
+                                  </div>
                                 ) : (
                                   <Link
                                     href={subItem.href}
@@ -606,7 +573,7 @@ export default function Header() {
                 </div>
               ))}
               <Link
-                href="/donate"
+                href="/forms-links/bank-details"
                 className="block mt-4 px-6 py-2 bg-blue-600 text-white text-center rounded-md hover:bg-blue-700 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >

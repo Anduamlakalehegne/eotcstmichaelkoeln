@@ -7,12 +7,12 @@ const clergyMembers = [
     image: "/IMG_E2338.JPG",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   },
-  {
-    name: "Sample Name",
-    title: "Priest",
-    image: "/IMG_5278.jpg",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
+  // {
+  //   name: "Sample Name",
+  //   title: "Priest",
+  //   image: "/IMG_5278.jpg",
+  //   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  // },
   {
     name: "Sample Name",
     title: "Deacon",
