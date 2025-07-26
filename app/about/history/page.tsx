@@ -52,90 +52,41 @@ export default function HistoryPage() {
           <div className="space-y-12">
             {[
               {
-                year: "1971 – 1973",
-                title: "የጽዋ ማኅበር መቋቋም",
-                description: "በሃይደልበርግ ለከፍተኛ ትምህርት ከኢትዮጵያ በመጡት ካህናት አስተባባሪነት የመጀመሪያው የጽዋ መርሃ ግብር ተጀመረ።",
+                year: "1971-1981",
+                title: "የመጀመሪያው 10 አመታት",
+                description: `1. ከአገር ቤት ለትምህርት የመጡ ሁለት መንፈሳዊ ተማሪዎች፡፡\n2. የመጀመሪያው ቅዳሴ በሃይድል በርግ (ሊ. ካ, መርዓዊ ተበጀ እና ቀሲስ ዘለአለም)\n3. ፓትረያሪክ ብፁህ አቡነ ተክለ ሐይማኖት ጀርመን ሀገር ለጉብኝት በመጡበት ወቅት፣ የመጀመሪያው የቅዱስ ሚካኡል ቤተ ክርስትያን እንዲከፈት ሊካ መርዓዊ ተበጀ ፍቃድ ሲጠየቁ፣\n4. የመጀመሪያው የሰበካ ጉባኤ ምስረታ እና ስብሰባ።\n5. በ 1981-1983 በጀርመን ሐገር ውስጥ የመጀመሪያው የቅዱስ ሚካኤል መንፈሳዊ አግልግሎት።\n ከ1983-1985 ከሃይድልበርግ እየተመላለሱ ሲያገለግሉ፡፡\n ሊ. ካ. መርዓዊ ተበጀ\n 6. ሊ.ካ.መርዓዊ ተበጀ ሌሎችን ካህናት በማስተባበር ከኮሎኝ በመነሳት በጀርመን እና በተለያዩ የአውሮፓ ሃገራት መንፈሳዊ አገልግሎት ሲሰጡ፡፡\n 7. በጀርመን የቴሌቪዥን ጣቢያ WDR ግብዣ የመጡ የቅዱስ ያሬድ ዘማሪያን በኮኒቨርት ቤተክርስትያን ዝማሪ ሲያቀርቡ፡፡`,
                 icon: "Home",
                 color: "bg-blue-100 text-blue-700",
                 image: "",
               },
               {
-                year: "1973 – 1975",
-                title: "",
-                description:
-                  "",
+                year: "1981-1991",
+                title: "ሁለተኛው 10 አመታት",
+                description: `1. በጀርመን አገር ባሉ አብያተ ክርስትያናት ስለ ኢትዬጵያ ኦርቶዶክስ ተዋህዶ ቤተክርስትያን ገለፃ ሲደረግ፡፡\n2. የጀርመን አብያተ ክርስትያናት የሐይማኖት አባቶችን እና አገልጋዬች በኢትዬጵያ ጉብኝት ሲያደርጉ፡\n3. በጀርመን አገር ያሉ ቤተክርስትያኖች የሚገናኙበት ቀን (Kirchen Tag) ላይ ተሳትፎ ሲደረግ::\n4. በኢትዬጵያ ኦርቶዶክስ ተዋህዶ ቤተክርስትያን በአመታዊ የካህናት ስብሰባ ላይ አመታዊ ሪፖርት ሲያቀርቡ፡፡`,
                 icon: "Users",
                 color: "bg-indigo-100 text-indigo-700",
                 image: "",
               },
               {
-                year: "1971 – 1973",
-                title: "",
-                description: "",
+                year: "1991-2001",
+                title: "የሶስተኛው 10 አመታት",
+                description: `1. ቀድሞ ከኢቫንጌሊሽ ቤተክርስትያን መልካም ፍቃድ በጊዚያውነት የተሰጠውን ቤተክርስትያን ግዢ የተፈፀመበት።\n2. የቤተክርስትያን እድሳት ሲደረግ\n3. የመዘምራን አገልግሎት \n4. የ 25 አመት ክብረ በአል ለመጀመሪያ ጊዜ ሲከበር \n5. የ 30 አመት ክብረ በአል`,
                 icon: "BookOpen",
                 color: "bg-purple-100 text-purple-700",
                 image: "",
               },
               {
-                year: "1973 – 1975",
-                title: "",
-                description: "",
+                year: "2001-2011",
+                title: "የመጨረሻው 10 አመታት",
+                description: `1. የተለያዩ መንፈሳዊ አገልግሎቶች፡\n2. በኮሮና ጊዜ ያልተቋረጠ አገልግሎት \n3. ተጨማሪ ቤት እና ቦታ ግዢ `,
                 icon: "Globe",
                 color: "bg-teal-100 text-teal-700",
-                image: "",
-              },
-              {
-                year: "1975 – 1980",
-                title: "",
-                description: "",
-                icon: "Building",
-                color: "bg-amber-100 text-amber-700",
-                image: "",
-              },
-              {
-                year: "1980 – 1985",
-                title: "",
-                description: "",
-                icon: "Building",
-                color: "bg-amber-100 text-amber-700",
-                image: "",
-              },
-              {
-                year: "1985 – 1995",
-                title: "",
-                description: "",
-                icon: "Building",
-                color: "",
-                image: "",
-              },
-              {
-                year: "1995 – 2005",
-                title: "",
-                description: "",
-                icon: "Building",
-                color: "bg-amber-100 text-amber-700",
-                image: "",
-              },
-              {
-                year: "2005 – 2015",
-                title: "",
-                description: "",
-                icon: "Building",
-                color: "bg-amber-100 text-amber-700",
-                image: "",
-              },
-              {
-                year: "2015 – 2025",
-                title: "",
-                description: "",
-                icon: "Building",
-                color: "bg-amber-100 text-amber-700",
                 image: "",
               }
             ].map((period, index) => (
               <div key={index} className="relative">
                 {/* Timeline connector */}
-                {index < 4 && (
+                {index < 3 && (
                   <div className="absolute left-[39px] top-[80px] h-[calc(100%+40px)] w-1 bg-gray-200 z-0 md:left-1/2 md:-ml-0.5"></div>
                 )}
 
@@ -149,7 +100,6 @@ export default function HistoryPage() {
                       {period.icon === "Users" && <Users className="h-5 w-5" />}
                       {period.icon === "BookOpen" && <BookOpen className="h-5 w-5" />}
                       {period.icon === "Globe" && <Globe className="h-5 w-5" />}
-                      {period.icon === "Building" && <Building className="h-5 w-5" />}
                     </div>
                   </div>
 
@@ -160,20 +110,11 @@ export default function HistoryPage() {
                     <div
                       className={`bg-white p-6 rounded-lg shadow-md border-l-4 ${period.color.split(" ")[0].replace("bg-", "border-")} hover:shadow-lg transition-shadow`}
                     >
-                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-3 ${period.color}`}>
+                      {/* <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-3 ${period.color}`}>
                         {period.year}
-                      </span>
+                      </span> */}
                       <h3 className="text-xl font-bold mb-2">{period.title}</h3>
-                      <p className="text-gray-600">{period.description}</p>
-
-                      {/* <div className="mt-4 relative h-40 rounded-md overflow-hidden">
-                        <Image
-                          src={period.image || "/placeholder.svg"}
-                          alt={period.title}
-                          fill
-                          className="object-cover transition-transform hover:scale-105"
-                        />
-                      </div> */}
+                      <p className="text-gray-600 whitespace-pre-line">{period.description}</p>
                     </div>
                   </div>
 
