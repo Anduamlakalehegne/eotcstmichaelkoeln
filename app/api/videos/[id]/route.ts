@@ -36,16 +36,19 @@ export async function PUT(
     const supabase = createClient()
     const body = await request.json()
 
+    // Remove display_order if it exists in the request body
+    const { display_order, ...videoData } = body
+    
     const { data, error } = await supabase
       .from("videos")
       .update({
-        title: body.title,
-        description: body.description,
-        video_url: body.video_url,
-        thumbnail_url: body.thumbnail_url,
-        duration: body.duration,
-        category: body.category,
-        folder_id: body.folder_id,
+        title: videoData.title,
+        description: videoData.description,
+        video_url: videoData.video_url,
+        thumbnail_url: videoData.thumbnail_url,
+        duration: videoData.duration,
+        category: videoData.category,
+        folder_id: videoData.folder_id,
         updated_at: new Date().toISOString(),
       })
       .eq("id", params.id)

@@ -45,11 +45,9 @@ export default function CreateVideoPage() {
     duration: "",
     category: "",
     folder_id: initialFolderId,
-    display_order: 0,
   })
   const [videoInputType, setVideoInputType] = useState<'upload' | 'url'>("upload")
   const [videoPreview, setVideoPreview] = useState<string>("")
-  const [thumbnailInputType, setThumbnailInputType] = useState<'upload' | 'url'>("upload")
   const [thumbnailPreview, setThumbnailPreview] = useState<string>("")
 
   useEffect(() => {
@@ -58,8 +56,7 @@ export default function CreateVideoPage() {
   }, [])
 
   useEffect(() => {
-    // If video source changes, reset thumbnail input type and preview
-    setThumbnailInputType(videoInputType)
+    // Reset thumbnail preview when video input type changes
     setThumbnailPreview("")
     setFormData((prev) => ({ ...prev, thumbnail_url: "" }))
     // eslint-disable-next-line
@@ -158,10 +155,6 @@ export default function CreateVideoPage() {
     }
   }
 
-  const handleThumbnailUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, thumbnail_url: e.target.value })
-    setThumbnailPreview(e.target.value)
-  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -229,15 +222,6 @@ export default function CreateVideoPage() {
                 </Select>
               </div>
             )}
-            <div className="space-y-2">
-              <Label htmlFor="display_order">Display Order</Label>
-              <Input
-                id="display_order"
-                type="number"
-                value={formData.display_order || 0}
-                onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) })}
-              />
-            </div>
             {/* Video Source and Thumbnail sections (as previously enhanced) */}
             <div className="space-y-2">
               <Label>Video Source</Label>
@@ -274,27 +258,18 @@ export default function CreateVideoPage() {
             </div>
             <div className="space-y-2 mt-4">
               <Label>Thumbnail</Label>
-              {thumbnailInputType === "upload" && (
-                <div className="space-y-2">
-                  <Input
-                    id="thumbnail_file"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleThumbnailFileChange}
-                  />
+              <div className="space-y-2">
+                <div className="text-sm text-gray-600 mb-2">
+                  Please upload a thumbnail image file.
                 </div>
-              )}
-              {thumbnailInputType === "url" && (
-                <div className="space-y-2">
-                  <Input
-                    id="thumbnail_url"
-                    type="url"
-                    placeholder="https://..."
-                    value={formData.thumbnail_url || ""}
-                    onChange={handleThumbnailUrlChange}
-                  />
-                </div>
-              )}
+                <Input
+                  id="thumbnail_file"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleThumbnailFileChange}
+                  required
+                />
+              </div>
               {thumbnailPreview && (
                 <img src={thumbnailPreview} alt="Thumbnail Preview" className="w-48 h-32 object-cover rounded border mt-2" />
               )}

@@ -20,9 +20,13 @@ export async function GET(req: NextRequest) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
+    
+    // Remove display_order if it exists in the request body
+    const { display_order, ...videoData } = body
+    
     const { data, error } = await supabase
       .from("videos")
-      .insert([{ ...body, created_at: new Date().toISOString() }])
+      .insert([{ ...videoData, created_at: new Date().toISOString() }])
       .select()
       .single()
 

@@ -21,41 +21,53 @@ export default function Home() {
         {/* Official Website Section */}
         <section className="py-16 md:py-24 bg-white">
           <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-12 items-start">
+            {/* Welcome Text Header - Not full width */}
+            <div className="mb-12 flex justify-center">
+              <div className="max-w-4xl mx-auto text-center">
+                <div className="">
+                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-blue-700 leading-tight">
+                    ይህ በኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተ ክርስቲያን በጀርመንና አካባቢው ሀገረ ስብከት የኮሎኝ ርእሰ አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ይፋዊ ድረ ገጽ ነው።
+                  </h2>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-12 items-stretch">
               {/* Image Section */}
-              <div className="md:sticky md:top-24">
-                <div className="relative h-[300px] md:h-[600px] rounded-2xl overflow-hidden shadow-lg">
+              <div className="flex flex-col h-full">
+                <div className="relative flex-1 min-h-[400px] md:min-h-[500px] rounded-2xl overflow-hidden shadow-lg">
                   <Image
                     src="/photo_2024-04-28_18-45-26.jpg"
                     alt="Church Building"
                     fill
-                    className="object-cover"
+                    className="object-cover object-center"
                     priority
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 50vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 </div>
                 {/* Caption Section */}
                 <div className="py-3 flex flex-col items-center">
-                <span className="block text-center text-base xs:text-lg sm:text-xl md:text-2xl font-semibold text-blue-700 bg-white/80 rounded-lg px-2 xs:px-4 sm:px-6 py-2 sm:py-3 shadow-md border border-blue-100 tracking-wide mb-2">
+                  <span className="block text-center text-base xs:text-lg sm:text-xl md:text-2xl font-semibold text-blue-700 bg-white/80 rounded-lg px-2 xs:px-4 sm:px-6 py-2 sm:py-3 shadow-md border border-blue-100 tracking-wide mb-2">
                     የ2017 ዓ.ም የበዓለ ሆሣዕና አከባበር
                   </span>
                 </div>
               </div>
 
               {/* Text Content Section */}
-              <div className="space-y-8 text-justify">
-                <h2 className="text-xl md:text-2xl lg:text-2xl font-bold text-blue-600 leading-tight">
-                  ይህ በኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተ ክርስቲያን በጀርመንና አካባቢው ሀገረ ስብከት የኮሎኝ ርእሰ አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ይፋዊ ድረ ገጽ ነው።
-                </h2>
+              <div className="flex flex-col justify-start space-y-8 text-justify h-full">
                 <div className="prose prose-lg max-w-none">
                   <p className="text-gray-600 leading-relaxed">
-                    አሁን በመላው አውሮፓ፥ በአፍሪካ፥ በአሜሪካ፥ በካናዳና በአውስትራልያ ከተቋቋሙት ቀደምት አብያተ ክርስቲያናት መካከል የመጀመሪያው ቀዳማዊና ፋና ወጊው ቤተ ክርስቲያን የኮሎኝ ርእሰ አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ነው።  ቤተክርስቲያናችን ወንጌልን በመላው ዓለም ማዳረስን ተልእኮ በማድረግ ለትምህርት ወደ አውሮፓ በመጡ አገልጋዮች ብርቱ ጥረት፣ በሊቀ ካህናት ዶክተር መርዓዊ ተበጀ እና በዲያቆን በዕደ ማርያም መርሻ ፊት አውራሪነት፥ በወቅቱ የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን ፓትርያርክ በነበሩት በአቡነ ተክለ ሃይማኖት መልካም ፈቃድ እና በቅዱስ ሲኖዶስ ውሳኔ በ 1975 ዓ.ም በዚያን ጊዜ በጅቡቲና በምሥራቅ አፍሪካ ሊቀ ጳጳስ በነበሩት፥ በአሁኑ ጊዜ ደግሞ የኖርዲክ እና ግሪክ ሀገረ ስብከት ሊቀ ጳጳስ በኾኑተ በብፁዕ አቡነ ኤልያስ ተባርኮ ተከፈተ።
+                    አሁን በመላው አውሮፓ፥ በአፍሪካ፥ በአሜሪካ፥ በካናዳና በአውስትራልያ ከተቋቋሙት ቀደምት አብያተ ክርስቲያናት መካከል የመጀመሪያው ቀዳማዊና ፋና ወጊው ቤተ ክርስቲያን የኮሎኝ ርእሰ አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ነው።
+                  </p>
+                  <p className="text-gray-600 leading-relaxed">
+                    ቤተክርስቲያናችን ወንጌልን በመላው ዓለም ማዳረስን ተልእኮ በማድረግ ለትምህርት ወደ አውሮፓ በመጡ አገልጋዮች ብርቱ ጥረት፣ በሊቀ ካህናት ዶክተር መርዓዊ ተበጀ እና በዲያቆን በዕደ ማርያም መርሻ ፊት አውራሪነት፥ በወቅቱ የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን ፓትርያርክ በነበሩት በአቡነ ተክለ ሃይማኖት መልካም ፈቃድ እና በቅዱስ ሲኖዶስ ውሳኔ በ 1975 ዓ.ም በዚያን ጊዜ በጅቡቲና በምሥራቅ አፍሪካ ሊቀ ጳጳስ በነበሩት፥ በአሁኑ ጊዜ ደግሞ የኖርዲክ እና ግሪክ ሀገረ ስብከት ሊቀ ጳጳስ በኾኑተ በብፁዕ አቡነ ኤልያስ ተባርኮ ተከፈተ።
                   </p>
                   <p className="text-gray-600 leading-relaxed">
                     አመሠራረቱም እንደሚከተለው ነው።
                     በ 1971 ዓም ለሊቀ ካህናት ዶክተር መርዓዊ ተበጀ እና ዲያቆን በዕደ ማርያም መርሻ በብፁዕ ወቅዱስ አቡነ ተክለሃይማኖት ፈቃድ ወደ ጀርመን ለከፍተኛ ትምህርት ተላኩ። ወደ ጀርመን ሀገር በገቡ በሁለት ዓመት ውስጥ ቤተ ክርስቲያን ለማቋቋም ጽንሰ ሀሳቡ በመርህ ደረጃ ለውይይት ቀረበ። በሃይደልበርግ ኗሪ ከሆኑ ወንድሞች ጋር በእመቤታችን ቅድስት ማርያም የጽዋ ማኅበር ስም መሰባሰብ ጀመሩ። ማኅበሩ የመገናኛ ድልድይ ሆኖ ሊያገለግላቸው ችሏል። በተለይም በ 1973 ዓ.ም. በምድረ ጀርመን በሃይደልበርግ ከተማ የመጀመሪያው ቅዳሴ ተቀደሰ። ለምእመናንም ቡራኬ ተሰጠ። በዚህም መንፈሳዊ አገልግሎት በለንደን ለጃማይካውያን መንፈሳዊ አገልግሎት ለመስጠት ተመድበው የነበሩት አባ አረጋዊ ወልደ ገብርኤል በኋላ የመላው አውሮፓ ሊቀ ጳጳስ የነበሩት ብፁዕ አቡነ ዮሐንስ ተገኝተዋል። ሥርዓተ ቅዳሴውንም መርተዋል። ብፁዕ አቡነ ዮሐንስ ካላቸው ፍቅርን ከተላበሰ ሰብእነታቸው የተነሣ መልካም ግንኙነት ነበራቸው። ቤተ ክርስቲያኑ ሲቋቋምም በበዓሉ ላይ ቤተ ክርስቲያናቸውን ወክለው ተገኝተዋል። የመጀመሪያው ቅዳሴ ከተካሄደ በኋላ ቤተ ክርስቲያን የማቋቋሙ ፍላጎት እየተጠናከረ መጣ። በሃይደልበርግና በሌሎች ከተማዎች የሚገኙ ኢትዮጵያውያን ተካፋዮች የሆኑባቸው የዘመን መለወጫ፥ የልደትና የትንሣኤ በዓላት ይከበሩ ጀመር።
                   </p>
-                  
+
                 </div>
                 <div className="flex justify-start pt-4">
                   <Link
@@ -88,25 +100,26 @@ export default function Home() {
         </section>
 
         {/* Community Quote Section */}
-        <section className="relative h-[400px] overflow-hidden">
+        <section className="relative h-[400px] sm:h-[450px] md:h-[500px] overflow-hidden">
           {/* Background Image with Overlay */}
           <div className="absolute inset-0">
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/background-xHU3IROC6ReraBjI9GUVpUK7rqtMoW.jpeg"
               alt="Church Community"
               fill
-              className="object-cover"
+              className="object-cover object-center"
               priority
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
             />
             <div className="absolute inset-0 bg-black/60"></div>
           </div>
 
           {/* Quote Content */}
-          <div className="relative h-[300px] flex items-center justify-center mb-5">
-            <div className="container mx-auto px-2">
+          <div className="relative h-[300px] sm:h-[350px] md:h-[400px] flex items-center justify-center mb-5">
+            <div className="container mx-auto px-4 sm:px-6">
               <div className="max-w-3xl mx-auto text-center">
                 <div className="text-4xl md:text-8xl text-white/20 font-serif mb-3">"</div>
-                <p className="text-sm md:text-lg text-white font-light leading-relaxed mb-6 md:mb-8 text-justify">
+                <p className="text-sm sm:text-base md:text-lg text-white font-light leading-relaxed mb-6 md:mb-8 text-justify">
                   "የዚህ አጥቢያ መመሥረት ቤተ ክርስቲያን በሀገረ ጀርመንም ይሁን በመላው አውሮፓ ለደረሰችበት ደረጃ መሠረት የጣለ ነበር። ሊቀ ካህናት ዶ/ር መርዓዊ ተበጀ ከጀርመን አልፎ እንደ ጣልያን፣ ስዊድንና ፈረንሳይ የመሳሰሉት ሀገራት ቤተ ክርስቲያን ትመሠረት ዘንድ የተሳካ ሐዋርያዊ ጉዞ ያደረጉት ከዚህ አጥቢያ ቤተ ክርስቲያን በመነሣት ነበር። በመኾኑም ዛሬ የአንጋፋውን የርእሰ አድባራት ኮለኝ ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ክብረ በዓል ስናከብር የምናዘክረው በጀርመንና በተለያዩ የአውሮፓ ሀገራት የተስፋፋችው የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን በሀገረ ጀርመን ኹነኛ መዋቅሯን ዘርግታ መንቀሳቀስ የጀመረችበትን መኾኑን መገንዘብ ያስፈልጋል።"
                 </p>
                 <p className="text-xs md:text-base text-white font-medium">- ብፁእ አቡነ ዲዮናስዮስ፥ በኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን የጀርመንና አካባቢው እና የምሥራቅ ጎጃም አህጉረ ስብከት ሊቀ ጳጳስ</p>
@@ -137,10 +150,10 @@ export default function Home() {
         </section>
 
         <div className="w-full h-[400px]">
-         
+
           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2511.237020795784!2d6.9000118760123295!3d50.99329207170089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bf301e45ab489d%3A0x7a8cddf4bfecdac9!2zTGluZHdlaWxlcndlZyA5NCwgNTA3MzkgS8O2bG4sIOGMgOGIreGImOGKlQ!5e0!3m2!1sde!2sde&hl=de"
             width="100%"
-            
+
             height="100%"
             style={{ border: 0 }}
             allowFullScreen

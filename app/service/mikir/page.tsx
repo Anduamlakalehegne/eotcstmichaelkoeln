@@ -13,7 +13,40 @@ export default function MikirPage() {
         transition={{ duration: 0.5 }}
         className="text-center mb-12"
       >
-        <h1 className="text-4xl font-bold mb-4">የምክር አገልግሎት</h1>
+        <h1 className="text-4xl font-bold mb-8">የምክር አገልግሎት</h1>
+        
+        {/* Text Box Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="max-w-4xl mx-auto mb-12"
+        >
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg border border-blue-100">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              {/* Text Content */}
+              <div className="text-justify">
+                <p className="text-lg text-gray-700 leading-relaxed mb-4">
+                  በቤተ ክርስቲያናችን ውስጥ የምክር አገልግሎት በጣም አስፈላጊ እና የሚያስፈልግ አገልግሎት ነው። ይህ አገልግሎት በመንፈሳዊ እና በሰውነታዊ አቅጣጫ ምክር እና ድጋፍ ለማቅረብ ያለመ ነው።
+                </p>
+                <p className="text-gray-600 leading-relaxed">
+                  በቤተ ክርስቲያናችን ውስጥ የሚሰጡ ምክሮች በመጽሐፍ ቅዱስ እና በቅዱሳን አባቶች ትምህርቶች ላይ የተመሰረቱ ናቸው። እነዚህ ምክሮች በሕይወታችን ውስጥ ትክክለኛ አቅጣጫ ለመሄድ እና በመንፈሳዊ ጉዞ ውስጥ ለመራቅ ይረዱናል።
+                </p>
+              </div>
+              
+              {/* Optional Photo Space */}
+              <div className="flex justify-center">
+                <div className="relative w-64 h-48 bg-gray-100 rounded-xl overflow-hidden shadow-md border-2 border-dashed border-gray-300 flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <Quote className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">የምክር አገልግሎት ፎቶ</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         <div className="flex items-center justify-center gap-2">
           <BookOpen className="w-15 h-15 " />
           <p className="text-2xl font-bold">የቅዱሳን ምክሮች</p>

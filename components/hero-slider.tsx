@@ -84,54 +84,51 @@ export default function HeroSlider() {
   }
 
   return (
-    <section
-      className={
-        isMobile
-          ? "relative h-[40vh] min-h-[250px] w-full"
-          : "relative h-screen min-h-[400px] w-full"
-      }
-    >
+    <section className="relative w-full h-[60vh] min-h-[400px] sm:h-[70vh] md:h-screen md:min-h-[500px] overflow-hidden">
       {/* Slide Background with Transition */}
-      <div className="absolute inset-0 z-0 transition-opacity duration-500 ease-in-out">
+      <div className="absolute inset-0 z-0 transition-opacity duration-500 ease-in-out overflow-hidden">
         <Image
           src={slides[currentIndex].url || "/placeholder.svg"}
           alt={slides[currentIndex].alt[locale] || slides[currentIndex].alt.en}
           fill
-          className="object-cover"
+          className="object-cover object-center w-full h-full"
           priority
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+          sizes="100vw"
+          quality={90}
         />
         <div className="absolute z-0"></div>
       </div>
 
       {/* Slider Navigation */}
-      <div className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10">
+      <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 z-10">
         <button
           onClick={prevSlide}
-          className="bg-white/20 p-1 sm:p-2 rounded-full text-white hover:bg-white/30 transition-colors"
+          className="bg-white/30 backdrop-blur-sm p-2 sm:p-3 rounded-full text-white hover:bg-white/40 transition-all duration-200 shadow-lg"
           aria-label="Previous slide"
         >
-          <ChevronLeft size={isMobile ? 18 : 24} />
+          <ChevronLeft size={20} className="sm:w-6 sm:h-6" />
         </button>
       </div>
-      <div className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10">
+      <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 z-10">
         <button
           onClick={nextSlide}
-          className="bg-white/20 p-1 sm:p-2 rounded-full text-white hover:bg-white/30 transition-colors"
+          className="bg-white/30 backdrop-blur-sm p-2 sm:p-3 rounded-full text-white hover:bg-white/40 transition-all duration-200 shadow-lg"
           aria-label="Next slide"
         >
-          <ChevronRight size={isMobile ? 18 : 24} />
+          <ChevronRight size={20} className="sm:w-6 sm:h-6" />
         </button>
       </div>
 
       {/* Slider Pagination */}
-      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2 sm:gap-3">
+      <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-3 sm:gap-4">
         {slides.map((_, slideIndex) => (
           <button
             key={slideIndex}
             onClick={() => goToSlide(slideIndex)}
-            className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-colors ${
-              currentIndex === slideIndex ? "bg-white" : "bg-white/50"
+            className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-200 shadow-lg ${
+              currentIndex === slideIndex 
+                ? "bg-white scale-110" 
+                : "bg-white/60 hover:bg-white/80"
             }`}
             aria-label={`Go to slide ${slideIndex + 1}`}
           ></button>

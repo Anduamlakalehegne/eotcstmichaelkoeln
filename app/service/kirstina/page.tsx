@@ -202,15 +202,22 @@ export default function KirstinaPage() {
               </p>
 
               <div className="my-8 grid gap-8 md:grid-cols-2">
-                <div className="relative h-[300px] overflow-hidden rounded-lg">
-                  <Image src="/photo_2025-06-05_21-57-14.jpg?height=300&width=400" alt="የጥምቀት ዝግጅት" fill className="object-cover" />
+                <div className="relative h-[300px] sm:h-[350px] overflow-hidden rounded-lg">
+                  <Image 
+                    src="/photo_2025-06-05_21-57-14.jpg?height=300&width=400" 
+                    alt="የጥምቀት ዝግጅት" 
+                    fill 
+                    className="object-cover object-center"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, 50vw"
+                  />
                 </div>
-                <div className="relative h-[300px] overflow-hidden rounded-lg">
+                <div className="relative h-[300px] sm:h-[350px] overflow-hidden rounded-lg">
                   <Image
                     src="/photo_2023-01-22_21-43-32.jpg?height=300&width=400"
                     alt="የጥምቀት ሥነ-ሥርዓት"
                     fill
-                    className="object-cover"
+                    className="object-cover object-center"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, 50vw"
                   />
                 </div>
               </div>

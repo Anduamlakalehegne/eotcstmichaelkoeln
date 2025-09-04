@@ -76,7 +76,10 @@ export default function NewsSlider() {
           throw new Error("Failed to fetch news")
         }
         const data = await response.json()
-        setRawNews(data)
+        
+        // Filter news based on language
+        const languageFilteredData = data.filter((item: any) => item.language === locale)
+        setRawNews(languageFilteredData)
       } catch (err) {
         setError("Failed to load news. Please try again later.")
         console.error(err)
@@ -85,7 +88,7 @@ export default function NewsSlider() {
       }
     }
     fetchNews()
-  }, [])
+  }, [locale])
 
   // Remap news to current locale whenever rawNews or locale changes
   useEffect(() => {

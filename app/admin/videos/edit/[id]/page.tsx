@@ -39,7 +39,6 @@ interface Video {
   category: string
   folder_id?: number | null
   created_at: string
-  display_order?: number
 }
 
 export default function EditVideoPage({ params }: { params: { id: string } }) {
@@ -51,7 +50,6 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
   const [video, setVideo] = useState<Video | null>(null)
   const [videoInputType, setVideoInputType] = useState<'upload' | 'url'>("upload")
   const [videoPreview, setVideoPreview] = useState<string>("")
-  const [thumbnailInputType, setThumbnailInputType] = useState<'upload' | 'url'>("upload")
   const [thumbnailPreview, setThumbnailPreview] = useState<string>("")
 
   useEffect(() => {
@@ -70,7 +68,7 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
         setVideoInputType("url")
       }
     }
-    setThumbnailInputType(videoInputType)
+    // Reset thumbnail preview when video input type changes
     setThumbnailPreview("")
     setVideo((prev) => prev ? { ...prev, thumbnail_url: "" } : prev)
     // eslint-disable-next-line
@@ -137,7 +135,7 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
       }
       // Upload to Supabase
       const url = await uploadFile(file, "videos", video?.folder_id ? `videos/${video.folder_id}` : "videos")
-      setVideo({ ...video, video_url: url })
+      setVideo(video ? { ...video, video_url: url } : null)
       setVideoPreview(url)
     } catch (err: any) {
       setError(err.message)
@@ -148,7 +146,7 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
 
   const handleVideoUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!video) return
-    setVideo({ ...video, video_url: e.target.value })
+    setVideo(video ? { ...video, video_url: e.target.value } : null)
     setVideoPreview(e.target.value)
   }
 
@@ -178,11 +176,6 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
     }
   }
 
-  const handleThumbnailUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!video) return
-    setVideo({ ...video, thumbnail_url: e.target.value })
-    setThumbnailPreview(e.target.value)
-  }
 
   if (loading) {
     return (
@@ -220,7 +213,7 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
               <Input
                 id="title"
                 value={video.title}
-                onChange={(e) => setVideo({ ...video, title: e.target.value })}
+                onChange={(e) => setVideo(video ? { ...video, title: e.target.value } : null)}
                 required
               />
             </div>
@@ -229,14 +222,14 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
               <Input
                 id="description"
                 value={video.description || ""}
-                onChange={(e) => setVideo({ ...video, description: e.target.value })}
+                onChange={(e) => setVideo(video ? { ...video, description: e.target.value } : null)}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
               <Select
                 value={video.category || ""}
-                onValueChange={(value) => setVideo({ ...video, category: value })}
+                onValueChange={(value) => setVideo(video ? { ...video, category: value } : null)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
@@ -252,7 +245,7 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
               <Label htmlFor="folder">Folder</Label>
               <Select
                 value={video.folder_id ? String(video.folder_id) : ""}
-                onValueChange={value => setVideo({ ...video, folder_id: value ? parseInt(value) : undefined })}
+                onValueChange={value => setVideo(video ? { ...video, folder_id: value ? parseInt(value) : undefined } : null)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select folder (optional)" />
@@ -263,15 +256,6 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="display_order">Display Order</Label>
-              <Input
-                id="display_order"
-                type="number"
-                value={video.display_order || 0}
-                onChange={(e) => setVideo({ ...video, display_order: parseInt(e.target.value) })}
-              />
             </div>
             {/* Video Source and Thumbnail sections (as previously enhanced) */}
             <div className="space-y-2">
@@ -309,27 +293,18 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
             </div>
             <div className="space-y-2 mt-4">
               <Label>Thumbnail</Label>
-              {thumbnailInputType === "upload" && (
-                <div className="space-y-2">
-                  <Input
-                    id="thumbnail_file"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleThumbnailFileChange}
-                  />
+              <div className="space-y-2">
+                <div className="text-sm text-gray-600 mb-2">
+                  Please upload a thumbnail image file.
                 </div>
-              )}
-              {thumbnailInputType === "url" && (
-                <div className="space-y-2">
-                  <Input
-                    id="thumbnail_url"
-                    type="url"
-                    placeholder="https://..."
-                    value={video?.thumbnail_url || ""}
-                    onChange={handleThumbnailUrlChange}
-                  />
-                </div>
-              )}
+                <Input
+                  id="thumbnail_file"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleThumbnailFileChange}
+                  required
+                />
+              </div>
               {thumbnailPreview && (
                 <img src={thumbnailPreview} alt="Thumbnail Preview" className="w-48 h-32 object-cover rounded border mt-2" />
               )}

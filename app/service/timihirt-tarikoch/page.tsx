@@ -146,12 +146,13 @@ export default function TimihirtTarikochPage() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
         {posts.map((item) => (
           <Card key={item.id} className="overflow-hidden flex flex-col">
-            <div className="relative h-48">
+            <div className="relative h-48 sm:h-52">
               <Image
                 src={item.image_url || "/placeholder.svg"}
                 alt={item.title}
                 fill
-                className="object-cover"
+                className="object-cover object-center"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
               />
               {item.featured && <Badge className="absolute top-2 right-2 bg-amber-500">Featured</Badge>}
             </div>

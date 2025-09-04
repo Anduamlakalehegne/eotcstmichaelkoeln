@@ -11,22 +11,29 @@ export default function ConstructionSection() {
   return (
     <section className="py-16 md:py-24 bg-gray-50">
       <div className="container mx-auto px-4">
+        {/* Title Header - Above everything on mobile */}
+        <div className="mb-8 md:hidden text-center">
+          <h2 className="text-2xl font-bold text-blue-600">የቤተ ክርስቲያን ሕንፃ ግንባታ</h2>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-8 items-center">
           {/* Image Column - Order changes on mobile */}
           <div className="order-1 md:order-2">
-            <div className="relative h-[300px] md:h-[400px] rounded-2xl overflow-hidden shadow-md">
+            <div className="relative h-[350px] sm:h-[400px] md:h-[400px] rounded-2xl overflow-hidden shadow-md">
               <Image
                 src="/constraction.jpg"
                 alt="Church Construction"
                 fill
-                className="object-cover"
+                className="object-cover object-center"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 50vw, 50vw"
               />
             </div>
           </div>
 
           {/* Text Column */}
           <div className="order-2 md:order-1">
-            <h2 className="text-2xl md:text-3xl lg:text-3xl font-bold text-blue-600 mb-6">የቤተ ክርስቲያን ሕንፃ ግንባታ</h2>
+            {/* Desktop title - hidden on mobile */}
+            <h2 className="hidden md:block text-2xl md:text-3xl lg:text-3xl font-bold text-blue-600 mb-6">የቤተ ክርስቲያን ሕንፃ ግንባታ</h2>
             <div className="space-y-4 text-gray-600 text-justify">
               <p>
                 በጀርመን አገር በኮለን ከተማ የምትገኘው ርእሰ አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቅድስት ቤተ ክርስቲያናችን ከዛሬ ቀደም ከነበራት ርስት የቦታ ባለቤትነት በእግዚአብሔር ፈቃድ ተጨማሪ የአምልኮ ፣ የበረከት ፣ የባለቤትነት ዕድሉን አምላከ ሚካኤል አሳክቶላት ከኃይል ወደ ኃይል ፣ ከበረከት ወደ በረከት ፣ ከትጥበት ወደ ስፋት ለመሻገር በባዕድ አገር ሰፊ የቦታ (1840 ካሬ ሜትር) ባለቤት ሆናለች ።

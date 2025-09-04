@@ -13,7 +13,45 @@ import { supabaseClient } from "@/lib/supabase-client"
 import { toast } from "sonner"
 
 const categories = ["Historical", "Administrative", "Worship", "Community", "Construction", "Sacraments", "Holidays", "Youth"]
-const allowedDocumentTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
+const allowedDocumentTypes = [
+  // PDF files
+  "application/pdf",
+  // Microsoft Word documents
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  // Microsoft Excel files
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  // Microsoft PowerPoint files
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  // Text files
+  "text/plain",
+  "text/csv",
+  // Image files
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "image/bmp",
+  "image/tiff",
+  "image/webp",
+  // Audio files
+  "audio/mpeg",
+  "audio/wav",
+  "audio/ogg",
+  "audio/mp3",
+  // Video files
+  "video/mp4",
+  "video/avi",
+  "video/mov",
+  "video/wmv",
+  "video/webm",
+  // Archive files
+  "application/zip",
+  "application/x-rar-compressed",
+  "application/x-7z-compressed"
+]
 
 export default function EditArchivePage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -109,13 +147,13 @@ export default function EditArchivePage({ params }: { params: { id: string } }) 
 
     // Validate file type
     if (!allowedDocumentTypes.includes(file.type)) {
-      toast.error("Please upload a PDF or Word document")
+      toast.error("Please upload a supported file format (PDF, Word, Excel, PowerPoint, Text, Image, Audio, Video, or Archive)")
       return
     }
 
-    // Validate file size (10MB limit)
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("File size must be less than 10MB")
+    // Validate file size (50MB limit)
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error("File size must be less than 50MB")
       return
     }
 
@@ -283,7 +321,7 @@ export default function EditArchivePage({ params }: { params: { id: string } }) 
                 <div className="flex items-center gap-4">
                   <Input
                     type="file"
-                    accept=".pdf,.doc,.docx"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.jpg,.jpeg,.png,.gif,.bmp,.tiff,.webp,.mp3,.wav,.ogg,.mp4,.avi,.mov,.wmv,.webm,.zip,.rar,.7z"
                     onChange={handleDocumentUpload}
                     disabled={uploadingDocument}
                     className="hidden"
@@ -303,7 +341,11 @@ export default function EditArchivePage({ params }: { params: { id: string } }) 
                     </div>
                   )}
                 </div>
-                <p className="text-sm text-gray-500">Supported formats: PDF, DOC, DOCX (max 10MB)</p>
+                <p className="text-sm text-gray-500">
+                  Supported formats: PDF, Word (DOC/DOCX), Excel (XLS/XLSX), PowerPoint (PPT/PPTX), 
+                  Text (TXT/CSV), Images (JPG/PNG/GIF/BMP/TIFF/WEBP), Audio (MP3/WAV/OGG), 
+                  Video (MP4/AVI/MOV/WMV/WEBM), Archives (ZIP/RAR/7Z) - max 50MB
+                </p>
               </div>
             )}
 
