@@ -45,7 +45,7 @@ export default function Home() {
                     src="/photo_2024-04-28_18-45-26.jpg"
                     alt="Church Building"
                     fill
-                    className="object-cover object-center"
+                    className="object-contain md:object-cover object-center"
                     priority
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 50vw, 50vw"
                   />
@@ -110,7 +110,7 @@ export default function Home() {
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/background-xHU3IROC6ReraBjI9GUVpUK7rqtMoW.jpeg"
               alt="Church Community"
               fill
-              className="object-cover object-center"
+              className="object-contain md:object-cover object-center"
               priority
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
             />

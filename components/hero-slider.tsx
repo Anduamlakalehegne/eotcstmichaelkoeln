@@ -80,7 +80,7 @@ export default function HeroSlider() {
           src={slides[currentIndex].url || "/placeholder.svg"}
           alt={slides[currentIndex].alt[locale] || slides[currentIndex].alt.en}
           fill
-          className="object-cover object-center w-full h-full"
+          className="object-contain md:object-cover object-center w-full h-full"
           priority
           sizes="100vw"
           quality={90}

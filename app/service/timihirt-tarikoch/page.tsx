@@ -108,7 +108,8 @@ export default function TimihirtTarikochPage() {
                 src={item.image_url || "/placeholder.svg"}
                 alt={item.title}
                 fill
-                className="object-cover object-center"
+                // className="object-cover object-center"
+                className="object-contain md:object-cover"
                 sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
               />
               {item.featured && <Badge className="absolute top-2 right-2 bg-amber-500">{t.featured}</Badge>}
@@ -128,7 +129,7 @@ export default function TimihirtTarikochPage() {
 
       {/* Hero Section */}
       <div className="relative h-[400px] rounded-xl overflow-hidden mb-12">
-        <Image src="/photo_2025-04-04_01-33-42.jpg?height=800&width=1600" alt={t.title} fill className="object-cover" />
+        <Image src="/photo_2025-04-04_01-33-42.jpg?height=800&width=1600" alt={t.title} fill className="object-contain md:object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
           <p className="text-xl md:text-2xl font-light max-w-2xl">{t.hero.authorName}</p>

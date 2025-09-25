@@ -224,7 +224,7 @@ export default function NewsSlider() {
                     src={item.image_url || "/placeholder.svg"}
                     alt={item.title}
                     fill
-                    className="object-cover"
+                    className="object-contain md:object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                 </div>
