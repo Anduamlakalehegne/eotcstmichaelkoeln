@@ -110,18 +110,27 @@ export default function CreateArchivePage() {
         throw new Error("Please upload an image")
       }
 
-      const { error } = await supabaseClient.from("archive").insert([{
-        title: formData.title,
-        description: formData.description || null,
-        year: formData.year,
-        type: formData.type,
-        category: formData.category,
-        image_url: formData.image_url || "",
-        document_url: formData.document_url || null,
-        tags: formData.tags
-      }] as any)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/archive`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          description: formData.description || null,
+          year: formData.year,
+          type: formData.type,
+          category: formData.category,
+          image_url: formData.image_url || "",
+          document_url: formData.document_url || null,
+          tags: formData.tags
+        }),
+      })
 
-      if (error) throw error
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to create archive item")
+      }
 
       toast.success("Archive item created successfully")
       router.push("/admin/archive")

@@ -35,12 +35,9 @@ export default function ArchivePage() {
 
   const fetchItems = async () => {
     try {
-      const { data, error } = await supabaseClient
-        .from("archive")
-        .select("*")
-        .order("created_at", { ascending: false })
-
-      if (error) throw error
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/archive`)
+      if (!res.ok) throw new Error('Failed to fetch archive')
+      const data = await res.json()
       setItems(data || [])
     } catch (err: any) {
       setError(err.message)
@@ -55,12 +52,8 @@ export default function ArchivePage() {
 
     setIsDeleting(true)
     try {
-      const { error } = await supabaseClient
-        .from("archive")
-        .delete()
-        .eq("id", deleteItem.id)
-
-      if (error) throw error
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/archive/${deleteItem.id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed to delete')
 
       setItems(items.filter((item) => item.id !== deleteItem.id))
       setDeleteItem(null)

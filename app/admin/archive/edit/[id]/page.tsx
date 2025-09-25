@@ -77,13 +77,11 @@ export default function EditArchivePage({ params }: { params: { id: string } }) 
 
   const fetchItem = async () => {
     try {
-      const { data, error } = await supabaseClient
-        .from("archive")
-        .select("*")
-        .eq("id", params.id)
-        .single()
-
-      if (error) throw error
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/archive/${params.id}`)
+      if (!response.ok) {
+        throw new Error("Failed to fetch archive item")
+      }
+      const data = await response.json()
 
       if (data) {
         setFormData({
@@ -124,12 +122,18 @@ export default function EditArchivePage({ params }: { params: { id: string } }) 
         throw new Error("Please upload an image")
       }
 
-      const { error } = await supabaseClient
-        .from("archive")
-        .update(formData)
-        .eq("id", params.id)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/archive/${params.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
 
-      if (error) throw error
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to update archive item")
+      }
 
       toast.success("Archive item updated successfully")
       router.push("/admin/archive")

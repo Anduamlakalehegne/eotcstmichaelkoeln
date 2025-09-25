@@ -27,7 +27,8 @@ interface FolderType {
 }
 
 export default function PhotosPage() {
-  const { locale } = useLocale();
+  const { locale, translations } = useLocale();
+  const t = translations.gallery;
   const [photos, setPhotos] = useState<Photo[]>([])
   const [folders, setFolders] = useState<FolderType[]>([])
   const [currentFolder, setCurrentFolder] = useState<FolderType | null>(null)
@@ -47,7 +48,7 @@ export default function PhotosPage() {
     setLoading(true)
     try {
       const parent_id = currentFolder ? currentFolder.id : null
-      const url = parent_id ? `/api/gallery/folders?parent_id=${parent_id}` : "/api/gallery/folders"
+      const url = parent_id ? `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery-folders?parent_id=${parent_id}` : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery-folders`
       const res = await fetch(url)
       const data = await res.json()
       setFolders(data)
@@ -62,7 +63,7 @@ export default function PhotosPage() {
     setLoading(true)
     try {
       const folder_id = currentFolder ? currentFolder.id : null
-      const url = folder_id ? `/api/gallery?folder_id=${folder_id}` : "/api/gallery"
+      const url = folder_id ? `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery?folder_id=${folder_id}` : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery`
       const res = await fetch(url)
       const data = await res.json()
       setPhotos(data)
@@ -110,7 +111,7 @@ export default function PhotosPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center mt-32">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     )
@@ -132,16 +133,16 @@ export default function PhotosPage() {
       <div className="flex items-center gap-2 mb-8">
         {currentFolder && (
           <button onClick={handleBack} className="mr-2 px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 flex items-center">
-            <ArrowLeft className="h-4 w-4 mr-1" /> Back
+            <ArrowLeft className="h-4 w-4 mr-1" /> {t.common.back}
           </button>
         )}
-        <h1 className="text-3xl font-bold text-center flex-1">{locale === "am" ? "የፎቶ ማህደር" : "Photo Gallery"}</h1>
+        <h1 className="text-3xl font-bold text-center flex-1">{t.photos.title}</h1>
       </div>
 
       {/* Folders */}
       {folders.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">{locale === "am" ? "ፎልደሮች" : "Folders"}</h2>
+          <h2 className="text-xl font-semibold mb-4">{t.common.folders}</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {folders.map(folder => (
               <div key={folder.id} className="flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-gray-50" onClick={() => handleOpenFolder(folder)}>
@@ -156,7 +157,7 @@ export default function PhotosPage() {
       {/* Photos */}
       {photos.length === 0 ? (
         <div className="text-center text-gray-500">
-          <p>No photos available at this time.</p>
+          <p>{t.photos.empty}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -33,23 +33,27 @@ export default function EventsAdminPage() {
   async function fetchEvents() {
     setLoading(true)
     try {
-      let query = supabaseClient.from("events").select("*", { count: "exact" }).order("date", { ascending: false })
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/events`)
+      if (!response.ok) {
+        throw new Error("Failed to fetch events")
+      }
+      const data = await response.json()
 
       // Apply search filter if provided
+      let filteredData = data
       if (searchQuery) {
-        query = query.ilike("title", `%${searchQuery}%`)
+        filteredData = data.filter((event: any) => 
+          event.title.toLowerCase().includes(searchQuery.toLowerCase())
+        )
       }
 
       // Apply pagination
       const start = (currentPage - 1) * itemsPerPage
-      const end = start + itemsPerPage - 1
+      const end = start + itemsPerPage
+      const paginatedData = filteredData.slice(start, end)
 
-      const { data, count, error } = await query.range(start, end)
-
-      if (error) throw error
-
-      setEvents(data || [])
-      setTotalPages(Math.ceil((count || 0) / itemsPerPage))
+      setEvents(paginatedData || [])
+      setTotalPages(Math.ceil(filteredData.length / itemsPerPage))
     } catch (err: any) {
       console.error("Error fetching events:", err)
       setError(err.message)
@@ -60,9 +64,17 @@ export default function EventsAdminPage() {
 
   async function toggleFeatured(id: number, currentValue: boolean) {
     try {
-      const { error } = await supabaseClient.from("events").update({ featured: !currentValue }).eq("id", id)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/events/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          featured: !currentValue,
+        }),
+      })
 
-      if (error) throw error
+      if (!response.ok) throw new Error("Failed to update event")
 
       // Update local state
       setEvents(events.map((event) => (event.id === id ? { ...event, featured: !currentValue } : event)))
@@ -78,9 +90,11 @@ export default function EventsAdminPage() {
     }
 
     try {
-      const { error } = await supabaseClient.from("events").delete().eq("id", id)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/events/${id}`, {
+        method: "DELETE",
+      })
 
-      if (error) throw error
+      if (!response.ok) throw new Error("Failed to delete event")
 
       // Remove from local state
       setEvents(events.filter((event) => event.id !== id))
@@ -216,6 +230,7 @@ export default function EventsAdminPage() {
               </div>
 
               <div className="mt-4 flex justify-center">
+                {/* @ts-expect-error Pagination is not a div */}
                 <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
               </div>
             </>

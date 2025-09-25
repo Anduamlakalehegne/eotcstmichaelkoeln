@@ -49,7 +49,7 @@ export default function EditNewsPage() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        const response = await fetch(`/api/news/${params.id}`)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news/${params.id}`)
         if (!response.ok) {
           throw new Error("Failed to fetch news article")
         }
@@ -57,7 +57,7 @@ export default function EditNewsPage() {
         setFormData(data)
 
         // Fetch gallery images
-        const galleryResponse = await fetch(`/api/news/${params.id}/gallery`)
+        const galleryResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news-images/by-news/${params.id}`)
         if (galleryResponse.ok) {
           const galleryData = await galleryResponse.json()
           setRelatedImages(galleryData.map((item: any) => ({
@@ -127,7 +127,7 @@ export default function EditNewsPage() {
 
     try {
       // Update news article
-      const response = await fetch(`/api/news/${params.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news/${params.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -143,9 +143,7 @@ export default function EditNewsPage() {
 
       // Handle gallery images
       // First, delete existing gallery items
-      await fetch(`/api/news/${params.id}/gallery`, {
-        method: "DELETE"
-      })
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news-images/by-news/${params.id}`, { method: "DELETE" })
 
       // Then insert new gallery items
       if (relatedImages.length > 0) {
@@ -158,7 +156,7 @@ export default function EditNewsPage() {
             display_order: index,
           }))
 
-        const galleryResponse = await fetch("/api/news/gallery", {
+        const galleryResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news-images/bulk`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -103,73 +103,15 @@ export default function EventsPage() {
   };
   const translateCategory = (cat: string) => locale === "am" ? (categoryTranslations[cat] || cat) : cat;
 
-  // Get translations based on locale
-  const getTranslations = () => {
-    switch (locale) {
-      case "am":
-        return {
-          title: "መጪ ዝግጅቶች",
-          searchPlaceholder: "ዝግጅቶችን ይፈልጉ...",
-          filters: "ፊልተሮች",
-          category: "ምድብ",
-          year: "ዓመት",
-          month: "ወር",
-          sortBy: "በየትኛው እንደሚደርጉ",
-          upcomingFirst: "አዲሶቹን መጀመሪያ",
-          laterFirst: "የቆዩትን መጀመሪያ",
-          resetFilters: "ፊልተሮችን ዳግም ያዘጋጁ",
-          noEvents: "ምንም ዝግጅቶች አልተገኙም",
-          tryAdjusting: "ፍለጋዎን ወይም ፊልተሮችዎን ይስሩ",
-          clearSearch: "ፍለጋን ያጽዱ",
-          viewDetails: "ዝርዝሮችን ይመልከቱ",
-          featured: "የተመረጡ",
-        }
-      case "de":
-        return {
-          title: "Kommende Veranstaltungen",
-          searchPlaceholder: "Veranstaltungen suchen...",
-          filters: "Filter",
-          category: "Kategorie",
-          year: "Jahr",
-          month: "Monat",
-          sortBy: "Sortieren nach",
-          upcomingFirst: "Kommende zuerst",
-          laterFirst: "Spätere zuerst",
-          resetFilters: "Filter zurücksetzen",
-          noEvents: "Keine Veranstaltungen gefunden",
-          tryAdjusting: "Versuchen Sie, Ihre Suche oder Filter anzupassen",
-          clearSearch: "Suche löschen",
-          viewDetails: "Details anzeigen",
-          featured: "Hervorgehoben",
-        }
-      default:
-        return {
-          title: "Upcoming Events",
-          searchPlaceholder: "Search events...",
-          filters: "Filters",
-          category: "Category",
-          year: "Year",
-          month: "Month",
-          sortBy: "Sort by",
-          upcomingFirst: "Upcoming first",
-          laterFirst: "Later events first",
-          resetFilters: "Reset Filters",
-          noEvents: "No events found",
-          tryAdjusting: "Try adjusting your search or filters",
-          clearSearch: "Clear Search",
-          viewDetails: "View Details",
-          featured: "Featured",
-        }
-    }
-  }
-
-  const t = getTranslations()
+  // Get translations from the centralized localization system
+  const { translations } = useLocale()
+  const t = translations.events
 
   // Fetch events data
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const response = await fetch("/api/events")
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/events`)
         if (!response.ok) {
           throw new Error("Failed to fetch events")
         }
@@ -198,8 +140,8 @@ export default function EventsPage() {
   }, [locale])
 
   // For translated 'All' labels
-  const allYearLabel = locale === "am" ? "ሁሉም ዓመታት" : "All";
-  const allMonthLabel = locale === "am" ? "ሁሉም ወራቶች" : "All";
+  const allYearLabel = translations.home.events.allYears;
+  const allMonthLabel = translations.home.events.allMonths;
 
   // Filter and sort events based on search query, category, year, month, and sort order
   useEffect(() => {
@@ -263,7 +205,7 @@ export default function EventsPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12 flex justify-center">
+      <div className="container mx-auto px-4 py-12 flex justify-center mt-32">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )

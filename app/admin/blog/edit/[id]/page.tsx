@@ -41,7 +41,7 @@ export default function EditBlogPage() {
     async function fetchBlog() {
       setLoading(true)
       try {
-        const response = await fetch(`/api/news/${params.id}`)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news/${params.id}`)
         if (!response.ok) throw new Error("Failed to fetch blog post")
         const data = await response.json()
         setFormData({ ...data, category: BLOG_CATEGORY })
@@ -94,7 +94,7 @@ export default function EditBlogPage() {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/news/${params.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news/${params.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

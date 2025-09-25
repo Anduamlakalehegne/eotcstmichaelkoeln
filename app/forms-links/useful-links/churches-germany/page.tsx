@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Search, MapPin } from "lucide-react"
+import { useLocale } from "@/contexts/locale-context"
 
 // Dynamically import the map component to avoid SSR issues
 const MapComponent = dynamic(
@@ -71,6 +72,8 @@ const churchesData = [
 ]
 
 export default function ChurchesGermanyPage() {
+  const { translations } = useLocale()
+  const t = translations.formsLinks.usefulLinks.churchesGermany
   const searchParams = useSearchParams()
   const query = searchParams.get("query") || ""
   const [searchTerm, setSearchTerm] = useState(query)
@@ -110,25 +113,23 @@ export default function ChurchesGermanyPage() {
 
   return (
     <div>
-      {/* <PageHero
-        title="የኢትዮጵያ ኦርቶዶክስ ቤተክርስቲያናት በጀርመን"
-      /> */}
+      {/* <PageHero title={t.title} /> */}
 
-      <p className="text-center text-2xl font-bold">በጀርመን (፣ ሆላንድ፥ ሰዊዘርላንድ፣ ኦስትርያ) የሚገኙ የኢትዮጵያ ኦርቶዶክስ ተዋህዶ አብያተ ክርስቲያናት</p>
+      <p className="text-center text-2xl font-bold">{t.title}</p>
 
       <div className="container mx-auto py-8 px-4">
         <div className="mb-8">
           <form onSubmit={handleSearch} className="flex gap-2 max-w-md mx-auto">
             <Input
               type="text"
-              placeholder="በስም፣ ክልል፣ ወይም አድራሻ ይፈልጉ..."
+              placeholder={t.placeholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1"
             />
             <Button type="submit">
               <Search className="h-4 w-4 mr-2" />
-              ፈልግ
+              {t.search}
             </Button>
           </form>
         </div>
@@ -147,7 +148,7 @@ export default function ChurchesGermanyPage() {
           <div className="space-y-4">
             {filteredChurches.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-lg text-gray-600">ምንም ቤተክርስቲያናት አልተገኙም።</p>
+                <p className="text-lg text-gray-600">{t.noResults}</p>
               </div>
             ) : (
               filteredChurches.map((church) => (
@@ -168,19 +169,19 @@ export default function ChurchesGermanyPage() {
                         <p className="text-gray-600 mb-4">{church.region}</p>
                         <div className="space-y-2 text-sm">
                           <p>
-                            <strong>አድራሻ:</strong> {church.address}
+                            <strong>{t.labels.address}:</strong> {church.address}
                           </p>
                           <p>
-                            <strong>ስልክ:</strong> {church.phone}
+                            <strong>{t.labels.phone}:</strong> {church.phone}
                           </p>
                           <p>
-                            <strong>ኢሜይል:</strong>{" "}
+                            <strong>{t.labels.email}:</strong>{" "}
                             <a href={`mailto:${church.email}`} className="text-blue-600 hover:underline">
                               {church.email}
                             </a>
                           </p>
                           <p>
-                            <strong>ድህረ ገፅ:</strong>{" "}
+                            <strong>{t.labels.website}:</strong>{" "}
                             <a
                               href={church.website}
                               target="_blank"

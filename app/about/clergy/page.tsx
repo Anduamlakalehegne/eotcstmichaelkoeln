@@ -1,48 +1,52 @@
-import Image from "next/image"
+"use client"
 
-const clergyMembers = [
-  {
-    name: "Sample Name",
-    title: "Head Priest",
-    image: "/IMG_E2338.JPG",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-  // {
-  //   name: "Sample Name",
-  //   title: "Priest",
-  //   image: "/IMG_5278.jpg",
-  //   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  // },
-  {
-    name: "Sample Name",
-    title: "Deacon",
-    image: "/IMG_5279.JPG",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-  {
-    name: "Sample Name",
-    title: "Deacon",
-    image: "/IMG_E2347.JPG",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-  {
-    name: "Sample Name",
-    title: "Deacon",
-    image: "/photo_2024-09-19_22-55-00.jpg",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-  {
-    name: "Sample Name",
-    title: "Deacon",
-    image: "/IMG_E5314.JPG",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-]
+import Image from "next/image"
+import { useLocale } from "@/contexts/locale-context"
 
 export default function ClergyPage() {
+  const { translations } = useLocale()
+
+  const clergyMembers = [
+    {
+      name: "Sample Name",
+      title: translations.clergy.headPriest,
+      image: "/IMG_E2338.JPG",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    },
+    // {
+    //   name: "Sample Name",
+    //   title: translations.clergy.priest,
+    //   image: "/IMG_5278.jpg",
+    //   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    // },
+    {
+      name: "Sample Name",
+      title: translations.clergy.deacon,
+      image: "/IMG_5279.JPG",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    },
+    {
+      name: "Sample Name",
+      title: translations.clergy.deacon,
+      image: "/IMG_E2347.JPG",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    },
+    {
+      name: "Sample Name",
+      title: translations.clergy.deacon,
+      image: "/photo_2024-09-19_22-55-00.jpg",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    },
+    {
+      name: "Sample Name",
+      title: translations.clergy.deacon,
+      image: "/IMG_E5314.JPG",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    },
+  ]
   return (
     <div className="container mx-auto px-4">
-      <h1 className="text-3xl font-bold mb-8">የቤተክርስቲያን ካህናት</h1>
+      <h1 className="text-3xl font-bold mb-8">{translations.clergy.title}</h1>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {clergyMembers.map((member, index) => (
           <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">

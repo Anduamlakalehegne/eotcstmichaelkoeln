@@ -45,14 +45,14 @@ export default function EditGalleryPage({ params }: { params: { id: string } }) 
   }, [params.id])
 
   const fetchFolders = async () => {
-    const res = await fetch("/api/gallery/folders")
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery-folders`)
     const data = await res.json()
     setFolders(data)
   }
 
   const fetchPhoto = async () => {
     try {
-      const response = await fetch(`/api/gallery/${params.id}`)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery/${params.id}`)
       if (!response.ok) {
         throw new Error("Failed to fetch photo")
       }
@@ -71,7 +71,7 @@ export default function EditGalleryPage({ params }: { params: { id: string } }) 
     setError(null)
 
     try {
-      const response = await fetch(`/api/gallery/${params.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery/${params.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

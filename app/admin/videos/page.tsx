@@ -63,7 +63,7 @@ export default function VideosPage() {
     setLoading(true)
     try {
       const parent_id = currentFolder ? currentFolder.id : null
-      const url = parent_id ? `/api/videos/folders?parent_id=${parent_id}` : "/api/videos/folders"
+      const url = parent_id ? `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/video-folders?parent_id=${parent_id}` : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/video-folders`
       const res = await fetch(url)
       const data = await res.json()
       setFolders(data)
@@ -78,7 +78,7 @@ export default function VideosPage() {
     setLoading(true)
     try {
       const folder_id = currentFolder ? currentFolder.id : null
-      const url = folder_id ? `/api/videos?folder_id=${folder_id}` : "/api/videos"
+      const url = folder_id ? `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/videos?folder_id=${folder_id}` : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/videos`
       const res = await fetch(url)
       const data = await res.json()
       setVideos(data)
@@ -107,7 +107,7 @@ export default function VideosPage() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch("/api/videos/folders", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/video-folders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newFolderName, parent_id: currentFolder ? currentFolder.id : null })
@@ -127,7 +127,7 @@ export default function VideosPage() {
     if (!deleteFolder) return
     setIsDeletingFolder(true)
     try {
-      const res = await fetch(`/api/videos/folders/${deleteFolder.id}`, { method: "DELETE" })
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/video-folders/${deleteFolder.id}`, { method: "DELETE" })
       if (!res.ok) throw new Error("Failed to delete folder")
       setDeleteFolder(null)
       fetchFolders()
@@ -147,7 +147,7 @@ export default function VideosPage() {
     if (!videoToDelete) return
     setDeleting(true)
     try {
-      const res = await fetch(`/api/videos/${videoToDelete.id}`, { method: "DELETE" })
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/videos/${videoToDelete.id}`, { method: "DELETE" })
       if (!res.ok) throw new Error("Failed to delete video")
       setVideos(videos.filter((v) => v.id !== videoToDelete.id))
       setDeleteDialogOpen(false)

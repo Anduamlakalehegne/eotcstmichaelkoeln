@@ -2,11 +2,24 @@
 
 import { createContext, useContext, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabaseClient } from "@/lib/supabase-client"
-import type { Session } from "@supabase/supabase-js"
+
+type AuthUser = {
+  id: string
+  email: string
+  first_name?: string | null
+  last_name?: string | null
+  role?: string | null
+  is_admin?: boolean | null
+}
+
+type AuthSession = {
+  access_token: string
+  expires_at: number // epoch seconds
+  user: AuthUser
+}
 
 type AuthContextType = {
-  session: Session | null
+  session: AuthSession | null
   loading: boolean
   signOut: () => Promise<void>
 }
@@ -18,30 +31,50 @@ const AuthContext = createContext<AuthContextType>({
 })
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null)
+  const [session, setSession] = useState<AuthSession | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
-    // Get initial session
-    supabaseClient.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setLoading(false)
-    })
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabaseClient.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      setLoading(false)
-    })
-
-    return () => subscription.unsubscribe()
+    const load = () => {
+      try {
+        const raw = localStorage.getItem('auth')
+        if (!raw) {
+          setSession(null)
+          setLoading(false)
+          return
+        }
+        const parsed = JSON.parse(raw) as AuthSession
+        if (!parsed?.access_token || !parsed?.expires_at || !parsed?.user) {
+          localStorage.removeItem('auth')
+          setSession(null)
+          setLoading(false)
+          return
+        }
+        if (parsed.expires_at * 1000 <= Date.now()) {
+          localStorage.removeItem('auth')
+          setSession(null)
+        } else {
+          setSession(parsed)
+        }
+      } catch {
+        localStorage.removeItem('auth')
+        setSession(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'auth') load()
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
   }, [])
 
   const signOut = async () => {
-    await supabaseClient.auth.signOut()
+    localStorage.removeItem('auth')
+    setSession(null)
     router.push("/login")
   }
 

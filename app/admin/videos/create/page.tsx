@@ -42,7 +42,6 @@ export default function CreateVideoPage() {
     description: "",
     video_url: "",
     thumbnail_url: "",
-    duration: "",
     category: "",
     folder_id: initialFolderId,
   })
@@ -63,7 +62,7 @@ export default function CreateVideoPage() {
   }, [videoInputType])
 
   const fetchFolders = async () => {
-    const res = await fetch("/api/videos/folders")
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/video-folders`)
     const data = await res.json()
     setFolders(data)
   }
@@ -74,7 +73,7 @@ export default function CreateVideoPage() {
     setError(null)
 
     try {
-      const response = await fetch("/api/videos", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/videos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

@@ -4,8 +4,11 @@ import type React from "react"
 import { useState } from "react"
 import { toast } from "sonner"
 import { CheckCircle2 } from "lucide-react"
+import { useLocale } from "@/contexts/locale-context"
 
 export default function ContactFormPage() {
+  const { translations } = useLocale()
+  const t = translations.contact.form
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 
@@ -30,14 +33,14 @@ export default function ContactFormPage() {
       })
 
       if (response.ok) {
-        toast.success("Message sent successfully!")
+        toast.success(t.toastSuccess)
         form.reset()
         setIsSuccess(true)
       } else {
-        throw new Error("Failed to send message")
+        throw new Error(t.sendError)
       }
     } catch (error) {
-      toast.error("Failed to send message. Please try again.")
+      toast.error(t.toastError)
       console.error("Error sending message:", error)
     } finally {
       setIsSubmitting(false)
@@ -52,15 +55,15 @@ export default function ContactFormPage() {
             <div className="flex justify-center mb-4">
               <CheckCircle2 className="h-16 w-16 text-green-500" />
             </div>
-            <h2 className="text-2xl font-bold text-green-800 mb-4">መልእክትዎ በተሳካ ሁኔታ ተልኳል!</h2>
+            <h2 className="text-2xl font-bold text-green-800 mb-4">{t.successTitle}</h2>
             <p className="text-green-700 mb-6">
-              ስለሚያግኙን እናመሰግናለን። በቅርቡ እንመልስልዎታለን።
+              {t.successMessage}
             </p>
             <button
               onClick={() => setIsSuccess(false)}
               className="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors"
             >
-              ሌላ መልእክት ላክ
+              {t.successButton}
             </button>
           </div>
         </div>
@@ -70,7 +73,7 @@ export default function ContactFormPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">ያግኙን</h1>
+      <h1 className="text-3xl font-bold mb-8">{t.title}</h1>
       <div className="max-w-2xl mx-auto">
         <form 
           onSubmit={handleSubmit} 
@@ -85,7 +88,7 @@ export default function ContactFormPage() {
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                ስም
+                {t.labels.name}
               </label>
               <input
                 type="text"
@@ -97,7 +100,7 @@ export default function ContactFormPage() {
             </div>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                ኢሜይል
+                {t.labels.email}
               </label>
               <input
                 type="email"
@@ -111,7 +114,7 @@ export default function ContactFormPage() {
 
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-              ስልክ ቁጥር
+              {t.labels.phone}
             </label>
             <input
               type="tel"
@@ -123,7 +126,7 @@ export default function ContactFormPage() {
 
           <div>
             <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-              ርዕስ
+              {t.labels.subject}
             </label>
             <select
               id="subject"
@@ -131,17 +134,17 @@ export default function ContactFormPage() {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               required
             >
-              <option value="">ርዕስ ይምረጡ</option>
-              <option value="general">አጠቃላይ ጥያቄ</option>
-              <option value="services">የቤተክርስቲያን አገልግሎቶች</option>
-              <option value="events">ዝግጅቶች</option>
-              <option value="other">ሌላ</option>
+              <option value="">{t.labels.selectSubject}</option>
+              <option value="general">{t.labels.subjectGeneral}</option>
+              <option value="services">{t.labels.subjectServices}</option>
+              <option value="events">{t.labels.subjectEvents}</option>
+              <option value="other">{t.labels.subjectOther}</option>
             </select>
           </div>
 
           <div>
             <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-              መልእክት
+              {t.labels.message}
             </label>
             <textarea
               id="message"
@@ -157,7 +160,7 @@ export default function ContactFormPage() {
             disabled={isSubmitting}
             className="w-full bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "በማስገባት ላይ..." : "መልእክት ላክ"}
+            {isSubmitting ? t.submitting : t.submit}
           </button>
         </form>
       </div>

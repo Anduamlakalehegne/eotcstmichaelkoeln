@@ -1,13 +1,17 @@
+"use client"
+
 import Image from "next/image"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
 import { Clock, MapPin, Users, BookOpen, Church, Landmark, Home, Globe, Building } from "lucide-react"
+import { useLocale } from "@/contexts/locale-context"
 
 export default function HistoryPage() {
+  const { translations } = useLocale()
   return (
     <div className="container mx-auto px-2 sm:px-4 py-6 md:py-8">
       <div className="">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-center">የኮሎኝ ቅዱስ ሚካኤል ቤተ ክርስቲያን ታሪክ</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-center">{translations.history.title}</h1>
 
         {/* Introduction Section */}
         <div className="mb-8 md:mb-12 flex flex-col md:flex-row gap-6 md:gap-8 items-start">
@@ -24,22 +28,15 @@ export default function HistoryPage() {
             {/* Caption Section */}
             <div className="py-1 flex flex-col items-center">
               <span className="block text-center text-base xs:text-lg sm:text-xl md:text-2xl font-semibold text-blue-700 bg-white/80 rounded-lg px-2 xs:px-4 sm:px-6 py-2 sm:py-3 shadow-md border border-blue-100 tracking-wide mb-2">
-                ቦታው እንዲገዛ ሲወሰን በነበረን ስብሰባ ላይ የተነሳነው የፎቶ ማስታዎሻ
+                {translations.history.caption}
               </span>
             </div>
 
             <p className="text-sm xs:text-base sm:text-lg mb-4 text-gray-700 leading-relaxed px-2 xs:px-4 sm:px-6 md:px-20 py-2 text-justify">
-              ቀዳሚ ገጽአሁን በመላው አውሮፓ፥ በአፍሪካ፥ በአሜሪካ፥ በካናዳና በአውስትራልያ ከተቋቋሙት ቀደምት አብያተ ክርስቲያናት መካከል የመጀመሪያው ቀዳማዊና ፋና ወጊው ቤተ ክርስቲያን የኮሎኝ ርእሰ አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ነው። ቤተ ክርስቲያናችን በሊቀ ካህናት ዶክተር መርዓዊ ተበጀ ፊት አውራሪነት፥ በብፁዕ ወቅዱስ አቡነ ተክለሃይማኖት አባታዊ ፈቃድ በዚያን ጊዜ በጅቡቲና በምሥራቅ አፍሪካ ሊቀ ጳጳስ በነበሩት፥ በአሁኑ ጊዜ ደግሞ የኖርዲክ እና ግሪክ ሀገረ ስብከት ሊቀ ጳጳስ በኾኑተ በብፁዕ አቡነ ኤልያስ ተባርኮ ተከፈተ።
-
-              <p className="py-2">አመሠራረቱም እንደሚከተለው ነው።</p>
-              በ 1971 ዓም ለሊቀ ካህናት ዶክተር መርዓዊ ተበጀ እና ዲያቆን በዕደ ማርያም መርሻ በብፁዕ ወቅዱስ አቡነ ተክለሃይማኖት ፈቃድ ወደ ጀርመን ለከፍተኛ ትምህርት ተላኩ። ወደ ጀርመን ሀገር በገቡ በሁለት ዓመት ውስጥ ቤተ ክርስቲያን ለማቋቋም ጽንሰ ሀሳቡ በመርህ ደረጃ ለውይይት ቀረበ። በሃይደልበርግ ኗሪ ከሆኑ ወንድሞች ጋር በእመቤታችን ቅድስት ማርያም የጽዋ ማኅበር ስም መሰባሰብ ጀመሩ። ማኅበሩ የመገናኛ ድልድይ ሆኖ ሊያገለግላቸው ችሏል። በተለይም በ 1973 ዓ.ም. በምድረ ጀርመን በሃይደልበርግ ከተማ የመጀመሪያው ቅዳሴ ተቀደሰ። ለምእመናንም ቡራኬ ተሰጠ። በዚህም መንፈሳዊ አገልግሎት በለንደን ለጃማይካውያን መንፈሳዊ አገልግሎት ለመስጠት ተመድበው የነበሩት አባ አረጋዊ ወልደ ገብርኤል በኋላ የመላው አውሮፓ ሊቀ ጳጳስ የነበሩት ብፁዕ አቡነ ዮሐንስ ተገኝተዋል። ሥርዓተ ቅዳሴውንም መርተዋል። ብፁዕ አቡነ ዮሐንስ ካላቸው ፍቅርን ከተላበሰ ሰብእነታቸው የተነሣ መልካም ግንኙነት ነበራቸው። ቤተ ክርስቲያኑ ሲቋቋምም በበዓሉ ላይ ቤተ ክርስቲያናቸውን ወክለው ተገኝተዋል። የመጀመሪያው ቅዳሴ ከተካሄደ በኋላ ቤተ ክርስቲያን የማቋቋሙ ፍላጎት እየተጠናከረ መጣ። በሃይደልበርግና በሌሎች ከተማዎች የሚገኙ ኢትዮጵያውያን ተካፋዮች የሆኑባቸው የዘመን መለወጫ፥ የልደትና የትንሣኤ በዓላት ይከበሩ ጀመር።
-
-              <p className="py-2">
-                ከዚህ በኋላ ሁኔታዎች ሁሉ መልክ መልክ መያዝ ጀመሩ። የምእመናኑም ቁጥር እየጨመረ ሄደ። በአውሮፓውያኑ የሰማኒያዎቹ ዓመታት ላይ አያሌ ኢትዮጵያውያንና ኤርትራውያን ወደ ጀርመን በብዛት የገቡበት ጊዜ ነበር። በተለይም " Landesarbeitsgemeinschaft Ausländische Flüchtlinge Nordrhein-Westfalen in Düsseldorf e.V." የሚባል በመንግሥት በጀት የሚደጎም ማኅበር ተቋቁሞ የስደተኞችን ጉዳይ ይከታተል ስለነበር የኢትዮጵያን ስደተኞች የሚመለከት ዐውደ ጥናት ከመሰረም 8-11፥1973 በዱስልዶርፍ ከተማ ተካሄደ። የቤተ ክርስቲያናችን መሥራቾችም ከፕሮፌሰራቸው ከዶ/ር ሃየር ጋር ጸሎት እንዲያደርጉና ትምህርት እንዲሰጡ ተጋበዙ። የእሁዱ መርሃ ግብር የእኛ ብቻ ነበር፧ በጀርመንኛ ለሚቀርበው ጥያቄ በመምህራቸው እየታገዙ፧ ስለ ቤተ ክርስቲያናችን በቂ ግንዛቤ ለማስጨበጥ ችለዋል። ከሀገሩ ከወጣ በኋላ እንድ ቀን እንኳ ቃለ እግዚአብሔር ሰምቶ ያማያውቀው ሁሉ ያነባ ነበር። በተለይ ፕሮፌሰር ሃየር እኛን ለመርዳት ቆርጠው የተነሡት የዚያን ሕዝብ ስሜት ከተመለከቱ በኋላ ነበር ማለት ይቻላል።
-              </p>
-              <p className="py-2">
-                ቤተ ክርስቲያን ለምን አናቋቁምም የሚለው ጥያቄ የዕለት ከዕለት ጥያቄ ሆኖ መቅረብ ጀመረ። ለዚህም አንድ አመች ዕድል ተፈጠረ። ከላይ በተጠቀሰው በ 1973 ዓ.ም. የኢትዮጵያ ፓትርያርክ ብፁዕ ወቅዱስ አቡነ ተክለሃይማኖት የጀርመን ወንጌላዊት ቤተ ክርስቲያን ባደረገችላቸው ጥሪ መሠረት ጀርመንን ሲጎበኙ፥ ቤተ ክርስቲያን እድናቋቁም ፈቃዳቸው ይሆን ዘንድ ፍራንክፈርት ላይ ጥያቄ ቀረበ። ቅዱስነታቸውም ጥቂት ካሰቡ በኋላ ተማሪዎቹን ካህናት «ትምህርታችሁን ጨርሳችሁ ለምን ወደ ሀገራችሁ አትመለሱም» አሉዋቸው። እነርሱም «ቅዱስ አባታችን ከሀገሩ የወጣው ሕዝብ ብዙ ስለሆነ፧ እንደሌሎቹ ኦርቶዶክሳውያን የእኛም አማንያን ቤተ ክርስቲያን ያስፈልጋቸዋል» የሚል መልስ ሰጡ። አስከትለዋቸው የመጡት ብፁዓን ሊቃነ ጳጳሳት አቡነ ዜና ማርቆስ፣ አቡነ ጎርጎርዮስ፣ አቡነ ኤልያስ እና የጠቅላይ ቤተ ክህነት ዋና ሥራ አስኪያጅ ሊቀ ማእምራን አበባው ይግዛው በውጭ ሀገር ትምህርታቸውን ተከታትለው የጨረሱ፧ በዝርዎት ያሉትን የግሪካውያንንና የሌሎቹንም ኦርቶዶክሳውያን አብያተ ክርስቲያናት ሁኔታ ስለሚያውቁ ለሀሳቡ ላይ ድጋፍ ሰጥተዋል። በመጨረሻም «ለማናቸውም ደብዳቤ ጻፉ» ብለው ካረፉበት ክፍል ቡራኬ ተቀብለው ወጡ።
-              </p>
+              {translations.history.introduction}
+              <p className="py-2">{translations.history.establishment}</p>
+              <p className="py-2">{translations.history.development}</p>
+              <p className="py-2">{translations.history.question}</p>
             </p>
           </div>
 
@@ -47,38 +44,38 @@ export default function HistoryPage() {
 
         {/* Timeline Section - Enhanced */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold mb-8 text-center">ቤተ ክርስቲያናችን በታሪክ ውስጥ</h2>
+          <h2 className="text-2xl font-bold mb-8 text-center">{translations.history.timeline.title}</h2>
 
           <div className="space-y-12">
             {[
               {
-                year: "1971-1981",
-                title: "የመጀመሪያው 10 አመታት",
-                description: `1. ከአገር ቤት ለትምህርት የመጡ ሁለት መንፈሳዊ ተማሪዎች፡፡\n2. የመጀመሪያው ቅዳሴ በሃይድል በርግ (ሊ. ካ, መርዓዊ ተበጀ እና ቀሲስ ዘለአለም)\n3. ፓትረያሪክ ብፁህ አቡነ ተክለ ሐይማኖት ጀርመን ሀገር ለጉብኝት በመጡበት ወቅት፣ የመጀመሪያው የቅዱስ ሚካኡል ቤተ ክርስትያን እንዲከፈት ሊካ መርዓዊ ተበጀ ፍቃድ ሲጠየቁ፣\n4. የመጀመሪያው የሰበካ ጉባኤ ምስረታ እና ስብሰባ።\n5. በ 1981-1983 በጀርመን ሐገር ውስጥ የመጀመሪያው የቅዱስ ሚካኤል መንፈሳዊ አግልግሎት።\n ከ1983-1985 ከሃይድልበርግ እየተመላለሱ ሲያገለግሉ፡፡\n ሊ. ካ. መርዓዊ ተበጀ\n 6. ሊ.ካ.መርዓዊ ተበጀ ሌሎችን ካህናት በማስተባበር ከኮሎኝ በመነሳት በጀርመን እና በተለያዩ የአውሮፓ ሃገራት መንፈሳዊ አገልግሎት ሲሰጡ፡፡\n 7. በጀርመን የቴሌቪዥን ጣቢያ WDR ግብዣ የመጡ የቅዱስ ያሬድ ዘማሪያን በኮኒቨርት ቤተክርስትያን ዝማሪ ሲያቀርቡ፡፡`,
+                year: translations.history.timeline.periods.first.year,
+                title: translations.history.timeline.periods.first.title,
+                description: translations.history.timeline.periods.first.description,
                 icon: "Home",
                 color: "bg-blue-100 text-blue-700",
                 image: "",
               },
               {
-                year: "1981-1991",
-                title: "ሁለተኛው 10 አመታት",
-                description: `1. በጀርመን አገር ባሉ አብያተ ክርስትያናት ስለ ኢትዬጵያ ኦርቶዶክስ ተዋህዶ ቤተክርስትያን ገለፃ ሲደረግ፡፡\n2. የጀርመን አብያተ ክርስትያናት የሐይማኖት አባቶችን እና አገልጋዬች በኢትዬጵያ ጉብኝት ሲያደርጉ፡\n3. በጀርመን አገር ያሉ ቤተክርስትያኖች የሚገናኙበት ቀን (Kirchen Tag) ላይ ተሳትፎ ሲደረግ::\n4. በኢትዬጵያ ኦርቶዶክስ ተዋህዶ ቤተክርስትያን በአመታዊ የካህናት ስብሰባ ላይ አመታዊ ሪፖርት ሲያቀርቡ፡፡`,
+                year: translations.history.timeline.periods.second.year,
+                title: translations.history.timeline.periods.second.title,
+                description: translations.history.timeline.periods.second.description,
                 icon: "Users",
                 color: "bg-indigo-100 text-indigo-700",
                 image: "",
               },
               {
-                year: "1991-2001",
-                title: "የሶስተኛው 10 አመታት",
-                description: `1. ቀድሞ ከኢቫንጌሊሽ ቤተክርስትያን መልካም ፍቃድ በጊዚያውነት የተሰጠውን ቤተክርስትያን ግዢ የተፈፀመበት።\n2. የቤተክርስትያን እድሳት ሲደረግ\n3. የመዘምራን አገልግሎት \n4. የ 25 አመት ክብረ በአል ለመጀመሪያ ጊዜ ሲከበር \n5. የ 30 አመት ክብረ በአል`,
+                year: translations.history.timeline.periods.third.year,
+                title: translations.history.timeline.periods.third.title,
+                description: translations.history.timeline.periods.third.description,
                 icon: "BookOpen",
                 color: "bg-purple-100 text-purple-700",
                 image: "",
               },
               {
-                year: "2001-2011",
-                title: "የመጨረሻው 10 አመታት",
-                description: `1. የተለያዩ መንፈሳዊ አገልግሎቶች፡\n2. በኮሮና ጊዜ ያልተቋረጠ አገልግሎት \n3. ተጨማሪ ቤት እና ቦታ ግዢ `,
+                year: translations.history.timeline.periods.fourth.year,
+                title: translations.history.timeline.periods.fourth.title,
+                description: translations.history.timeline.periods.fourth.description,
                 icon: "Globe",
                 color: "bg-teal-100 text-teal-700",
                 image: "",
@@ -137,21 +134,21 @@ export default function HistoryPage() {
             <div className="bg-gradient-to-br from-blue-50 to-white p-8 rounded-lg shadow-xl">
               {/* Section Title */}
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-blue-900 mb-2">የቤተ ክርስቲያን አስተዳደር</h2>
+                <h2 className="text-3xl font-bold text-blue-900 mb-2">{translations.history.administration.title}</h2>
                 <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
               </div>
 
               {/* Administrator */}
               <div className="max-w-md mx-auto mb-12">
                 <div className="bg-white p-6 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-3 text-center">አስተዳዳሪ</h3>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3 text-center">{translations.history.administration.administrator}</h3>
                   <div className="flex items-center justify-center space-x-3">
                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                       <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                     </div>
-                    <p className="text-xl text-blue-700 font-medium">ሊቀ ካህናት ዶክተር መርዓዊ ተበጀ</p>
+                    <p className="text-xl text-blue-700 font-medium">{translations.history.administration.administratorName}</p>
                   </div>
                 </div>
               </div>
@@ -159,7 +156,7 @@ export default function HistoryPage() {
               {/* Current Council */}
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-6 text-center">
-                  አሁን ያሉ የሰበካ ጉባኤ አስተዳደር (2016-2019 ዓ.ም.)
+                  {translations.history.administration.currentCouncil} {translations.history.administration.councilPeriod}
                 </h3>
 
                 <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">

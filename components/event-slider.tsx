@@ -18,7 +18,7 @@ interface Event {
 type EventType = "upcoming" | "past" | "all"
 
 export default function EventSlider() {
-  const { locale } = useLocale();
+  const { locale, translations } = useLocale();
   const [rawEvents, setRawEvents] = useState<any[]>([])
   const [events, setEvents] = useState<Event[]>([])
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([])
@@ -64,7 +64,7 @@ export default function EventSlider() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const response = await fetch("/api/events")
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/events`)
         if (!response.ok) {
           throw new Error("Failed to fetch events")
         }
@@ -163,15 +163,15 @@ export default function EventSlider() {
   const pageCount = Math.ceil(filteredEvents.length / eventsPerPage)
 
   if (loading) {
-    return <div className="text-center">ተግባራዊ ዝግጅቶችን በመጫን ላይ...</div>
+    return <div className="text-center">{translations.home.events.loading}</div>
   }
 
   if (error) {
-    return <div className="text-center text-red-500">ስህተት፡ {error}</div>
+    return <div className="text-center text-red-500">{translations.home.events.error} {error}</div>
   }
 
   if (events.length === 0) {
-    return <div className="text-center text-gray-500">ምንም ክስተት አልተገኘም</div>
+    return <div className="text-center text-gray-500">{translations.home.events.noEvents}</div>
   }
 
   // Check if there are any upcoming events
@@ -187,12 +187,12 @@ export default function EventSlider() {
   if (!hasUpcomingEvents && eventType === "upcoming") {
     return (
       <div className="text-center space-y-4">
-        <p className="text-gray-500 text-lg">ምንም የሚመጡ ዝግጅቶች አልተገኙም</p>
+        <p className="text-gray-500 text-lg">{translations.home.events.noUpcomingEvents}</p>
         <button
           onClick={() => setEventType("past")}
           className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
         >
-          የተያረፉትን ዝግጅቶች ይመልከቱ
+          {translations.home.events.viewPastEvents}
         </button>
       </div>
     )
@@ -210,7 +210,7 @@ export default function EventSlider() {
               eventType === "upcoming" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-200"
             }`}
           >
-            የሚመጡ
+            {translations.home.events.upcoming}
           </button>
           <button
             onClick={() => setEventType("past")}
@@ -218,7 +218,7 @@ export default function EventSlider() {
               eventType === "past" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-200"
             }`}
           >
-            ያለፉ
+            {translations.home.events.past}
           </button>
           <button
             onClick={() => setEventType("all")}
@@ -226,7 +226,7 @@ export default function EventSlider() {
               eventType === "all" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-200"
             }`}
           >
-            ሁሉም
+            {translations.home.events.all}
           </button>
         </div>
 
@@ -237,7 +237,7 @@ export default function EventSlider() {
         >
           {years.map((year) => (
             <option key={year} value={year}>
-              {year === "all" ? "ሁሉም ዓመታት" : year}
+              {year === "all" ? translations.home.events.allYears : year}
             </option>
           ))}
         </select>
@@ -249,7 +249,7 @@ export default function EventSlider() {
         >
           {months.map((month) => (
             <option key={month} value={month}>
-              {month === "all" ? "ሁሉም ወራቶች" : month}
+              {month === "all" ? translations.home.events.allMonths : month}
             </option>
           ))}
         </select>
@@ -286,7 +286,7 @@ export default function EventSlider() {
                     href={`/news/events/${event.id}`}
                     className="inline-flex text-blue-600 hover:text-blue-700 text-sm font-medium items-center gap-1"
                   >
-                    ዝርዝር
+                    {translations.home.events.details}
                   </Link>
                 </div>
               ))}

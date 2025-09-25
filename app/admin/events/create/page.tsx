@@ -105,9 +105,12 @@ export default function CreateEventPage() {
       if (!formData.location) throw new Error("Location is required")
 
       // Insert event
-      const { data: eventData, error: eventError } = await supabaseClient
-        .from("events")
-        .insert({
+      const eventResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           title: formData.title,
           description: formData.description,
           category: formData.category,
@@ -122,15 +125,16 @@ export default function CreateEventPage() {
           image_url: formData.image_url,
           current_attendees: 0,
           language: formData.language,
-        })
-        .select()
+        }),
+      })
 
-      if (eventError) {
-        console.error("Supabase insert error:", eventError) // Log the full error object
-        throw new Error(eventError.message || "Failed to create event")
+      if (!eventResponse.ok) {
+        const errorData = await eventResponse.json()
+        throw new Error(errorData.error || "Failed to create event")
       }
 
-      const eventId = eventData[0].id
+      const eventData = await eventResponse.json()
+      const eventId = eventData.id
 
       // Handle related images if any
       if (relatedImages.length > 0) {
@@ -141,11 +145,17 @@ export default function CreateEventPage() {
           display_order: index,
         }))
 
-        const { error: galleryError } = await supabaseClient.from("event_gallery").insert(galleryItems)
+        const galleryResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/event-gallery/bulk`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ images: galleryItems }),
+        })
 
-        if (galleryError) {
-          console.error("Supabase gallery insert error:", galleryError) // Log the full error object
-          throw new Error(galleryError.message || "Failed to insert gallery images")
+        if (!galleryResponse.ok) {
+          const errorData = await galleryResponse.json()
+          throw new Error(errorData.error || "Failed to insert gallery images")
         }
       }
 

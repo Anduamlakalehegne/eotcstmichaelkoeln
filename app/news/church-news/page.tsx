@@ -69,81 +69,14 @@ export default function ChurchNewsPage() {
   const [totalPages, setTotalPages] = useState(1)
   const [paginatedNews, setPaginatedNews] = useState<News[]>([])
 
-  // Get translations based on locale
-  const getTranslations = () => {
-    switch (locale) {
-      case "am":
-        return {
-          title: "የቤተ ክርስቲያን ዜናዎች",
-          searchPlaceholder: "ዜናዎችን ይፈልጉ...",
-          filters: "ፊልተሮች",
-          category: "ምድብ",
-          year: "ዓመት",
-          month: "ወር",
-          sortBy: "በየትኛው እንደሚደርጉ",
-          newestFirst: "አዲሶቹን መጀመሪያ",
-          oldestFirst: "የቆዩትን መጀመሪያ",
-          resetFilters: "ፊልተሮችን ዳግም ያዘጋጁ",
-          noNews: "ምንም ዜናዎች አልተገኙም",
-          tryAdjusting: "ፍለጋዎን ወይም ፊልተሮችዎን ይስሩ",
-          clearSearch: "ፍለጋን ያጽዱ",
-          readMore: "ተጨማሪ ያንብቡ",
-          readFullArticle: "ሙሉውን ጽሑፍ ያንብቡ",
-          featured: "የተመረጡ",
-          allNews: "ሁሉም ዜናዎች",
-          by: "በ",
-        }
-      case "de":
-        return {
-          title: "Kirchennachrichten",
-          searchPlaceholder: "Nachrichten suchen...",
-          filters: "Filter",
-          category: "Kategorie",
-          year: "Jahr",
-          month: "Monat",
-          sortBy: "Sortieren nach",
-          newestFirst: "Neueste zuerst",
-          oldestFirst: "Älteste zuerst",
-          resetFilters: "Filter zurücksetzen",
-          noNews: "Keine Nachrichten gefunden",
-          tryAdjusting: "Versuchen Sie, Ihre Suche oder Filter anzupassen",
-          clearSearch: "Suche löschen",
-          readMore: "Weiterlesen",
-          readFullArticle: "Ganzen Artikel lesen",
-          featured: "Hervorgehoben",
-          allNews: "Alle Nachrichten",
-          by: "Von",
-        }
-      default:
-        return {
-          title: "Church News",
-          searchPlaceholder: "Search news...",
-          filters: "Filters",
-          category: "Category",
-          year: "Year",
-          month: "Month",
-          sortBy: "Sort by",
-          newestFirst: "Newest first",
-          oldestFirst: "Oldest first",
-          resetFilters: "Reset Filters",
-          noNews: "No news articles found",
-          tryAdjusting: "Try adjusting your search or filters",
-          clearSearch: "Clear Search",
-          readMore: "Read more",
-          readFullArticle: "Read Full Article",
-          featured: "Featured",
-          allNews: "All News",
-          by: "By",
-        }
-    }
-  }
-
-  const t = getTranslations()
+  // Use centralized translations from locale context
+  const { translations } = useLocale()
+  const t = translations.churchNews
 
   // For translated 'All' labels
-  const allYearLabel = locale === "am" ? "ሁሉም ዓመታት" : "All";
-  const allMonthLabel = locale === "am" ? "ሁሉም ወራቶች" : "All";
-  const allCategoryLabel = locale === "am" ? "ሁሉም ምድቦች" : "All";
+  const allYearLabel = translations.home.events.allYears;
+  const allMonthLabel = translations.home.events.allMonths;
+  const allCategoryLabel = t.allNews || "All Categories";
   // Category translation map (add more as needed)
   const categoryTranslations: Record<string, string> = {
     "Community": "ማህበረሰብ",
@@ -162,7 +95,7 @@ export default function ChurchNewsPage() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        const response = await fetch("/api/news")
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news`)
         if (!response.ok) {
           throw new Error("Failed to fetch news")
         }
@@ -247,7 +180,7 @@ export default function ChurchNewsPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12 flex justify-center">
+      <div className="container mx-auto px-4 py-12 flex justify-center mt-32">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )

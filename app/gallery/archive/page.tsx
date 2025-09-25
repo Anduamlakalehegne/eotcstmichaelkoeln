@@ -15,7 +15,8 @@ import { useLocale } from "@/contexts/locale-context"
 import { useMemo } from "react"
 
 export default function ArchivePage() {
-  const { locale } = useLocale();
+  const { locale, translations } = useLocale();
+  const t = translations.gallery;
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [archiveItems, setArchiveItems] = useState<Archive[]>([])
@@ -29,18 +30,18 @@ export default function ArchivePage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   // Amharic and English labels
-  const allYearLabel = locale === "am" ? "ሁሉም ዓመታት" : "All Years";
-  const allCategoryLabel = locale === "am" ? "ሁሉም ምድቦች" : "All Categories";
-  const allTypeLabel = locale === "am" ? "ሁሉም አይነቶች" : "All Types";
-  const searchLabel = locale === "am" ? "ፈልግ" : "Search";
-  const filtersLabel = locale === "am" ? "ፊልተሮች" : "Filters";
-  const clearFiltersLabel = locale === "am" ? "ፊልተሮችን አጥፋ" : "Clear Filters";
-  const yearLabel = locale === "am" ? "ዓመት" : "Year";
-  const categoryLabel = locale === "am" ? "ምድብ" : "Category";
-  const typeLabel = locale === "am" ? "አይነት" : "Type";
-  const archiveTitle = locale === "am" ? "የቤተክርስቲያን ማህደር" : "Church Archive";
-  const archiveDesc = locale === "am" ? "የቤተክርስቲያን ታሪካዊ ፎቶዎችና ሰነዶችን ያስሱ" : "Explore our historical photos and documents";
-  const noItemsLabel = locale === "am" ? "ምንም ማህደር አልተገኘም" : "No archive items found with the current filters.";
+  const allYearLabel = t.archive.allYears;
+  const allCategoryLabel = t.archive.allCategories;
+  const allTypeLabel = t.archive.allTypes;
+  const searchLabel = t.archive.search;
+  const filtersLabel = t.archive.filters;
+  const clearFiltersLabel = t.archive.clearFilters;
+  const yearLabel = t.archive.year;
+  const categoryLabel = t.archive.category;
+  const typeLabel = t.archive.type;
+  const archiveTitle = t.archive.title;
+  const archiveDesc = t.archive.description;
+  const noItemsLabel = t.archive.noItems;
   // Category/type translation maps
   const categoryTranslations: Record<string, string> = {
     "Historical": "ታሪካዊ",
@@ -62,8 +63,8 @@ export default function ArchivePage() {
   const translateCategory = (cat: string) => locale === "am" ? (categoryTranslations[cat] || cat) : cat;
   const translateType = (type: string) => locale === "am" ? (typeTranslations[type] || type) : (type.charAt(0).toUpperCase() + type.slice(1));
 
-  const gridLabel = locale === "am" ? "ወደ ጎን" : "Grid";
-  const timelineLabel = locale === "am" ? "ወደ ታች" : "Timeline";
+  const gridLabel = t.archive.grid;
+  const timelineLabel = t.archive.timeline;
 
   // Fetch archive items
   useEffect(() => {
@@ -72,13 +73,11 @@ export default function ArchivePage() {
 
   const fetchArchiveItems = async () => {
     try {
-      const { data, error } = await supabaseClient
-        .from("archive")
-        .select("*")
-        .order("created_at", { ascending: false })
-
-      if (error) throw error
-
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/archive`)
+      if (!response.ok) {
+        throw new Error("Failed to fetch archive")
+      }
+      const data = await response.json()
       setArchiveItems(data || [])
       setFilteredItems(data || [])
     } catch (err: any) {
@@ -89,7 +88,7 @@ export default function ArchivePage() {
   }
 
   // Get unique years, categories, and types for filters
-  const years = [...new Set(archiveItems.map((item) => item.year))].sort((a, b) => b.localeCompare(a))
+  const years = [...new Set(archiveItems.map((item) => item.year))].sort((a, b) => String(b).localeCompare(String(a)))
   const categories = [...new Set(archiveItems.map((item) => item.category))]
   const types = [...new Set(archiveItems.map((item) => item.type))]
 
@@ -297,8 +296,8 @@ export default function ArchivePage() {
       {/* Results Count */}
       <div className="mb-6">
         <p className="text-gray-600">
-          Showing {filteredItems.length} of {archiveItems.length} items
-          {(selectedYear || selectedCategory || selectedType || searchQuery) && " with applied filters"}
+          {t.archive.resultsPrefix} {filteredItems.length} of {archiveItems.length} items
+          {(selectedYear || selectedCategory || selectedType || searchQuery) && ` ${t.archive.resultsSuffixApplied}`}
         </p>
       </div>
 
@@ -508,7 +507,7 @@ export default function ArchivePage() {
                 </div>
                 {selectedItem.tags && selectedItem.tags.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500">Tags</h4>
+                    <h4 className="text-sm font-medium text-gray-500">{t.common.tags}</h4>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {selectedItem.tags.map((tag: string) => (
                         <Badge key={tag} variant="secondary">
@@ -520,7 +519,7 @@ export default function ArchivePage() {
                 )}
                 <Button className="flex items-center gap-2 w-full">
                   <Download size={16} />
-                  Download {selectedItem.type === "document" ? (locale === "am" ? "ሰነድ" : "Document") : (locale === "am" ? "ፎቶ" : "Image")}
+                  {t.common.download} {selectedItem.type === "document" ? (locale === "am" ? "ሰነድ" : "Document") : (locale === "am" ? "ፎቶ" : "Image")}
                 </Button>
               </div>
             </div>

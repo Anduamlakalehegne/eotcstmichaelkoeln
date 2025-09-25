@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import Header from "@/components/header"
@@ -8,8 +10,11 @@ import ConstructionSection from "@/components/construction-section"
 import WeeklyServicesSection from "@/components/weekly-services-section"
 import HeroSlider from "@/components/hero-slider"
 import SupabaseTest from "@/components/supabase-test"
+import { useLocale } from "@/contexts/locale-context"
 
 export default function Home() {
+  const { translations } = useLocale()
+  
   return (
     <div>
       <main className="min-h-screen gap-16">
@@ -26,7 +31,7 @@ export default function Home() {
               <div className="max-w-4xl mx-auto text-center">
                 <div className="">
                   <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-blue-700 leading-tight">
-                    ይህ በኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተ ክርስቲያን በጀርመንና አካባቢው ሀገረ ስብከት የኮሎኝ ርእሰ አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ይፋዊ ድረ ገጽ ነው።
+                    {translations.home.welcome.title}
                   </h2>
                 </div>
               </div>
@@ -49,7 +54,7 @@ export default function Home() {
                 {/* Caption Section */}
                 <div className="py-3 flex flex-col items-center">
                   <span className="block text-center text-base xs:text-lg sm:text-xl md:text-2xl font-semibold text-blue-700 bg-white/80 rounded-lg px-2 xs:px-4 sm:px-6 py-2 sm:py-3 shadow-md border border-blue-100 tracking-wide mb-2">
-                    የ2017 ዓ.ም የበዓለ ሆሣዕና አከባበር
+                    {translations.home.welcome.caption}
                   </span>
                 </div>
               </div>
@@ -58,23 +63,21 @@ export default function Home() {
               <div className="flex flex-col justify-start space-y-8 text-justify h-full">
                 <div className="prose prose-lg max-w-none">
                   <p className="text-gray-600 leading-relaxed">
-                    አሁን በመላው አውሮፓ፥ በአፍሪካ፥ በአሜሪካ፥ በካናዳና በአውስትራልያ ከተቋቋሙት ቀደምት አብያተ ክርስቲያናት መካከል የመጀመሪያው ቀዳማዊና ፋና ወጊው ቤተ ክርስቲያን የኮሎኝ ርእሰ አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ነው።
+                    {translations.home.welcome.paragraph1}
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    ቤተክርስቲያናችን ወንጌልን በመላው ዓለም ማዳረስን ተልእኮ በማድረግ ለትምህርት ወደ አውሮፓ በመጡ አገልጋዮች ብርቱ ጥረት፣ በሊቀ ካህናት ዶክተር መርዓዊ ተበጀ እና በዲያቆን በዕደ ማርያም መርሻ ፊት አውራሪነት፥ በወቅቱ የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን ፓትርያርክ በነበሩት በአቡነ ተክለ ሃይማኖት መልካም ፈቃድ እና በቅዱስ ሲኖዶስ ውሳኔ በ 1975 ዓ.ም በዚያን ጊዜ በጅቡቲና በምሥራቅ አፍሪካ ሊቀ ጳጳስ በነበሩት፥ በአሁኑ ጊዜ ደግሞ የኖርዲክ እና ግሪክ ሀገረ ስብከት ሊቀ ጳጳስ በኾኑተ በብፁዕ አቡነ ኤልያስ ተባርኮ ተከፈተ።
+                    {translations.home.welcome.paragraph2}
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    አመሠራረቱም እንደሚከተለው ነው።
-                    በ 1971 ዓም ለሊቀ ካህናት ዶክተር መርዓዊ ተበጀ እና ዲያቆን በዕደ ማርያም መርሻ በብፁዕ ወቅዱስ አቡነ ተክለሃይማኖት ፈቃድ ወደ ጀርመን ለከፍተኛ ትምህርት ተላኩ። ወደ ጀርመን ሀገር በገቡ በሁለት ዓመት ውስጥ ቤተ ክርስቲያን ለማቋቋም ጽንሰ ሀሳቡ በመርህ ደረጃ ለውይይት ቀረበ። በሃይደልበርግ ኗሪ ከሆኑ ወንድሞች ጋር በእመቤታችን ቅድስት ማርያም የጽዋ ማኅበር ስም መሰባሰብ ጀመሩ። ማኅበሩ የመገናኛ ድልድይ ሆኖ ሊያገለግላቸው ችሏል። በተለይም በ 1973 ዓ.ም. በምድረ ጀርመን በሃይደልበርግ ከተማ የመጀመሪያው ቅዳሴ ተቀደሰ። ለምእመናንም ቡራኬ ተሰጠ። በዚህም መንፈሳዊ አገልግሎት በለንደን ለጃማይካውያን መንፈሳዊ አገልግሎት ለመስጠት ተመድበው የነበሩት አባ አረጋዊ ወልደ ገብርኤል በኋላ የመላው አውሮፓ ሊቀ ጳጳስ የነበሩት ብፁዕ አቡነ ዮሐንስ ተገኝተዋል። ሥርዓተ ቅዳሴውንም መርተዋል። ብፁዕ አቡነ ዮሐንስ ካላቸው ፍቅርን ከተላበሰ ሰብእነታቸው የተነሣ መልካም ግንኙነት ነበራቸው። ቤተ ክርስቲያኑ ሲቋቋምም በበዓሉ ላይ ቤተ ክርስቲያናቸውን ወክለው ተገኝተዋል። የመጀመሪያው ቅዳሴ ከተካሄደ በኋላ ቤተ ክርስቲያን የማቋቋሙ ፍላጎት እየተጠናከረ መጣ። በሃይደልበርግና በሌሎች ከተማዎች የሚገኙ ኢትዮጵያውያን ተካፋዮች የሆኑባቸው የዘመን መለወጫ፥ የልደትና የትንሣኤ በዓላት ይከበሩ ጀመር።
+                    {translations.home.welcome.paragraph3}
                   </p>
-
                 </div>
                 <div className="flex justify-start pt-4">
                   <Link
                     href="/about/history"
                     className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
                   >
-                    ተጨማሪ ያንብቡ
+                    {translations.home.welcome.readMore}
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
@@ -94,7 +97,7 @@ export default function Home() {
         {/* Upcoming Events Section */}
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">በቅርቡ የሚመጡ ዝግጅቶች</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">{translations.home.events.title}</h2>
             <EventSlider />
           </div>
         </section>
@@ -120,9 +123,9 @@ export default function Home() {
               <div className="max-w-3xl mx-auto text-center">
                 <div className="text-4xl md:text-8xl text-white/20 font-serif mb-3">"</div>
                 <p className="text-sm sm:text-base md:text-lg text-white font-light leading-relaxed mb-6 md:mb-8 text-justify">
-                  "የዚህ አጥቢያ መመሥረት ቤተ ክርስቲያን በሀገረ ጀርመንም ይሁን በመላው አውሮፓ ለደረሰችበት ደረጃ መሠረት የጣለ ነበር። ሊቀ ካህናት ዶ/ር መርዓዊ ተበጀ ከጀርመን አልፎ እንደ ጣልያን፣ ስዊድንና ፈረንሳይ የመሳሰሉት ሀገራት ቤተ ክርስቲያን ትመሠረት ዘንድ የተሳካ ሐዋርያዊ ጉዞ ያደረጉት ከዚህ አጥቢያ ቤተ ክርስቲያን በመነሣት ነበር። በመኾኑም ዛሬ የአንጋፋውን የርእሰ አድባራት ኮለኝ ደብረ ሰላም ቅዱስ ሚካኤል ቤተ ክርስቲያን ክብረ በዓል ስናከብር የምናዘክረው በጀርመንና በተለያዩ የአውሮፓ ሀገራት የተስፋፋችው የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን በሀገረ ጀርመን ኹነኛ መዋቅሯን ዘርግታ መንቀሳቀስ የጀመረችበትን መኾኑን መገንዘብ ያስፈልጋል።"
+                  "{translations.home.community.quote}"
                 </p>
-                <p className="text-xs md:text-base text-white font-medium">- ብፁእ አቡነ ዲዮናስዮስ፥ በኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን የጀርመንና አካባቢው እና የምሥራቅ ጎጃም አህጉረ ስብከት ሊቀ ጳጳስ</p>
+                <p className="text-xs md:text-base text-white font-medium">{translations.home.community.author}</p>
               </div>
             </div>
           </div>
@@ -133,13 +136,13 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-3 gap-12">
               <div className="flex flex-col justify-center items-center">
-                <h2 className="text-3xl font-bold mb-4">ዜናዎች</h2>
+                <h2 className="text-3xl font-bold mb-4">{translations.home.news.title}</h2>
 
                 <Link
                   href="/news/church-news"
                   className="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
                 >
-                  ሙሉ ዜናዎች ያንብቡ
+                  {translations.home.news.readAllNews}
                 </Link>
               </div>
               <div className="md:col-span-2">

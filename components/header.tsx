@@ -133,7 +133,7 @@ export default function Header() {
       case "am":
         return "አማ"
       default:
-        return localeCode.toUpperCase()
+        return String(localeCode).toUpperCase()
     }
   }
 

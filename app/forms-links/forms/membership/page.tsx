@@ -14,37 +14,42 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FileText, Download, Send, User, Users, Book, MapPin } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
+import { useLocale } from "@/contexts/locale-context"
 
-const formSchema = z.object({
-  firstName: z.string().min(2, { message: "የመጀመሪያ ስም ቢያንስ 2 ፊደል መሆን አለበት።" }),
-  lastName: z.string().min(2, { message: "የአያት ስም ቢያንስ 2 ፊደል መሆን አለበት።" }),
-  baptismalName: z.string().optional(),
-  dateOfBirth: z.string().min(1, { message: "የትውልድ ቀን ያስፈልጋል።" }),
-  email: z.string().email({ message: "እባክዎን ትክክለኛ ኢሜል ያስገቡ።" }),
-  phone: z.string().min(6, { message: "የስልክ ቁጥር ቢያንስ 6 ቁጥሮች መሆን አለበት።" }),
-  address: z.string().min(5, { message: "አድራሻ ቢያንስ 5 ፊደል መሆን አለበት።" }),
-  city: z.string().min(2, { message: "ከተማ ቢያንስ 2 ፊደል መሆን አለበት።" }),
-  postalCode: z.string().min(4, { message: "የፖስታ ኮድ ቢያንስ 4 ቁጥሮች መሆን አለበት።" }),
-  membershipType: z.enum(["individual", "family"], {
-    required_error: "እባክዎን የአባልነት አይነት ይምረጡ።",
-  }),
+export default function MembershipFormPage() {
+  const { translations } = useLocale()
+  const t = translations.formsLinks.forms.membership
+
+  const formSchema = z.object({
+    firstName: z.string().min(2, { message: t.validation.firstNameMin }),
+    lastName: z.string().min(2, { message: t.validation.lastNameMin }),
+    baptismalName: z.string().optional(),
+    dateOfBirth: z.string().min(1, { message: t.validation.dateOfBirthReq }),
+    email: z.string().email({ message: t.validation.emailInvalid }),
+    phone: z.string().min(6, { message: t.validation.phoneMin }),
+    address: z.string().min(5, { message: t.validation.addressMin }),
+    city: z.string().min(2, { message: t.validation.cityMin }),
+    postalCode: z.string().min(4, { message: t.validation.postalCodeMin }),
+    membershipType: z.enum(["individual", "family"], {
+      required_error: t.validation.membershipTypeReq,
+    }),
   familyMembers: z
     .array(
       z.object({
-        name: z.string().min(2, { message: "ስም ቢያንስ 2 ፊደል መሆን አለበት።" }),
-        relation: z.string().min(2, { message: "ግንኙነት ቢያንስ 2 ፊደል መሆን አለበት።" }),
+        name: z.string().min(2, { message: t.validation.familyMemberNameMin }),
+        relation: z.string().min(2, { message: t.validation.familyMemberRelationMin }),
         age: z.string(),
       })
     ),
   emergencyContact: z.object({
-    name: z.string().min(2, { message: "ስም ቢያንስ 2 ፊደል መሆን አለበት።" }),
-    phone: z.string().min(6, { message: "የስልክ ቁጥር ቢያንስ 6 ቁጥሮች መሆን አለበት።" }),
-    relation: z.string().min(2, { message: "ግንኙነት ቢያንስ 2 ፊደል መሆን አለበት።" }),
+    name: z.string().min(2, { message: t.validation.emergencyNameMin }),
+    phone: z.string().min(6, { message: t.validation.emergencyPhoneMin }),
+    relation: z.string().min(2, { message: t.validation.emergencyRelationMin }),
   }),
   interests: z.array(z.string()).optional(),
   skills: z.string().optional(),
   agreeToTerms: z.boolean().refine((value) => value === true, {
-    message: "የቤተክርስቲያን ደንቦችን መቀበል አለበት።",
+    message: t.validation.agreeRequired,
   }),
 }).superRefine((data, ctx) => {
   if (data.membershipType === "family") {
@@ -73,8 +78,6 @@ const formSchema = z.object({
       })
     }
   } else {
-    // If not family, ignore familyMembers validation
-    // Optionally clear familyMembers or ignore
   }
 })
 
@@ -100,7 +103,6 @@ const defaultValues: z.infer<typeof formSchema> = {
       agreeToTerms: false,
 }
 
-export default function MembershipFormPage() {
   const [formStep, setFormStep] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -121,19 +123,19 @@ export default function MembershipFormPage() {
 
     try {
       // Format the email content
-      const emailContent = `\nNew Membership Application\n\nFirst Name: ${values.firstName}\nLast Name: ${values.lastName}\nBaptismal Name: ${values.baptismalName || "-"}\nDate of Birth: ${values.dateOfBirth}\nEmail: ${values.email}\nPhone: ${values.phone}\nAddress: ${values.address}\nCity: ${values.city}\nPostal Code: ${values.postalCode}\nMembership Type: ${values.membershipType}\n\nFamily Members: ${(values.familyMembers && values.familyMembers.length > 0) ? values.familyMembers.map((m, i) => `\n  ${i+1}. Name: ${m.name}, Relation: ${m.relation}, Age: ${m.age}`).join("") : "-"}\n\nEmergency Contact:\n  Name: ${values.emergencyContact.name}\n  Phone: ${values.emergencyContact.phone}\n  Relation: ${values.emergencyContact.relation}\n\nInterests: ${(values.interests && values.interests.length > 0) ? values.interests.join(", ") : "-"}\nSkills: ${values.skills || "-"}\n\nSubmitted on: ${new Date().toLocaleString()}\n      `.trim()
+      const emailContent = `\n${t.email.heading}\n\n${t.labels.firstName}: ${values.firstName}\n${t.labels.lastName}: ${values.lastName}\n${t.labels.baptismalName}: ${values.baptismalName || "-"}\n${t.labels.dateOfBirth}: ${values.dateOfBirth}\n${t.labels.email}: ${values.email}\n${t.labels.phone}: ${values.phone}\n${t.labels.address}: ${values.address}\n${t.labels.city}: ${values.city}\n${t.labels.postalCode}: ${values.postalCode}\n${t.labels.membershipType}: ${values.membershipType}\n\n${t.labels.familyMembers}: ${(values.familyMembers && values.familyMembers.length > 0) ? values.familyMembers.map((m, i) => `\n  ${i+1}. ${t.labels.name}: ${m.name}, ${t.labels.relation}: ${m.relation}, ${t.labels.age}: ${m.age}`).join("") : "-"}\n\n${t.labels.emergencyContact}:\n  ${t.labels.name}: ${values.emergencyContact.name}\n  ${t.labels.phone}: ${values.emergencyContact.phone}\n  ${t.labels.relation}: ${values.emergencyContact.relation}\n\nInterests: ${(values.interests && values.interests.length > 0) ? values.interests.join(", ") : "-"}\n${t.labels.skills}: ${values.skills || "-"}\n\n${t.email.submittedOn}: ${new Date().toLocaleString()}\n      `.trim()
 
       // Create form data for FormSubmit.co
       const formData = new FormData()
       formData.append("_to", "anduamlakalehegne@gmail.com")
-      formData.append("_subject", `New Membership Application - ${values.firstName} ${values.lastName}`)
+      formData.append("_subject", `${t.email.subjectPrefix} - ${values.firstName} ${values.lastName}`)
       formData.append("_replyto", values.email)
       formData.append("message", emailContent)
       formData.append("name", `${values.firstName} ${values.lastName}`)
       formData.append("email", values.email)
       formData.append("_captcha", "false")
       formData.append("_template", "table")
-      formData.append("_autoresponse", "Thank you for submitting your membership application. We will review your information and contact you soon.")
+      formData.append("_autoresponse", t.email.autoresponse)
 
       // Send the form using FormSubmit.co
       const response = await fetch("https://formsubmit.co/anduamlakalehegne@gmail.com", {
@@ -147,15 +149,15 @@ export default function MembershipFormPage() {
       if (response.ok) {
         if (responseText.includes("Activate your form")) {
           toast({
-            title: "Form activation required",
-            description: "Please check your email (anduamlakalehegne@gmail.com) for the activation link from FormSubmit.co",
+            title: t.toast.activationTitle,
+            description: t.toast.activationDesc,
             variant: "default",
           })
         } else {
           setIsSubmitted(true)
           toast({
-            title: "Application submitted successfully!",
-            description: "Your membership application has been sent via email.",
+            title: t.toast.submitSuccessTitle,
+            description: t.toast.submitSuccessDesc,
           })
         }
       } else {
@@ -165,8 +167,8 @@ export default function MembershipFormPage() {
     } catch (error) {
       console.error("Error submitting form:", error)
       toast({
-        title: "Error submitting form",
-        description: "There was an error submitting your form. Please try again or contact us directly.",
+        title: t.toast.submitErrorTitle,
+        description: t.toast.submitErrorDesc,
         variant: "destructive",
       })
     } finally {
@@ -203,17 +205,15 @@ export default function MembershipFormPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-3xl mx-auto">
         <div className="mb-12 text-center">
-          <h1 className="text-3xl font-bold mb-4">የቤተክርስቲያን አባልነት ማመልከቻ ቅፅ</h1>
-          <p className="text-gray-600">
-            በኮሎኝ ቅዱስ ሚካኤል የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተክርስቲያን አባል ለመሆን ይህን ቅፅ ይሙሉ።
-          </p>
+          <h1 className="text-3xl font-bold mb-4">{t.title}</h1>
+          <p className="text-gray-600">{t.intro}</p>
         </div>
 
         <Tabs defaultValue="form" className="mb-8">
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="form">
               <FileText className="mr-2 h-4 w-4" />
-              መመዝገቢያ ቅፅ
+              {t.tabs.form}
             </TabsTrigger>
           </TabsList>
 
@@ -236,23 +236,11 @@ export default function MembershipFormPage() {
                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    ማመልከቻዎ በተሳካ ሁኔታ ተልኳል
+                    {t.successTitle}
                   </CardTitle>
-                  <CardDescription className="text-green-600">
-                    ስለማመልከቻዎ እናመሰግናለን
-                  </CardDescription>
+                  <CardDescription className="text-green-600">{t.successDesc}</CardDescription>
                 </CardHeader>
-                {/* <CardContent className="pt-6">
-                  <p className="mb-4">
-                    ማመልከቻዎን ተቀብለናል። የሚቀጥሉት ይህን ይጠብቁ:
-                  </p>
-                  <ol className="space-y-2 list-decimal pl-5">
-                    <li>የማረጋገጫ ኢሜል  ወደ ተመዘገበው ኢሜል ይላካል።</li>
-                    <li>የአባልነት ኮሚቴ አባል ማመልከቻዎን ይመርመራል።</li>
-                    <li>በአስፈላጊነት ወደ ቤተክርስቲያኑ ለቃለ-መጠይቅ ይጠራሉ።</li>
-                    <li>ከተፈቀደ በኋላ የአባልነት ማረጋገጫ ይሰጣል።</li>
-                  </ol>
-                </CardContent> */}
+               
                 <CardFooter className="border-t pt-4 flex flex-col sm:flex-row gap-3">
                   <Button
                     onClick={() => {
@@ -261,9 +249,8 @@ export default function MembershipFormPage() {
                       setFormStep(0)
                     }}
                   >
-                    ሌላ ማመልከቻ ላክ
+                    {t.successButton}
                   </Button>
-                  {/* <Button variant="outline">ወደ መነሻ ገፅ ተመለስ</Button> */}
                 </CardFooter>
               </Card>
             ) : (
@@ -275,9 +262,9 @@ export default function MembershipFormPage() {
                         <CardHeader className="bg-gray-50">
                           <CardTitle className="flex items-center">
                             <User className="mr-2 h-5 w-5 text-blue-600" />
-                            የግል መረጃ
+                            {t.sections.personal.title}
                           </CardTitle>
-                          <CardDescription>የግል መረጃዎን ያስገቡ</CardDescription>
+                          <CardDescription>{t.sections.personal.description}</CardDescription>
                         </CardHeader>
                         <CardContent className="pt-6">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -286,9 +273,9 @@ export default function MembershipFormPage() {
                               name="firstName"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>የመጀመሪያ ስም *</FormLabel>
+                                  <FormLabel>{t.labels.firstName} *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="ሙሉ ስም" {...field} />
+                                    <Input placeholder={t.placeholders.firstName} {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -299,9 +286,9 @@ export default function MembershipFormPage() {
                               name="lastName"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>የአያት ስም *</FormLabel>
+                                  <FormLabel>{t.labels.lastName} *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="የአያት ስም" {...field} />
+                                    <Input placeholder={t.placeholders.lastName} {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -312,9 +299,9 @@ export default function MembershipFormPage() {
                               name="baptismalName"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>የክርስትና ስም (ካለ)</FormLabel>
+                                  <FormLabel>{t.labels.baptismalName}</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="የጥምቀት ስም" {...field} />
+                                    <Input placeholder={t.placeholders.baptismalName} {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -325,7 +312,7 @@ export default function MembershipFormPage() {
                               name="dateOfBirth"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>የትውልድ ቀን *</FormLabel>
+                                  <FormLabel>{t.labels.dateOfBirth} *</FormLabel>
                                   <FormControl>
                                     <Input type="date" {...field} />
                                   </FormControl>
@@ -338,9 +325,9 @@ export default function MembershipFormPage() {
                               name="email"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>ኢሜል *</FormLabel>
+                                  <FormLabel>{t.labels.email} *</FormLabel>
                                   <FormControl>
-                                    <Input type="email" placeholder="example@email.com" {...field} />
+                                    <Input type="email" placeholder={t.placeholders.email} {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -351,9 +338,9 @@ export default function MembershipFormPage() {
                               name="phone"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>ስልክ ቁጥር *</FormLabel>
+                                  <FormLabel>{t.labels.phone} *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="+49 123 456789" {...field} />
+                                    <Input placeholder={t.placeholders.phone} {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -367,9 +354,9 @@ export default function MembershipFormPage() {
                         <CardHeader className="bg-gray-50">
                           <CardTitle className="flex items-center">
                             <MapPin className="mr-2 h-5 w-5 text-blue-600" />
-                            የአድራሻ መረጃ
+                            {t.sections.address.title}
                           </CardTitle>
-                          <CardDescription>የአሁኑን አድራሻዎን ያስገቡ</CardDescription>
+                          <CardDescription>{t.sections.address.description}</CardDescription>
                         </CardHeader>
                         <CardContent className="pt-6">
                           <div className="grid grid-cols-1 gap-6">
@@ -378,9 +365,9 @@ export default function MembershipFormPage() {
                               name="address"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>የመኖሪያ አድራሻ *</FormLabel>
+                                  <FormLabel>{t.labels.address} *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="123 ምሳሌ መንገድ" {...field} />
+                                    <Input placeholder={t.placeholders.address} {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -392,9 +379,9 @@ export default function MembershipFormPage() {
                                 name="city"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>ከተማ *</FormLabel>
+                                    <FormLabel>{t.labels.city} *</FormLabel>
                                     <FormControl>
-                                      <Input placeholder="ኮሎኝ" {...field} />
+                                      <Input placeholder={t.placeholders.city} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>
@@ -405,9 +392,9 @@ export default function MembershipFormPage() {
                                 name="postalCode"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>የፖስታ ኮድ *</FormLabel>
+                                    <FormLabel>{t.labels.postalCode} *</FormLabel>
                                     <FormControl>
-                                      <Input placeholder="50667" {...field} />
+                                      <Input placeholder={t.placeholders.postalCode} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>
@@ -420,7 +407,7 @@ export default function MembershipFormPage() {
 
                       <div className="flex justify-end">
                         <Button type="button" onClick={nextFormStep}>
-                          ወደ ቀጣይ ይቀጥሉ
+                          {t.labels.next}
                         </Button>
                       </div>
                     </div>
@@ -432,9 +419,9 @@ export default function MembershipFormPage() {
                         <CardHeader className="bg-gray-50">
                           <CardTitle className="flex items-center">
                             <Users className="mr-2 h-5 w-5 text-blue-600" />
-                            የአባልነት አይነት & የቤተሰብ መረጃ
+                            {t.sections.membership.title}
                           </CardTitle>
-                          <CardDescription>የአባልነት አይነት ይምረጡ እና የቤተሰብ አባላት ካሉ ያክሉ</CardDescription>
+                          <CardDescription>{t.sections.membership.description}</CardDescription>
                         </CardHeader>
                         <CardContent className="pt-6">
                           <div className="space-y-6">
@@ -443,7 +430,7 @@ export default function MembershipFormPage() {
                               name="membershipType"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>የአባልነት አይነት *</FormLabel>
+                                  <FormLabel>{t.labels.membershipType} *</FormLabel>
                                   <FormControl>
                                     <RadioGroup
                                       onValueChange={field.onChange}
@@ -453,13 +440,13 @@ export default function MembershipFormPage() {
                                       <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="individual" id="individual" />
                                         <label htmlFor="individual" className="cursor-pointer">
-                                          የግል አባልነት
+                                          {t.labels.membershipIndividual}
                                         </label>
                                       </div>
                                       <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="family" id="family" />
                                         <label htmlFor="family" className="cursor-pointer">
-                                          የቤተሰብ አባልነት
+                                          {t.labels.membershipFamily}
                                         </label>
                                       </div>
                                     </RadioGroup>
@@ -472,16 +459,16 @@ export default function MembershipFormPage() {
                             {watchMembershipType === "family" && (
                               <div className="space-y-4">
                                 <div className="flex items-center justify-between">
-                                  <h4 className="text-sm font-medium">የቤተሰብ አባላት</h4>
+                                  <h4 className="text-sm font-medium">{t.labels.familyMembers}</h4>
                                   <Button type="button" variant="outline" size="sm" onClick={addFamilyMember}>
-                                    የቤተሰብ አባል አክል
+                                    {t.labels.addFamilyMember}
                                   </Button>
                                 </div>
 
                                 {Array.from({ length: familyMembersCount }).map((_, index) => (
                                   <div key={index} className="border border-gray-200 rounded-md p-4">
                                     <div className="flex items-center justify-between mb-3">
-                                      <h5 className="text-sm font-medium">የቤተሰብ አባል {index + 1}</h5>
+                                      <h5 className="text-sm font-medium">{t.labels.memberN} {index + 1}</h5>
                                       {index > 0 && (
                                         <Button
                                           type="button"
@@ -490,7 +477,7 @@ export default function MembershipFormPage() {
                                           onClick={() => removeFamilyMember(index)}
                                           className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
                                         >
-                                          አስወግድ
+                                          {t.labels.remove}
                                         </Button>
                                       )}
                                     </div>
@@ -500,7 +487,7 @@ export default function MembershipFormPage() {
                                         name={`familyMembers.${index}.name`}
                                         render={({ field }) => (
                                           <FormItem>
-                                            <FormLabel>ስም</FormLabel>
+                                            <FormLabel>{t.labels.name}</FormLabel>
                                             <FormControl>
                                               <Input placeholder="ሙሉ ስም" {...field} />
                                             </FormControl>
@@ -513,9 +500,9 @@ export default function MembershipFormPage() {
                                         name={`familyMembers.${index}.relation`}
                                         render={({ field }) => (
                                           <FormItem>
-                                            <FormLabel>ግንኙነት</FormLabel>
+                                            <FormLabel>{t.labels.relation}</FormLabel>
                                             <FormControl>
-                                              <Input placeholder="ለምሳሌ፡ ባል፣ ልጅ" {...field} />
+                                              <Input placeholder={t.placeholders.relationExample} {...field} />
                                             </FormControl>
                                             <FormMessage />
                                           </FormItem>
@@ -526,7 +513,7 @@ export default function MembershipFormPage() {
                                         name={`familyMembers.${index}.age`}
                                         render={({ field }) => (
                                           <FormItem>
-                                            <FormLabel>እድሜ</FormLabel>
+                                            <FormLabel>{t.labels.age}</FormLabel>
                                             <FormControl>
                                               <Input type="number" {...field} />
                                             </FormControl>
@@ -547,9 +534,9 @@ export default function MembershipFormPage() {
                         <CardHeader className="bg-gray-50">
                           <CardTitle className="flex items-center">
                             <User className="mr-2 h-5 w-5 text-blue-600" />
-                            የአደጋ ጊዜ እውቂያ
+                            {t.sections.emergency.title}
                           </CardTitle>
-                          <CardDescription>በአደጋ ጊዜ ሊደውሉት የሚችሉትን ሰው ያስገቡ</CardDescription>
+                          <CardDescription>{t.sections.emergency.description}</CardDescription>
                         </CardHeader>
                         <CardContent className="pt-6">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -558,9 +545,9 @@ export default function MembershipFormPage() {
                               name="emergencyContact.name"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>ስም *</FormLabel>
+                                  <FormLabel>{t.labels.name} *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="ሙሉ ስም" {...field} />
+                                    <Input placeholder="" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -571,9 +558,9 @@ export default function MembershipFormPage() {
                               name="emergencyContact.phone"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>ስልክ ቁጥር *</FormLabel>
+                                  <FormLabel>{t.labels.phone} *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="ስልክ ቁጥር" {...field} />
+                                    <Input placeholder="" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -584,9 +571,9 @@ export default function MembershipFormPage() {
                               name="emergencyContact.relation"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>ግንኙነት *</FormLabel>
+                                  <FormLabel>{t.labels.relation} *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="ለምሳሌ፡ ባል፣ ወላጅ" {...field} />
+                                    <Input placeholder="" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -598,10 +585,10 @@ export default function MembershipFormPage() {
 
                       <div className="flex justify-between">
                         <Button type="button" variant="outline" onClick={prevFormStep}>
-                          ወደ ቀዳሚ ተመለስ
+                          {t.labels.prev}
                         </Button>
                         <Button type="button" onClick={nextFormStep}>
-                          ወደ ቀጣይ ይቀጥሉ
+                          {t.labels.next}
                         </Button>
                       </div>
                     </div>
@@ -613,11 +600,9 @@ export default function MembershipFormPage() {
                         <CardHeader className="bg-gray-50">
                           <CardTitle className="flex items-center">
                             <Book className="mr-2 h-5 w-5 text-blue-600" />
-                            በቤተክርስቲያኑ ውስጥ አገልግሎት
+                            {t.sections.service.title}
                           </CardTitle>
-                          <CardDescription>
-                            በቤተክርስቲያኑ ውስጥ ለማገልገል የሚፈልጉትን ይምረጡ
-                          </CardDescription>
+                          <CardDescription>{t.sections.service.description}</CardDescription>
                         </CardHeader>
                         <CardContent className="pt-6">
                           <div className="space-y-6">
@@ -627,23 +612,21 @@ export default function MembershipFormPage() {
                               render={() => (
                                 <FormItem>
                                   <div className="mb-4">
-                                    <FormLabel>የሚፈልጉት አገልግሎቶች (ሁሉንም መምረጥ ይችላሉ)</FormLabel>
-                                    <FormDescription>
-                                      በቤተክርስቲያኑ ውስጥ ለማገልገል የሚፈልጉትን ይምረጡ
-                                    </FormDescription>
+                                    <FormLabel>{t.labels.interestsTitle}</FormLabel>
+                                    <FormDescription>{t.labels.interestsHelp}</FormDescription>
                                   </div>
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                    {[
-                                      { id: "worship", label: "የስጦታ አገልግሎት" },
-                                      { id: "choir", label: "የቤተክርስቲያን መዝሙር ቡድን" },
-                                      { id: "sunday-school", label: "የእሁድ ት/ቤት" },
-                                      { id: "youth", label: "የወጣቶች ፕሮግራሞች" },
-                                      { id: "community", label: "የማህበረሰብ አገልግሎት" },
-                                      { id: "prayer", label: "የጸሎት ቡድኖች" },
-                                      { id: "bible-study", label: "የመጽሐፍ ቅዱስ ጥናት" },
-                                      { id: "committees", label: "የቤተክርስቲያን ኮሚቴዎች" },
-                                      { id: "events", label: "የተለያዩ ዝግጅቶች" },
-                                      { id: "maintenance", label: "የቤተክርስቲያን ግንባታ/ጥገና" },
+                                    {[ 
+                                      { id: "worship", label: t.labels.interestsOptions.worship },
+                                      { id: "choir", label: t.labels.interestsOptions.choir },
+                                      { id: "sunday-school", label: t.labels.interestsOptions.sundaySchool },
+                                      { id: "youth", label: t.labels.interestsOptions.youth },
+                                      { id: "community", label: t.labels.interestsOptions.community },
+                                      { id: "prayer", label: t.labels.interestsOptions.prayer },
+                                      { id: "bible-study", label: t.labels.interestsOptions.bibleStudy },
+                                      { id: "committees", label: t.labels.interestsOptions.committees },
+                                      { id: "events", label: t.labels.interestsOptions.events },
+                                      { id: "maintenance", label: t.labels.interestsOptions.maintenance },
                                     ].map((item) => (
                                       <FormField
                                         key={item.id}
@@ -683,13 +666,10 @@ export default function MembershipFormPage() {
                               name="skills"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>ችሎታዎች & ተሞክሮዎች</FormLabel>
-                                  <FormDescription>
-                                    ለቤተክርስቲያኑ ማገልገል የሚፈልጉትን ችሎታዎች ይግለጹ
-                                  </FormDescription>
+                                  <FormLabel>{t.labels.skills}</FormLabel>
+                                  <FormDescription>{t.labels.skillsHelp}</FormDescription>
                                   <FormControl>
                                     <Textarea
-                                      // placeholder="ለምሳሌ፡ ሙዚቃ፣ አስተማማኝነት፣ የተለያዩ ቋንቋዎች..."
                                       className="min-h-[100px]"
                                       {...field}
                                     />
@@ -706,7 +686,7 @@ export default function MembershipFormPage() {
                         <CardHeader className="bg-gray-50">
                           <CardTitle className="flex items-center">
                             <FileText className="mr-2 h-5 w-5 text-blue-600" />
-                            ደንቦች & ማስገባት
+                            {t.sections.terms.title}
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="pt-6">
@@ -720,12 +700,8 @@ export default function MembershipFormPage() {
                                     <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                                   </FormControl>
                                   <div className="space-y-1 leading-none">
-                                    <FormLabel className="font-normal">
-                                      የቤተክርስቲያኑን ደንቦች እና መመሪያዎች እስማማለሁ
-                                    </FormLabel>
-                                    <FormDescription>
-                                      የሰጡት መረጃ እውነተኛ መሆኑን ያረጋግጡ እና የቤተክርስቲያኑን መመሪያዎች እና ደንቦች ይከተላሉ።
-                                    </FormDescription>
+                                    <FormLabel className="font-normal">{t.labels.agree}</FormLabel>
+                                    <FormDescription>{t.labels.agreeHelp}</FormDescription>
                                   </div>
                                   <FormMessage />
                                 </FormItem>
@@ -737,7 +713,7 @@ export default function MembershipFormPage() {
 
                       <div className="flex justify-between">
                         <Button type="button" variant="outline" onClick={prevFormStep}>
-                          ወደ ቀዳሚ ተመለስ
+                          {t.labels.prev}
                         </Button>
                         <Button type="submit" disabled={isSubmitting}>
                           {isSubmitting ? (
@@ -762,12 +738,12 @@ export default function MembershipFormPage() {
                                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                 ></path>
                               </svg>
-                              በማስገባት ላይ...
+                              {t.labels.submitting}
                             </>
                           ) : (
                             <>
                               <Send className="mr-2 h-4 w-4" />
-                              ማመልከቻ ላክ
+                              {t.labels.submit}
                             </>
                           )}
                         </Button>

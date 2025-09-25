@@ -21,6 +21,7 @@ import { SuccessToast } from "@/components/success-toast"
 import { calculateReadTime } from "@/lib/calculate-read-time"
 import { useToast } from "@/components/ui/use-toast"
 import { useLocale } from "@/contexts/locale-context"
+import { Locale } from "date-fns"
 
 // Use the same categories as the user-facing news page
 const categories = [
@@ -152,8 +153,7 @@ export default function CreateNewsPage() {
     setFormData((prev) => ({
       ...prev,
       content,
-      // Automatically calculate read time based on content
-      read_time: calculateReadTime(content),
+      read_time: `${calculateReadTime(content)} min read`,
     }))
   }
 
@@ -194,7 +194,7 @@ export default function CreateNewsPage() {
 
     try {
       // Create news article first
-      const response = await fetch("/api/news", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -221,7 +221,7 @@ export default function CreateNewsPage() {
             display_order: index,
           }))
 
-        const galleryResponse = await fetch("/api/news/gallery", {
+        const galleryResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news-images/bulk`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -461,7 +461,9 @@ export default function CreateNewsPage() {
           <CardContent>
             <Select
               value={formData.language}
-              onValueChange={(value) => setFormData({ ...formData, language: value })}
+              onValueChange={(value) =>
+                setFormData({ ...formData, language: value as typeof formData.language })
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder={t.languageLabel} />

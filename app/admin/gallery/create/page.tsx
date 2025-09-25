@@ -46,7 +46,7 @@ export default function CreateGalleryPage() {
   }, [])
 
   const fetchFolders = async () => {
-    const res = await fetch("/api/gallery/folders")
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery-folders`)
     const data = await res.json()
     setFolders(data)
   }
@@ -57,7 +57,7 @@ export default function CreateGalleryPage() {
     setError(null)
 
     try {
-      const response = await fetch("/api/gallery", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

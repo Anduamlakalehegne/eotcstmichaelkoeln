@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Loader2, AlertCircle } from "lucide-react"
-import { supabaseClient } from "@/lib/supabase-client"
+// import { supabaseClient } from "@/lib/supabase-client"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -40,40 +40,25 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password,
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
       })
-
-      if (error) {
-        if (error.message.includes('Invalid login credentials')) {
-          setError('Invalid email or password. Please try again.')
-        } else {
-          setError(error.message)
-        }
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error || 'Invalid email or password. Please try again.')
         return
       }
-
-      if (!data.session) {
-        setError('Login failed. Please try again.')
-        return
-      }
-
-      // Store the entire session data
       const authData = {
-        access_token: data.session.access_token,
-        refresh_token: data.session.refresh_token,
-        expires_at: data.session.expires_at,
-        user: data.user
+        access_token: data.token,
+        expires_at: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60,
+        user: data.user,
       }
-      
       localStorage.setItem('auth', JSON.stringify(authData))
-
-      // Use window.location.href for a hard navigation
-      // window.location.href = '/admin'
       router.push('/admin')
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred. Please try again.")
+      setError(err.message || 'An unexpected error occurred. Please try again.')
     } finally {
       setLoading(false)
     }

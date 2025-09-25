@@ -110,7 +110,7 @@ export default function EditNewsPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch(`/api/news/${params.id}`)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news/${params.id}`)
         if (!response.ok) {
           throw new Error("Failed to fetch news")
         }
@@ -133,7 +133,7 @@ export default function EditNewsPage({ params }: { params: { id: string } }) {
     setLoading(true)
 
     try {
-      const response = await fetch(`/api/news/${params.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news/${params.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

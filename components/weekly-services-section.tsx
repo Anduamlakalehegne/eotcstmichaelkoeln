@@ -1,36 +1,32 @@
 import { Calendar, Clock, Users } from "lucide-react"
 import Link from "next/link"
+import { useLocale } from "@/contexts/locale-context"
 
-const weeklyServices = [
-  {
-    day: "ሳምንታዊ",
-    services: [
-      { time: "ከጠዋቱ 7:00-12:00", name: "ሥርዓተ ቅዳሴ", attendees: "ዘወትር እሁድ " },
-      // { time: "11:30 AM - 12:30 PM", name: "Sunday School", attendees: "Children & Youth" },
-    ],
-    highlight: true,
-  },
-  {
-    day: "ወርሃዊ",
-    services: [{ time: "ከምሸቱ 18:00-20:00", name: "ወርሃዊ ጸሎት", attendees: "ዘወትር በዕለተ ቅዱስ ሚካኤል" }],
-    highlight: true,
-  },
-  // {
-  //   day: "ልዩ ልዩ",
-  //   services: [
-  //     { time: "7:00 AM - 9:00 AM", name: "Morning Prayer", attendees: "All welcome" },
-  //     { time: "5:00 PM - 6:30 PM", name: "Evening Prayer", attendees: "All welcome" },
-  //   ],
-  //   highlight: false,
-  // },
-]
+// This will be moved inside the component to use translations
 
 export default function WeeklyServicesSection() {
+  const { translations } = useLocale()
+  
+  const weeklyServices = [
+    {
+      day: translations.home.services.weekly,
+      services: [
+        { time: "ከጠዋቱ 7:00-12:00", name: translations.home.services.sundayService, attendees: translations.home.services.sundayServiceTime },
+      ],
+      highlight: true,
+    },
+    {
+      day: translations.home.services.monthly,
+      services: [{ time: "ከምሸቱ 18:00-20:00", name: translations.home.services.monthlyPrayer, attendees: translations.home.services.monthlyPrayerTime }],
+      highlight: true,
+    },
+  ]
+
   return (
     <section className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">የአገልግሎት መርሐ ግብር</h2>
+          <h2 className="text-3xl font-bold mb-4">{translations.home.services.title}</h2>
           {/* <p className="text-gray-600 max-w-2xl mx-auto">
             Join us for our regular weekly services. All are welcome to participate in our worship and prayer
             gatherings.
@@ -83,7 +79,7 @@ export default function WeeklyServicesSection() {
             href="/service/weekly"
             className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
           >
-            ተጨማሪ መርሐ ግብሮች
+            {translations.home.services.moreSchedules}
           </Link>
         </div>
       </div>

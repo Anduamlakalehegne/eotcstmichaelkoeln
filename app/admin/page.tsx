@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DashboardStats } from "@/components/dashboard-stats"
 import { Newspaper, Calendar, Plus, ArrowRight, Loader2 } from "lucide-react"
-import { supabaseClient } from "@/lib/supabase-client"
+// import { supabaseClient } from "@/lib/supabase-client"
 
 export default function AdminDashboard() {
   const [recentNews, setRecentNews] = useState<any[]>([])
@@ -19,36 +19,38 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function fetchRecentContent() {
       try {
-        // Fetch recent news
-        const { data: newsData, error: newsError } = await supabaseClient
-          .from("news")
-          .select("id, title, publish_date")
-          .order("publish_date", { ascending: false })
-          .limit(3)
+        const base = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
 
-        if (newsError) throw newsError
+        const [newsRes, eventsRes, announcementsRes] = await Promise.all([
+          fetch(`${base}/api/news`),
+          fetch(`${base}/api/events`),
+          fetch(`${base}/api/announcements`),
+        ])
 
-        // Fetch upcoming events
-        const { data: eventsData, error: eventsError } = await supabaseClient
-          .from("events")
-          .select("id, title, date")
-          .order("date", { ascending: true })
-          .limit(3)
+        if (!newsRes.ok || !eventsRes.ok || !announcementsRes.ok) {
+          throw new Error('Failed to load recent content')
+        }
 
-        if (eventsError) throw eventsError
+        const [allNews, allEvents, allAnn] = await Promise.all([
+          newsRes.json(),
+          eventsRes.json(),
+          announcementsRes.json(),
+        ])
 
-        // Fetch recent announcements
-        const { data: announcementsData, error: announcementsError } = await supabaseClient
-          .from("announcements")
-          .select("id, title, publish_date")
-          .order("publish_date", { ascending: false })
-          .limit(3)
+        const newsData = (allNews || [])
+          .sort((a: any, b: any) => new Date(b.publish_date).getTime() - new Date(a.publish_date).getTime())
+          .slice(0, 3)
+        const eventsData = (allEvents || [])
+          .filter((e: any) => new Date(e.date).getTime() >= Date.now())
+          .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
+          .slice(0, 3)
+        const announcementsData = (allAnn || [])
+          .sort((a: any, b: any) => new Date(b.publish_date).getTime() - new Date(a.publish_date).getTime())
+          .slice(0, 3)
 
-        if (announcementsError) throw announcementsError
-
-        setRecentNews(newsData || [])
-        setRecentEvents(eventsData || [])
-        setRecentAnnouncements(announcementsData || [])
+        setRecentNews(newsData)
+        setRecentEvents(eventsData)
+        setRecentAnnouncements(announcementsData)
       } catch (err) {
         console.error(err)
         setError("Failed to load recent content")

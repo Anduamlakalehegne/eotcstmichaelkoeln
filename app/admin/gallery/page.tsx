@@ -53,7 +53,7 @@ export default function GalleryPage() {
     setLoading(true)
     try {
       const parent_id = currentFolder ? currentFolder.id : null
-      const url = parent_id ? `/api/gallery/folders?parent_id=${parent_id}` : "/api/gallery/folders"
+      const url = parent_id ? `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery-folders?parent_id=${parent_id}` : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery-folders`
       const res = await fetch(url)
       const data = await res.json()
       setFolders(data)
@@ -68,7 +68,7 @@ export default function GalleryPage() {
     setLoading(true)
     try {
       const folder_id = currentFolder ? currentFolder.id : null
-      const url = folder_id ? `/api/gallery?folder_id=${folder_id}` : "/api/gallery"
+      const url = folder_id ? `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery?folder_id=${folder_id}` : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery`
       const res = await fetch(url)
       const data = await res.json()
       setPhotos(data)
@@ -97,7 +97,7 @@ export default function GalleryPage() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch("/api/gallery/folders", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery-folders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newFolderName, parent_id: currentFolder ? currentFolder.id : null })
@@ -117,7 +117,7 @@ export default function GalleryPage() {
     if (!deleteFolder) return
     setIsDeletingFolder(true)
     try {
-      const res = await fetch(`/api/gallery/folders/${deleteFolder.id}`, { method: "DELETE" })
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/gallery-folders/${deleteFolder.id}`, { method: "DELETE" })
       if (!res.ok) throw new Error("Failed to delete folder")
       setDeleteFolder(null)
       fetchFolders()

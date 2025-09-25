@@ -1,60 +1,74 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { notFound } from "next/navigation"
-import { getServerClient } from "@/lib/supabase-server"
+import { useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Calendar, Clock } from "lucide-react"
+import { Calendar, Clock, Loader2 } from "lucide-react"
 import { formatDate } from "@/lib/utils"
 import type { News, NewsGalleryImage } from "@/lib/supabase"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { Badge } from "@/components/ui/badge"
 import { CardHeader, CardTitle } from "@/components/ui/card"
 
-async function getNewsArticle(id: string) {
-  const supabase = getServerClient()
-  if (!supabase) {
-    console.error("Database connection failed")
-    return null
+export default function NewsDetailPage() {
+  const params = useParams()
+  const [article, setArticle] = useState<News | null>(null)
+  const [galleryImages, setGalleryImages] = useState<NewsGalleryImage[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchNewsData() {
+      try {
+        // Fetch news article
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news/${params.id}`)
+        if (!response.ok) {
+          throw new Error("Failed to fetch news article")
+        }
+        const data = await response.json()
+        setArticle(data)
+
+        // Fetch gallery images
+        const galleryResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news-images/by-news/${params.id}`)
+        if (galleryResponse.ok) {
+          const galleryData = await galleryResponse.json()
+          setGalleryImages(galleryData || [])
+        }
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchNewsData()
+  }, [params.id])
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex justify-center items-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </div>
+    )
   }
 
-  const { data, error } = await supabase.from("news").select("*").eq("id", id).single()
-
-  if (error || !data) {
-    console.error("Error fetching news article:", error)
-    return null
-  }
-
-  return data as News
-}
-
-async function getNewsGalleryImages(newsId: string) {
-  const supabase = getServerClient()
-  if (!supabase) {
-    console.error("Database connection failed")
-    return []
-  }
-
-  const { data, error } = await supabase
-    .from("news_images")
-    .select("*")
-    .eq("news_id", newsId)
-    .order("display_order", { ascending: true })
-
-  if (error) {
-    console.error("Error fetching gallery images:", error)
-    return []
-  }
-
-  return (data || []) as NewsGalleryImage[]
-}
-
-export default async function NewsDetailPage({ params }: { params: { id: string } }) {
-  const article = await getNewsArticle(params.id)
-  const galleryImages = await getNewsGalleryImages(params.id)
-
-  if (!article) {
-    notFound()
+  if (error || !article) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">News Article Not Found</h1>
+          <p className="mb-6">The news article you're looking for doesn't exist or has been removed.</p>
+          <Button asChild>
+            <Link href="/news/church-news">Back to News</Link>
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   return (

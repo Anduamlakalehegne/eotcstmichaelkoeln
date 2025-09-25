@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Newspaper, Calendar, FileText, Loader2, Image, Video, Archive } from "lucide-react"
-import { supabaseClient } from "@/lib/supabase-client"
+// import { supabaseClient } from "@/lib/supabase-client"
 
 export function DashboardStats() {
   const [stats, setStats] = useState({
@@ -22,60 +22,37 @@ export function DashboardStats() {
   useEffect(() => {
     async function fetchStats() {
       try {
-        // Fetch news count
-        const { data: newsData, error: newsError } = await supabaseClient
-          .from("news")
-          .select("id, featured")
-          .order("id", { ascending: false })
+        const base = process.env.NEXT_PUBLIC_BACKEND_URL
 
-        if (newsError) throw newsError
+        console.log(base)
+        const [newsRes, eventsRes, announcementsRes, galleryRes, videosRes, archiveRes] = await Promise.all([
+          fetch(`${base}/api/news`),
+          fetch(`${base}/api/events`),
+          fetch(`${base}/api/announcements`),
+          fetch(`${base}/api/gallery`),
+          fetch(`${base}/api/videos`),
+          fetch(`${base}/api/archive`),
+        ])
 
-        // Fetch events count
-        const { data: eventsData, error: eventsError } = await supabaseClient
-          .from("events")
-          .select("id, featured")
-          .order("id", { ascending: false })
+        if (!newsRes.ok || !eventsRes.ok || !announcementsRes.ok || !galleryRes.ok || !videosRes.ok || !archiveRes.ok) {
+          throw new Error('Failed to fetch one or more stats')
+        }
 
-        if (eventsError) throw eventsError
-
-        // Fetch announcements count
-        const { data: announcementsData, error: announcementsError } = await supabaseClient
-          .from("announcements")
-          .select("id")
-          .order("id", { ascending: false })
-
-        if (announcementsError) throw announcementsError
-
-        // Fetch gallery count
-        const { data: galleryData, error: galleryError } = await supabaseClient
-          .from("gallery")
-          .select("id")
-          .order("id", { ascending: false })
-
-        if (galleryError) throw galleryError
-
-        // Fetch videos count
-        const { data: videosData, error: videosError } = await supabaseClient
-          .from("videos")
-          .select("id")
-          .order("id", { ascending: false })
-
-        if (videosError) throw videosError
-
-        // Fetch archive count
-        const { data: archiveData, error: archiveError } = await supabaseClient
-          .from("archive")
-          .select("id")
-          .order("id", { ascending: false })
-
-        if (archiveError) throw archiveError
+        const [newsData, eventsData, announcementsData, galleryData, videosData, archiveData] = await Promise.all([
+          newsRes.json(),
+          eventsRes.json(),
+          announcementsRes.json(),
+          galleryRes.json(),
+          videosRes.json(),
+          archiveRes.json(),
+        ])
 
         setStats({
           totalNews: newsData.length,
           totalEvents: eventsData.length,
           totalAnnouncements: announcementsData.length,
-          featuredNews: newsData.filter((item) => item.featured).length,
-          featuredEvents: eventsData.filter((item) => item.featured).length,
+          featuredNews: newsData.filter((item: any) => item.featured).length,
+          featuredEvents: eventsData.filter((item: any) => item.featured).length,
           totalGallery: galleryData.length,
           totalVideos: videosData.length,
           totalArchive: archiveData.length,

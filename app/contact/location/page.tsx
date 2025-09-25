@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic"
 import { Card, CardContent } from "@/components/ui/card"
+import { useLocale } from "@/contexts/locale-context"
 
 // Dynamically import the map component to avoid SSR issues
 const MapComponent = dynamic(
@@ -9,42 +10,77 @@ const MapComponent = dynamic(
   { ssr: false }
 )
 
-const churchLocation = {
-  id: 1,
-  name: "የኮሎኝ ቅዱስ ሚካኤል ቤተ ክርስቲያን",
-  address: "Lindweilerweg 94, 50739",
-  city: "ኮሎኝ, ጀርመን",
-  coordinates: [50.9777, 6.8977] as [number, number], // Cologne coordinates
-  transport: {
-    bus: "አውቶቡስ 136 Lindweilerweg",
-    train: "ኤስ ባን S11/S6 Longerich",
-  },
-  contact: {
-    postal: "Ückerather Str. 2, 50739 Köln",
+function getChurchLocationByLocale(locale: "am" | "en" | "de") {
+  const base = {
+    id: 1,
+    address: "Lindweilerweg 94, 50739",
+    coordinates: [50.9777, 6.8977] as [number, number],
+    contact: {
+      postal: "Ückerather Str. 2, 50739 Köln",
+      phone: "+49 221 5992623",
+      email: "aeokd@gmx.de",
+    },
     phone: "+49 221 5992623",
     email: "aeokd@gmx.de",
-  },
-  // Additional required properties for Church interface
-  phone: "+49 221 5992623",
-  email: "aeokd@gmx.de",
-  website: "",
-  region: "ኮሎኝ"
+    website: "",
+  }
+
+  if (locale === "am") {
+    return {
+      ...base,
+      name: "የኮሎኝ ቅዱስ ሚካኤል ቤተ ክርስቲያን",
+      city: "ኮሎኝ, ጀርመን",
+      region: "ኮሎኝ",
+      transport: {
+        bus: "አውቶቡስ 136 Lindweilerweg",
+        train: "ኤስ ባን S11/S6 Longerich",
+      },
+    }
+  }
+
+  if (locale === "de") {
+    return {
+      ...base,
+      name: "St. Michael Äthiopisch-Orthodoxe Kirche Köln",
+      city: "Köln, Deutschland",
+      region: "Köln",
+      transport: {
+        bus: "Bus 136 Lindweilerweg",
+        train: "S-Bahn S11/S6 Longerich",
+      },
+    }
+  }
+
+  // default to English
+  return {
+    ...base,
+    name: "St. Michael Ethiopian Orthodox Church Cologne",
+    city: "Cologne, Germany",
+    region: "Cologne",
+    transport: {
+      bus: "Bus 136 Lindweilerweg",
+      train: "S-Bahn S11/S6 Longerich",
+    },
+  }
 }
 
 export default function LocationPage() {
+  const { translations, locale } = useLocale()
+  const t = translations.contact.location
+  const churchLocation = getChurchLocationByLocale(locale)
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">የኮሎኝ ቅዱስ ሚካኤል ቤተ ክርስቲያን አድራሻ</h1>
+      <h1 className="text-3xl font-bold mb-8">{t.title}</h1>
       <div className="grid md:grid-cols-2 gap-8">
         <div className="space-y-6">
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold mb-4">አድራሻ</h2>
+              <h2 className="text-xl font-bold mb-4">{t.address}</h2>
               <p className="text-gray-600 mb-2">{churchLocation.name}</p>
               <p className="text-gray-600 mb-2">{churchLocation.address}</p>
               <p className="text-gray-600 mb-6">{churchLocation.city}</p>
 
-              <h3 className="font-bold mb-2">የትራንስፖርት ማቆሚያዎች</h3>
+              <h3 className="font-bold mb-2">{t.transportStops}</h3>
               <p className="text-gray-600 mb-2">{churchLocation.transport.bus}</p>
               <p className="text-gray-600 mb-6">{churchLocation.transport.train}</p>
 
@@ -55,19 +91,19 @@ export default function LocationPage() {
 
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold mb-4">በሚቀጥሉት አድራሻዎች ይጻፉልን/ይደውሉልን</h2>
+              <h2 className="text-xl font-bold mb-4">{t.contactUsAt}</h2>
               <div className="space-y-2">
                 <p className="text-gray-600">
-                  <strong>የፖስታ አድራሻ፥</strong> {churchLocation.contact.postal}
+                  <strong>{t.labels.postalAddress}:</strong> {churchLocation.contact.postal}
                 </p>
                 <p className="text-gray-600">
-                  <strong>ስልክ፥</strong>{" "}
+                  <strong>{t.labels.phone}:</strong>{" "}
                   <a href={`tel:${churchLocation.contact.phone}`} className="text-blue-600 hover:underline">
                     {churchLocation.contact.phone}
                   </a>
                 </p>
                 <p className="text-gray-600">
-                  <strong>ኢሜይል፥</strong>{" "}
+                  <strong>{t.labels.email}:</strong>{" "}
                   <a href={`mailto:${churchLocation.contact.email}`} className="text-blue-600 hover:underline">
                     {churchLocation.contact.email}
                   </a>

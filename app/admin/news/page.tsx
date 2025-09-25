@@ -37,7 +37,7 @@ export default function AdminNewsPage() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        const response = await fetch("/api/news")
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news`)
         if (!response.ok) {
           throw new Error("Failed to fetch news")
         }
@@ -76,7 +76,7 @@ export default function AdminNewsPage() {
 
     setDeleteLoading(true)
     try {
-      const response = await fetch(`/api/news/${newsToDelete}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news/${newsToDelete}`, {
         method: "DELETE",
       })
 
@@ -104,7 +104,7 @@ export default function AdminNewsPage() {
   // Handle toggle featured status
   const handleToggleFeatured = async (id: number, currentStatus: boolean) => {
     try {
-      const response = await fetch(`/api/news/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

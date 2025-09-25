@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
-import { createClient } from "@/lib/supabase/client"
+// import { createClient } from "@/lib/supabase/client"
 import { Download, Upload, Trash2 } from "lucide-react"
 
 interface ChurchCalendar {
@@ -38,7 +38,7 @@ export default function CalendarsPage() {
   const [title, setTitle] = useState("")
   const router = useRouter()
   const { toast } = useToast()
-  const supabase = createClient()
+  // const supabase = createClient()
 
   useEffect(() => {
     fetchCalendars()
@@ -46,25 +46,10 @@ export default function CalendarsPage() {
 
   const fetchCalendars = async () => {
     try {
-      const { data, error } = await supabase
-        .from('church_calendars')
-        .select('*')
-        .order('year', { ascending: false })
-
-      if (error) throw error
-
-      // Ensure all calendars have public URLs
-      const calendarsWithUrls = data.map(calendar => {
-        if (!calendar.file_path.startsWith('http')) {
-          const { data: { publicUrl } } = supabase.storage
-            .from('church-calendars')
-            .getPublicUrl(calendar.file_path)
-          return { ...calendar, file_path: publicUrl }
-        }
-        return calendar
-      })
-
-      setCalendars(calendarsWithUrls)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/church-calendars`)
+      if (!res.ok) throw new Error('Failed to fetch calendars')
+      const data = await res.json()
+      setCalendars(data || [])
     } catch (error) {
       console.error('Error fetching calendars:', error)
       toast({
@@ -110,54 +95,19 @@ export default function CalendarsPage() {
       const timestamp = Date.now()
       const storageFileName = `calendar_${year}_${timestamp}.pdf`
 
-      // Upload file to storage
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('church-calendars')
-        .upload(storageFileName, selectedFile, {
-          cacheControl: '3600',
-          upsert: false
-        })
+      // Upload file to backend (expects multipart/form-data)
+      const form = new FormData()
+      form.append('file', selectedFile)
+      form.append('year', year)
+      form.append('title', title)
 
-      if (uploadError) {
-        console.error("Storage upload error:", {
-          message: uploadError.message,
-          name: uploadError.name,
-          stack: uploadError.stack
-        })
-        throw uploadError
-      }
-
-      if (!uploadData?.path) {
-        throw new Error("No file path returned from upload")
-      }
-
-      // Get the public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('church-calendars')
-        .getPublicUrl(uploadData.path)
-
-      // Save calendar record with the public URL
-      const { error: dbError } = await supabase
-        .from('church_calendars')
-        .upsert({
-          year: parseInt(year),
-          title,
-          file_path: publicUrl, // Store the public URL instead of the path
-          file_name: selectedFile.name,
-          file_size: selectedFile.size,
-          mime_type: selectedFile.type,
-          is_active: true
-        }, {
-          onConflict: 'year'
-        })
-
-      if (dbError) {
-        // If database insert fails, delete the uploaded file
-        await supabase.storage
-          .from('church-calendars')
-          .remove([uploadData.path])
-        
-        throw dbError
+      const uploadRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/church-calendars/upload`, {
+        method: 'POST',
+        body: form,
+      })
+      if (!uploadRes.ok) {
+        const err = await uploadRes.json().catch(() => ({}))
+        throw new Error(err.error || 'Failed to upload calendar')
       }
 
       toast({
@@ -184,24 +134,12 @@ export default function CalendarsPage() {
     }
   }
 
-  const handleDelete = async (id: string, filePath: string) => {
+  const handleDelete = async (id: string, _filePath: string) => {
     if (!confirm("Are you sure you want to delete this calendar?")) return
 
     try {
-      // Delete from storage
-      const { error: storageError } = await supabase.storage
-        .from("church-calendars")
-        .remove([filePath])
-
-      if (storageError) throw storageError
-
-      // Delete from database
-      const { error: dbError } = await supabase
-        .from("church_calendars")
-        .delete()
-        .eq("id", id)
-
-      if (dbError) throw dbError
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/church-calendars/${id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed to delete calendar')
 
       toast({
         title: "Success",

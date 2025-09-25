@@ -71,13 +71,11 @@ export default function EditEventPage() {
     async function fetchEvent() {
       try {
         // Fetch event details
-        const { data: event, error: eventError } = await supabaseClient
-          .from("events")
-          .select("*")
-          .eq("id", params.id)
-          .single()
-
-        if (eventError) throw eventError
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/events/${params.id}`)
+        if (!response.ok) {
+          throw new Error("Failed to fetch event")
+        }
+        const event = await response.json()
 
         // Set form data
         setFormData(event)
@@ -88,23 +86,20 @@ export default function EditEventPage() {
         }
 
         // Fetch gallery images
-        const { data: galleryData, error: galleryError } = await supabaseClient
-          .from("event_gallery")
-          .select("*")
-          .eq("event_id", params.id)
-          .order("display_order", { ascending: true })
+        const galleryResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/event-gallery/by-event/${params.id}`)
+        if (galleryResponse.ok) {
+          const galleryData = await galleryResponse.json()
 
-        if (galleryError) throw galleryError
+          // Transform gallery data to match RelatedImage format
+          const galleryImages: RelatedImage[] = galleryData.map((item: any) => ({
+            id: item.id,
+            image_url: item.image_url,
+            caption: item.caption || "",
+            display_order: item.display_order,
+          }))
 
-        // Transform gallery data to match RelatedImage format
-        const galleryImages: RelatedImage[] = galleryData.map((item) => ({
-          id: item.id,
-          image_url: item.image_url,
-          caption: item.caption || "",
-          display_order: item.display_order,
-        }))
-
-        setRelatedImages(galleryImages)
+          setRelatedImages(galleryImages)
+        }
       } catch (err: any) {
         console.error("Error fetching event:", err)
         setError(err.message)
@@ -157,9 +152,12 @@ export default function EditEventPage() {
       if (!formData.location) throw new Error("Location is required")
 
       // Update event
-      const { error: eventError } = await supabaseClient
-        .from("events")
-        .update({
+      const eventResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/events/${params.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           title: formData.title,
           description: formData.description,
           category: formData.category,
@@ -172,18 +170,20 @@ export default function EditEventPage() {
           max_attendees: formData.max_attendees ? Number(formData.max_attendees) : null,
           featured: formData.featured,
           image_url: formData.image_url,
-          updated_at: new Date().toISOString(),
           language: formData.language,
-        })
-        .eq("id", params.id)
+        }),
+      })
 
-      if (eventError) throw eventError
+      if (!eventResponse.ok) {
+        const errorData = await eventResponse.json()
+        throw new Error(errorData.error || "Failed to update event")
+      }
 
       // Handle gallery images
       // First, delete existing gallery items
-      const { error: deleteError } = await supabaseClient.from("event_gallery").delete().eq("event_id", params.id)
-
-      if (deleteError) throw deleteError
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/event-gallery/by-event/${params.id}`, { 
+        method: "DELETE" 
+      })
 
       // Then insert new gallery items
       if (relatedImages.length > 0) {
@@ -194,9 +194,18 @@ export default function EditEventPage() {
           display_order: index,
         }))
 
-        const { error: galleryError } = await supabaseClient.from("event_gallery").insert(galleryItems)
+        const galleryResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/event-gallery/bulk`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ images: galleryItems }),
+        })
 
-        if (galleryError) throw galleryError
+        if (!galleryResponse.ok) {
+          const errorData = await galleryResponse.json()
+          throw new Error(errorData.error || "Failed to insert gallery images")
+        }
       }
 
       router.push("/admin/events")

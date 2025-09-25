@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion"
 import { HardHat, Timer, CheckCircle2 } from "lucide-react"
+import { useLocale } from "@/contexts/locale-context"
 
 export default function ConstructionStatusPage() {
+  const { translations } = useLocale()
   return (
     <div className="container mx-auto px-4 py-12 text-justify">
       {/* Header with subtle animation */}
@@ -13,7 +15,7 @@ export default function ConstructionStatusPage() {
         transition={{ duration: 0.5 }}
         className="text-center mb-12"
       >
-        <h1 className="text-3xl font-bold mb-4">የግንባታ ሁኔታ</h1>
+        <h1 className="text-3xl font-bold mb-4">{translations.constructionStatus.title}</h1>
       </motion.div>
 
       {/* Status Overview Cards */}
@@ -26,9 +28,9 @@ export default function ConstructionStatusPage() {
         >
           <div className="flex items-center mb-2">
             <HardHat className="w-6 h-6 text-blue-500 mr-2" />
-            <h3 className="font-semibold">የግንባታ ሁኔታ</h3>
+            <h3 className="font-semibold">{translations.constructionStatus.statusOverview.constructionStatus}</h3>
           </div>
-          <p className="text-gray-600">በሂደት ላይ</p>
+          <p className="text-gray-600">{translations.constructionStatus.statusOverview.constructionStatusValue}</p>
         </motion.div>
 
         <motion.div 
@@ -39,9 +41,9 @@ export default function ConstructionStatusPage() {
         >
           <div className="flex items-center mb-2">
             <Timer className="w-6 h-6 text-yellow-500 mr-2" />
-            <h3 className="font-semibold">የፍቃድ ሁኔታ</h3>
+            <h3 className="font-semibold">{translations.constructionStatus.statusOverview.permitStatus}</h3>
           </div>
-          <p className="text-gray-600">በጥብቅ ላይ</p>
+          <p className="text-gray-600">{translations.constructionStatus.statusOverview.permitStatusValue}</p>
         </motion.div>
 
         <motion.div 
@@ -52,9 +54,9 @@ export default function ConstructionStatusPage() {
         >
           <div className="flex items-center mb-2">
             <CheckCircle2 className="w-6 h-6 text-green-500 mr-2" />
-            <h3 className="font-semibold">የቦታ ሁኔታ</h3>
+            <h3 className="font-semibold">{translations.constructionStatus.statusOverview.landStatus}</h3>
           </div>
-          <p className="text-gray-600">1840 ካሬ ሜትር</p>
+          <p className="text-gray-600">{translations.constructionStatus.statusOverview.landStatusValue}</p>
         </motion.div>
       </div>
 
@@ -67,25 +69,16 @@ export default function ConstructionStatusPage() {
       >
         <div className="prose max-w-none">
           <p className="text-lg leading-relaxed mb-6">
-            በጀርመን አገር በኮለን ከተማ የምትገኘው ርእሰ አድባራት ደብረ ሰላም ቅዱስ ሚካኤል ቅድስት ቤተ ክርስቲያናችን ከዛሬ ቀደም ከነበራት ርስት የቦታ ባለቤትነት
-            በእግዚአብሔር ፈቃድ ተጨማሪ የአምልኮ ፣ የበረከት ፣ የባለቤትነት ዕድሉን አምላከ ሚካኤል አሳክቶላት ከኃይል ወደ ኃይል ፣ ከበረከት ወደ በረከት ፣ ከትጥበት
-            ወደ ስፋት ለመሻገር በባዕድ አገር ሰፊ የቦታ (1840 ካሬ ሜትር) ባለቤት ሆናለች ።
+            {translations.constructionStatus.content.paragraph1}
           </p>
 
           <p className="text-lg leading-relaxed mb-6">
-            የቤተክርስትያናችን የቦታ ግዢ ከተፈፀመ  በኃላ በተያዘው እቅድ መሰረት የውስጥ ማሰፋፋት ለማድረግ አስፈላጊው ጥናት ለማድረግ ከአርክቴክት ጋር የመግባቢያ ውል
-            ተፈርሞ ሰራው ተጀምሯል ቤተክርሰትያናችን በቅርሰነት ሰለተመዘገበ አፍርሶ መስራት ሰለማይቻል የቤተክርሰትያኑን ንድፍ ለማውጣት አስቸጋሪ ነበር። ሆኖም አስፈላጊው
-            የግንባታ ሂደት አልፎ ለሚመለከታቸው የመንግሰት አካላት (Stadt Köln Bauamt) የመጀመሪያውን ማመልከቻ ( Bauantrag ) ተደርጐ ነበር ። ሆኖም  ፍቃድ
-            አግኝተን ለመስራት ከጐረቤቶቻችን ያለው እርቀት አስፈላጊ ነበር ይህም ምንአልባተ‍ ግንባታው ሲጀመር በወሰን የሚጋሩን  ጐረቤቶቻችን ቦታ ላይ ሊነካ ስለሚችል
-            ( Baulast) የእነሱን  ይሁንታ ማግኘት ነበረብን ነገር ግን ጐረቤቶቻችን ለዚህ ብዙ ገንዘብ ሰለጠየቁን ይህን ለማሰቀረት ከ Bauphysik ጋር በመመካከር Baulast
-            ፕላኑ በውስጥ  እንዴሆን ተደርጓል ከዚህ በተጨማሪ የመጀመሪያውን ቤተክርስትያን ግዢ ሲደረግ በፊት በኩል ባለው ጓሮ ቦታ ባለቤትነቱ  የአኢቫንኬልሽ ቤ/ክረስትያን
-            ይዞታ  ሰለነበር  ይህንም ቦታ ግዢ ተፈፅሞ የኖታሩ እማኝ አባሪ ተደርጐ ይህ ማሻሻያ የተደረገበት ማመልከቻ  በድጋሚ  ለStadt Köln Bauamt ተመልክቷል።
+            {translations.constructionStatus.content.paragraph2}
           </p>
 
           <div className="bg-blue-50 rounded-lg p-6 mt-8">
             <p className="text-lg leading-relaxed">
-              የእንፃ መስሪያ እቅድ(Bauplan)ማሻሻያ በተደረገ ቁጥር ለአርክቴክቶሮቹ የሚከፈለው ገንዘብ እና ለቦታው መስሪያ ፍቃድ የማግኛው ጊዜ ብዙ ጊዜ ፈጅቷል ። አሁን
-              የመስሪያ  ፍቃድ ለማግኘት እየጠበቅን እንገኛለን::
+              {translations.constructionStatus.content.highlightBox}
             </p>
           </div>
         </div>

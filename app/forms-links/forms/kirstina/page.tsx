@@ -13,30 +13,34 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { FileText, Info, Calendar, Send, Loader2 } from "lucide-react"
 import Image from "next/image"
 import { toast } from "@/hooks/use-toast"
-
-const formSchema = z.object({
-  familyName: z.string().min(2, { message: "Family name must be at least 2 characters." }),
-  firstName: z.string().min(2, { message: "First name must be at least 2 characters." }),
-  baptismName: z.string().min(2, { message: "Baptism name must be at least 2 characters." }),
-  fatherName: z.string().min(2, { message: "Father's name must be at least 2 characters." }),
-  motherName: z.string().min(2, { message: "Mother's name must be at least 2 characters." }),
-  godparentName: z.string().min(2, { message: "Godparent's name must be at least 2 characters." }),
-  country: z.string().min(2, { message: "Country is required." }),
-  birthPlace: z.string().min(2, { message: "Birth place is required." }),
-  birthCountry: z.string().min(2, { message: "Birth country is required." }),
-  birthDate: z.string().min(1, { message: "Birth date is required." }),
-  baptismChurch: z.string().min(2, { message: "Baptism church is required." }),
-  baptismDate: z.string().min(1, { message: "Baptism date is required." }),
-  nationality: z.string().min(2, { message: "Nationality is required." }),
-  baptizingPriest: z.string().min(2, { message: "Baptizing priest name is required." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
-  phone: z.string().min(6, { message: "Phone number must be at least 6 characters." }),
-  agreeToTerms: z.boolean().refine((value) => value === true, {
-    message: "You must agree to the terms and conditions.",
-  }),
-})
+import { useLocale } from "@/contexts/locale-context"
 
 export default function KirstinaFormPage() {
+  const { translations } = useLocale()
+  const t = translations.formsLinks.forms.kirstina
+
+  const formSchema = z.object({
+    familyName: z.string().min(2, { message: t.validation.familyNameMin }),
+    firstName: z.string().min(2, { message: t.validation.firstNameMin }),
+    baptismName: z.string().min(2, { message: t.validation.baptismNameMin }),
+    fatherName: z.string().min(2, { message: t.validation.fatherNameMin }),
+    motherName: z.string().min(2, { message: t.validation.motherNameMin }),
+    godparentName: z.string().min(2, { message: t.validation.godparentNameMin }),
+    country: z.string().min(2, { message: t.validation.countryRequired }),
+    birthPlace: z.string().min(2, { message: t.validation.birthPlaceRequired }),
+    birthCountry: z.string().min(2, { message: t.validation.birthCountryRequired }),
+    birthDate: z.string().min(1, { message: t.validation.birthDateRequired }),
+    baptismChurch: z.string().min(2, { message: t.validation.baptismChurchRequired }),
+    baptismDate: z.string().min(1, { message: t.validation.baptismDateRequired }),
+    nationality: z.string().min(2, { message: t.validation.nationalityRequired }),
+    baptizingPriest: z.string().min(2, { message: t.validation.baptizingPriestRequired }),
+    email: z.string().email({ message: t.validation.emailInvalid }),
+    phone: z.string().min(6, { message: t.validation.phoneMin }),
+    agreeToTerms: z.boolean().refine((value) => value === true, {
+      message: t.validation.agreeRequired,
+    }),
+  })
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submissionResult, setSubmissionResult] = useState<{ success: boolean; messageId?: string } | null>(null)
@@ -70,32 +74,32 @@ export default function KirstinaFormPage() {
     try {
       // Format the email content
       const emailContent = `
-New Baptism Registration
+${t.email.heading}
 
-Family Name: ${values.familyName}
-First Name: ${values.firstName}
-Baptism Name: ${values.baptismName}
-Father's Name: ${values.fatherName}
-Mother's Name: ${values.motherName}
-Godparent's Name: ${values.godparentName}
-Country: ${values.country}
-Birth Place: ${values.birthPlace}
-Birth Country: ${values.birthCountry}
-Birth Date: ${values.birthDate}
-Baptism Church: ${values.baptismChurch}
-Baptism Date: ${values.baptismDate}
-Nationality: ${values.nationality}
-Baptizing Priest: ${values.baptizingPriest}
-Email: ${values.email}
-Phone: ${values.phone}
+${t.labels.familyName}: ${values.familyName}
+${t.labels.firstName}: ${values.firstName}
+${t.labels.baptismName}: ${values.baptismName}
+${t.labels.fatherName}: ${values.fatherName}
+${t.labels.motherName}: ${values.motherName}
+${t.labels.godparentName}: ${values.godparentName}
+${t.labels.country}: ${values.country}
+${t.labels.birthPlace}: ${values.birthPlace}
+${t.labels.birthCountry}: ${values.birthCountry}
+${t.labels.birthDate}: ${values.birthDate}
+${t.labels.baptismChurch}: ${values.baptismChurch}
+${t.labels.baptismDate}: ${values.baptismDate}
+${t.labels.nationality}: ${values.nationality}
+${t.labels.baptizingPriest}: ${values.baptizingPriest}
+${t.labels.email}: ${values.email}
+${t.labels.phone}: ${values.phone}
 
-Submitted on: ${new Date().toLocaleString()}
+${t.email.submittedOn}: ${new Date().toLocaleString()}
       `.trim()
 
       // Create form data for FormSubmit.co
       const formData = new FormData()
       formData.append("_to", "anduamlakalehegne@gmail.com")
-      formData.append("_subject", `New Baptism Registration - ${values.firstName} ${values.familyName}`)
+      formData.append("_subject", `${t.email.subjectPrefix} - ${values.firstName} ${values.familyName}`)
       formData.append("_replyto", values.email)
       formData.append("message", emailContent)
       formData.append("name", `${values.firstName} ${values.familyName}`)
@@ -104,7 +108,7 @@ Submitted on: ${new Date().toLocaleString()}
       // Add additional FormSubmit.co configuration
       formData.append("_captcha", "false") // Disable captcha for testing
       formData.append("_template", "table") // Use table template for better formatting
-      formData.append("_autoresponse", "Thank you for submitting your baptism registration. We will review your information and contact you soon.") // Auto-response to submitter
+      formData.append("_autoresponse", t.email.autoresponse) // Auto-response to submitter
 
       // Send the form using FormSubmit.co
       const response = await fetch("https://formsubmit.co/anduamlakalehegne@gmail.com", {
@@ -118,16 +122,16 @@ Submitted on: ${new Date().toLocaleString()}
       if (response.ok) {
         if (responseText.includes("Activate your form")) {
           toast({
-            title: "Form activation required",
-            description: "Please check your email (anduamlakalehegne@gmail.com) for the activation link from FormSubmit.co",
+            title: t.toast.activationTitle,
+            description: t.toast.activationDescription,
             variant: "default",
           })
         } else {
           setSubmissionResult({ success: true, messageId: `form-${Date.now()}` })
           setIsSubmitted(true)
           toast({
-            title: "Registration submitted successfully!",
-            description: "Your baptism registration has been sent via email.",
+            title: t.toast.submitSuccessTitle,
+            description: t.toast.submitSuccessDesc,
           })
         }
       } else {
@@ -137,8 +141,8 @@ Submitted on: ${new Date().toLocaleString()}
     } catch (error) {
       console.error("Error submitting form:", error)
       toast({
-        title: "Error submitting form",
-        description: "There was an error submitting your form. Please try again or contact us directly.",
+        title: t.toast.submitErrorTitle,
+        description: t.toast.submitErrorDesc,
         variant: "destructive",
       })
     } finally {
@@ -150,17 +154,15 @@ Submitted on: ${new Date().toLocaleString()}
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-12 text-center">
-          <h1 className="text-3xl font-bold mb-4">የክርስትና (ጥምቀት) መመዝገቢያ</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            በኮሎኝ ቅዱስ ሚካኤል የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተክርስቲያን የጥምቀት መመዝገብ ለማድረግ ይህን ቅፅ ይሙሉ።
-          </p>
+          <h1 className="text-3xl font-bold mb-4">{t.title}</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">{t.intro}</p>
         </div>
 
         <Tabs defaultValue="form" className="mb-8">
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="form">
               <FileText className="mr-2 h-4 w-4" />
-              መመዝገቢያ ቅፅ
+              {t.tabs.form}
             </TabsTrigger>
             {/* <TabsTrigger value="requirements">
               <Info className="mr-2 h-4 w-4" />
@@ -191,7 +193,7 @@ Submitted on: ${new Date().toLocaleString()}
                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    የጥምቀት መመዝገብዎ በተሳካ ሁኔታ ተልኳል!
+                    {t.successTitle}
                   </CardTitle>
                   {/* <CardDescription className="text-green-600">
                     መመዝገብዎ በኢሜይል ተልኳል
@@ -234,7 +236,7 @@ Submitted on: ${new Date().toLocaleString()}
                       form.reset()
                     }}
                   >
-                    ሌላ መመዝገብ ላክ
+                    {t.successButton}
                   </Button>
                 </CardFooter>
               </Card>
@@ -243,7 +245,7 @@ Submitted on: ${new Date().toLocaleString()}
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <Card>
                     <CardHeader className="bg-gray-50">
-                      <CardTitle>የጥምቀት ክርስትና ፎርም</CardTitle>
+                      <CardTitle>{t.cardTitle}</CardTitle>
                       {/* <CardDescription>Please fill out all required fields</CardDescription> */}
                     </CardHeader>
                     <CardContent className="pt-6">
@@ -253,9 +255,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="familyName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>የቤተስብ ስም / Familien Name *</FormLabel>
+                              <FormLabel>{t.labels.familyName} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="የቤተሰብ ስም" {...field} />
+                                <Input placeholder={t.placeholders.familyName} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -266,9 +268,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="firstName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>የተጸውዖ ስም / Vorname *</FormLabel>
+                              <FormLabel>{t.labels.firstName} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="የመጀመሪያ ስም" {...field} />
+                                <Input placeholder={t.placeholders.firstName} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -279,9 +281,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="baptismName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>የተጠመቀዉ (ችዉ) ክርስትና ስም / Taufname *</FormLabel>
+                              <FormLabel>{t.labels.baptismName} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="የክርስትና ስም" {...field} />
+                                <Input placeholder={t.placeholders.baptismName} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -292,9 +294,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="fatherName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>የአባት ስም / Name des Vaters *</FormLabel>
+                              <FormLabel>{t.labels.fatherName} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="የአባት ስም" {...field} />
+                                <Input placeholder={t.placeholders.fatherName} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -305,9 +307,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="motherName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>የእናት ስም / Name des Mutter *</FormLabel>
+                              <FormLabel>{t.labels.motherName} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="የእናት ስም" {...field} />
+                                <Input placeholder={t.placeholders.motherName} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -318,9 +320,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="godparentName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>የክርስትና አባት (እናት) ስም Godparent's Name *</FormLabel>
+                              <FormLabel>{t.labels.godparentName} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="የክርስትና አባት/እናት ስም" {...field} />
+                                <Input placeholder={t.placeholders.godparentName} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -331,9 +333,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="country"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>ሀገር / Land *</FormLabel>
+                              <FormLabel>{t.labels.country} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="ሀገር" {...field} />
+                                <Input placeholder={t.placeholders.country} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -344,9 +346,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="birthPlace"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>የተወለደበት ( ችበት) ቦታ / Geburtsadresse *</FormLabel>
+                              <FormLabel>{t.labels.birthPlace} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="የተወለደበት ቦታ" {...field} />
+                                <Input placeholder={t.placeholders.birthPlace} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -357,9 +359,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="birthCountry"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>የትውልድ ሀገር / Geburtsort *</FormLabel>
+                              <FormLabel>{t.labels.birthCountry} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="የትውልድ ሀገር" {...field} />
+                                <Input placeholder={t.placeholders.birthCountry} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -370,7 +372,7 @@ Submitted on: ${new Date().toLocaleString()}
                           name="birthDate"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>የተወለደበት (ችበት) ቀን / Geburtsdatum *</FormLabel>
+                              <FormLabel>{t.labels.birthDate} *</FormLabel>
                               <FormControl>
                                 <Input type="date" {...field} />
                               </FormControl>
@@ -383,9 +385,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="baptismChurch"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>የተጠመቀበት (ችበት) ቤተ ክርስቲያን / Taufdatum *</FormLabel>
+                              <FormLabel>{t.labels.baptismChurch} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="የቤተ ክርስቲያን ስም" {...field} />
+                                <Input placeholder={t.placeholders.baptismChurch} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -396,7 +398,7 @@ Submitted on: ${new Date().toLocaleString()}
                           name="baptismDate"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>የተጠመቀበት (ችበት) ቀን / Kirche *</FormLabel>
+                              <FormLabel>{t.labels.baptismDate} *</FormLabel>
                               <FormControl>
                                 <Input type="date" {...field} />
                               </FormControl>
@@ -409,9 +411,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="nationality"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>ዜግነት / Staatsangehörigkeit *</FormLabel>
+                              <FormLabel>{t.labels.nationality} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="ዜግነት" {...field} />
+                                <Input placeholder={t.placeholders.nationality} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -422,9 +424,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="baptizingPriest"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>አጥማቂው ካህን / Taufe Priester *</FormLabel>
+                              <FormLabel>{t.labels.baptizingPriest} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="አጥማቂው ካህን" {...field} />
+                                <Input placeholder={t.placeholders.baptizingPriest} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -435,9 +437,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>ኢሜል/Email *</FormLabel>
+                              <FormLabel>{t.labels.email} *</FormLabel>
                               <FormControl>
-                                <Input type="email" placeholder="ኢሜል" {...field} />
+                                <Input type="email" placeholder={t.placeholders.email} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -448,9 +450,9 @@ Submitted on: ${new Date().toLocaleString()}
                           name="phone"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Phone *</FormLabel>
+                              <FormLabel>{t.labels.phone} *</FormLabel>
                               <FormControl>
-                                <Input placeholder="ስልክ ቁጥር" {...field} />
+                                <Input placeholder={t.placeholders.phone} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -467,9 +469,9 @@ Submitted on: ${new Date().toLocaleString()}
                                 <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                               </FormControl>
                               <div className="space-y-1 leading-none">
-                                <FormLabel>የሰጠኋትን መረጃ ትክክለኛነቱን አረጋግጫለሁ *</FormLabel>
+                                <FormLabel>{t.labels.agree} *</FormLabel>
                                 <FormDescription>
-                                  የሰጡት መረጃ ትክክለኛና መሆኑን ያረጋግጡ።
+                                  {t.labels.agreeDescription}
                                 </FormDescription>
                               </div>
                               <FormMessage />
@@ -483,12 +485,12 @@ Submitted on: ${new Date().toLocaleString()}
                         {isSubmitting ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            በማስገባት ላይ...
+                            {t.actions.submitting}
                           </>
                         ) : (
                           <>
                             <Send className="mr-2 h-4 w-4" />
-                            መመዝገብ ላክ
+                            {t.actions.submit}
                           </>
                         )}
                       </Button>

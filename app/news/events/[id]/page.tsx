@@ -32,31 +32,27 @@ export default function EventDetailPage() {
     async function fetchEvent() {
       try {
         // Fetch event details
-        const { data, error: eventError } = await supabaseClient.from("events").select("*").eq("id", params.id).single()
-
-        if (eventError) throw eventError
-
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/events/${params.id}`)
+        if (!response.ok) {
+          throw new Error("Failed to fetch event")
+        }
+        const data = await response.json()
         setEvent(data)
 
         // Fetch related events
-        const { data: relatedData, error: relatedError } = await supabaseClient
-          .from("related_events")
-          .select("related_event_id")
-          .eq("event_id", params.id)
-
-        if (relatedError) throw relatedError
-
-        if (relatedData && relatedData.length > 0) {
-          const relatedIds = relatedData.map((item) => item.related_event_id)
-
-          const { data: relatedEventsData, error: relatedEventsError } = await supabaseClient
-            .from("events")
-            .select("id, title, category, image_url, date")
-            .in("id", relatedIds)
-
-          if (relatedEventsError) throw relatedEventsError
-
-          setRelatedEvents(relatedEventsData || [])
+        const relatedResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/related-events/event/${params.id}`)
+        if (relatedResponse.ok) {
+          const relatedData = await relatedResponse.json()
+          if (relatedData && relatedData.length > 0) {
+            const relatedIds = relatedData.map((item: any) => item.related_event_id)
+            
+            const relatedEventsResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/events`)
+            if (relatedEventsResponse.ok) {
+              const allEvents = await relatedEventsResponse.json()
+              const relatedEventsData = allEvents.filter((event: any) => relatedIds.includes(event.id))
+              setRelatedEvents(relatedEventsData || [])
+            }
+          }
         }
       } catch (err) {
         console.error("Error fetching event:", err)
@@ -71,7 +67,7 @@ export default function EventDetailPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-12 mt-32">
         <div className="flex justify-center items-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>

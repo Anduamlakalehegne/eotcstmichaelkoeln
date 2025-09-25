@@ -31,7 +31,8 @@ interface FolderType {
 }
 
 export default function VideosPage() {
-  const { locale } = useLocale();
+  const { locale, translations } = useLocale();
+  const t = translations.gallery;
   const [videos, setVideos] = useState<Video[]>([])
   const [folders, setFolders] = useState<FolderType[]>([])
   const [currentFolder, setCurrentFolder] = useState<FolderType | null>(null)
@@ -51,7 +52,7 @@ export default function VideosPage() {
     setLoading(true)
     try {
       const parent_id = currentFolder ? currentFolder.id : null
-      const url = parent_id ? `/api/videos/folders?parent_id=${parent_id}` : "/api/videos/folders"
+      const url = parent_id ? `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/video-folders?parent_id=${parent_id}` : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/video-folders`
       const res = await fetch(url)
       const data = await res.json()
       setFolders(data)
@@ -66,7 +67,7 @@ export default function VideosPage() {
     setLoading(true)
     try {
       const folder_id = currentFolder ? currentFolder.id : null
-      const url = folder_id ? `/api/videos?folder_id=${folder_id}` : "/api/videos"
+      const url = folder_id ? `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/videos?folder_id=${folder_id}` : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/videos`
       const res = await fetch(url)
       const data = await res.json()
       setVideos(data)
@@ -127,7 +128,7 @@ export default function VideosPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-32">
+      <div className="flex justify-center items-center h-32 mt-32">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
@@ -148,16 +149,16 @@ export default function VideosPage() {
       <div className="flex items-center gap-2 mb-8">
         {currentFolder && (
           <button onClick={handleBack} className="mr-2 px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 flex items-center">
-            <ArrowLeft className="h-4 w-4 mr-1" /> Back
+            <ArrowLeft className="h-4 w-4 mr-1" /> {t.common.back}
           </button>
         )}
-        <h1 className="text-3xl font-bold text-center flex-1">{locale === "am" ? "የቪዲዮ ማህደር" : "Video Gallery"}</h1>
+        <h1 className="text-3xl font-bold text-center flex-1">{t.videos.title}</h1>
       </div>
 
       {/* Folders */}
       {folders.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">{locale === "am" ? "ፎልደሮች" : "Folders"}</h2>
+          <h2 className="text-xl font-semibold mb-4">{t.common.folders}</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {folders.map(folder => (
               <div key={folder.id} className="flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-gray-50" onClick={() => handleOpenFolder(folder)}>
@@ -171,7 +172,7 @@ export default function VideosPage() {
 
       {/* Videos */}
       {videos.length === 0 ? (
-        <p className="text-gray-500">No videos available at this time.</p>
+        <p className="text-gray-500">{t.videos.empty}</p>
       ) : (
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {videos.map((video) => {
@@ -193,7 +194,7 @@ export default function VideosPage() {
                   ) : (
                     <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center gap-2">
                       <ImageIcon className="w-12 h-12 text-gray-400" />
-                      <span className="text-sm text-gray-500">No thumbnail available</span>
+                      <span className="text-sm text-gray-500">{t.common.noThumbnail}</span>
                     </div>
                   )}
                   <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
@@ -235,7 +236,7 @@ export default function VideosPage() {
           </div>
           {selectedVideo?.description && (
             <div className="mt-4">
-              <h3 className="font-semibold mb-2">Description</h3>
+              <h3 className="font-semibold mb-2">{t.common.description}</h3>
               <p className="text-gray-600">{selectedVideo.description}</p>
             </div>
           )}

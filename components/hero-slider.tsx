@@ -67,19 +67,8 @@ export default function HeroSlider() {
 
   // Get welcome text based on locale
   const getWelcomeText = () => {
-    switch (locale) {
-      case "am":
-        return {
-          title: "እንኳን ወደ ኮሎኝ ቅዱስ ሚካኤል የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን በሰላም መጡ!!"
-        }
-      case "de":
-        return {
-          title: "WILLKOMMEN IN DER ST. MICHAEL ÄTHIOPISCH-ORTHODOXEN KIRCHE IN KÖLN"
-        }
-      default:
-        return {
-          title: "WELCOME TO ST. MICHAEL ETHIOPIAN ORTHODOX CHURCH IN COLOGNE"
-        }
+    return {
+      title: translations.home.hero.welcomeTitle
     }
   }
 
@@ -117,6 +106,15 @@ export default function HeroSlider() {
         >
           <ChevronRight size={20} className="sm:w-6 sm:h-6" />
         </button>
+      </div>
+
+      {/* Welcome Text Overlay */}
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <div className="text-center px-4">
+          {/* <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white drop-shadow-lg leading-tight">
+            {getWelcomeText().title}
+          </h1> */}
+        </div>
       </div>
 
       {/* Slider Pagination */}

@@ -10,7 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { CalendarIcon, Clock, MapPin, Users, Info, Download } from "lucide-react"
 import { format, addDays } from "date-fns"
-import { createClient } from "@/lib/supabase/client"
+// import { createClient } from "@/lib/supabase/client"
+import { useLocale } from "@/contexts/locale-context"
 
 // Ethiopian calendar conversion utilities
 const ethiopianMonths = [
@@ -227,6 +228,8 @@ interface ChurchCalendar {
 }
 
 export default function CalendarPage() {
+  const { translations } = useLocale()
+  const t = translations.calendar
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [view, setView] = useState<"month" | "week" | "day">("month")
   const [selectedEvent, setSelectedEvent] = useState<any>(null)
@@ -237,7 +240,7 @@ export default function CalendarPage() {
   })
   const [currentCalendar, setCurrentCalendar] = useState<ChurchCalendar | null>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
+  // const supabase = createClient()
   const today = new Date();
 
   useEffect(() => {
@@ -247,33 +250,17 @@ export default function CalendarPage() {
   const fetchCurrentCalendar = async () => {
     try {
       const currentYear = new Date().getFullYear()
-      const { data, error } = await supabase
-        .from('church_calendars')
-        .select('*')
-        .eq('year', currentYear)
-        .eq('is_active', true)
-        .single()
-
-      if (error) {
-        if (error.code === 'PGRST116') {
-          // No calendar found for current year
-          setCurrentCalendar(null)
-        } else {
-          throw error
-        }
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/church-calendars?year=${currentYear}&is_active=true`)
+      if (!res.ok) {
+        setCurrentCalendar(null)
       } else {
-        // Ensure we have a public URL
-        if (data && !data.file_path.startsWith('http')) {
-          const { data: { publicUrl } } = supabase.storage
-            .from('church-calendars')
-            .getPublicUrl(data.file_path)
-          setCurrentCalendar({ ...data, file_path: publicUrl })
-        } else {
-          setCurrentCalendar(data)
-        }
+        const data = await res.json()
+        const calendar = Array.isArray(data) ? data[0] : data
+        setCurrentCalendar(calendar || null)
       }
     } catch (error) {
       console.error('Error fetching current calendar:', error)
+      setCurrentCalendar(null)
     } finally {
       setLoading(false)
     }
@@ -335,11 +322,8 @@ export default function CalendarPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        {/* <h1 className="text-3xl font-bold mb-4">Church Calendar</h1>
-        <p className="text-gray-600 mb-6">View our church events in both Gregorian and Ethiopian calendars</p> */}
-
-        <h1 className="text-3xl font-bold mb-4">የቤተክርስቲያን የቀን መቁጠሪያ</h1>
-        <p className="text-gray-600 mb-6">የቤተክርስቲያኑን ዝግጅቶች በግሪጎሪያንና በኢትዮጵያ የቀን መቁጠሪያ ይመልከቱ</p>
+        <h1 className="text-3xl font-bold mb-4">{t.title}</h1>
+        <p className="text-gray-600 mb-6">{t.subtitle}</p>
 
         <div className="flex flex-wrap items-center gap-4">
           {/* <Select value={view} onValueChange={(value: "month" | "week" | "day") => setView(value)}>
@@ -355,11 +339,11 @@ export default function CalendarPage() {
 
           <Select value={calendarType} onValueChange={(value: "gregorian" | "ethiopian") => setCalendarType(value)}>
             <SelectTrigger className="w-[230px]">
-              <SelectValue placeholder="Calendar type" />
+              <SelectValue placeholder={t.calendarTypeLabel} />
             </SelectTrigger>
             <SelectContent>
-              {/* <SelectItem value="gregorian">Gregorian Calendar</SelectItem> */}
-              <SelectItem value="ethiopian">ወደ ኢትዮጵያ ቀን መቁጠሪያ መቀየሪያ</SelectItem>
+              {/* <SelectItem value="gregorian">{t.calendarTypeGregorian}</SelectItem> */}
+              <SelectItem value="ethiopian">{t.calendarTypeEthiopian}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -398,37 +382,37 @@ export default function CalendarPage() {
         <div className="space-y-6">
           <Card className="p-6">
             <Tabs defaultValue="orthodox">
-              <TabsList className="mb-4">
-                <TabsTrigger value="orthodox">የኢትዮጵያ ኦርቶዶክስ ተዋህዶ የቀን መቁጠሪያ</TabsTrigger>
-                <TabsTrigger value="calendar">የቤተክርስቲያን የዓመቱ መቁጠሪያ</TabsTrigger>
+            <TabsList className="mb-4">
+                <TabsTrigger value="orthodox">{t.tabs.orthodoxCalendar}</TabsTrigger>
+                <TabsTrigger value="calendar">{t.tabs.churchAnnualCalendar}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="orthodox">
                 <div className="space-y-6">
                   <div className="bg-gray-50 rounded-lg p-6 pb-10">
-                    <h3 className="text-lg font-semibold mb-4">የኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተክርስቲያን የቀን መቁጠሪያ</h3>
+                    <h3 className="text-lg font-semibold mb-4">{t.tabs.orthodoxCalendar}</h3>
 
                     <div className="bg-blue-50 rounded-lg p-6">
-                      <h3 className="text-lg font-semibold mb-4">የዛሬ ቀን በኢትዮጵያ ካሌንዳር</h3>
+                      <h3 className="text-lg font-semibold mb-4">{t.todayInEthiopian}</h3>
                       <div className="text-center">
                         <p className="text-2xl font-bold text-blue-800">{formatEthiopianDate(today)}</p>
                         <p className="text-gray-600 mt-2">
-                          {format(today, "MMMM d, yyyy")} (Gregorian Calendar)
+                          {format(today, "MMMM d, yyyy")} {t.gregorianCalendar}
                         </p>
                       </div>
                     </div>
                     <p className="text-gray-600 mb-4">
-                      የኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተክርስቲያን የቀን መቁጠሪያ በራሱ የሚለየው የሆነ የቀን መቁጠሪያ ሲሆን፣ ከግሪጎሪያን ካሌንዳር ከ 7 ወይም 8 ዓመት ይቀየራል። ይህ የቀን መቁጠሪያ በኢትዮጵያ ኦርቶዶክስ ተዋህዶ ቤተክርስቲያን ውስጥ ለሃይማኖታዊ በዓላት እና ለሌሎች አስፈላጊ ቀናት ይጠቀማል።
+                      {t.featuresContent}
                     </p>
 
                     <div className="grid md:grid-cols-2 gap-6 mt-6">
                       <div>
-                        <h4 className="font-semibold mb-2">የኢትዮጵያ የቀን መቁጠሪያ ባህሪያት</h4>
+                        <h4 className="font-semibold mb-2">{t.featuresTitle}</h4>
                         <ul className="list-disc list-inside space-y-2 text-gray-600">
-                          <li>13 ወራት አሉት (12 ወራት እያንዳንዳቸው 30 ቀን እና 1 ወር 5 ወይም 6 ቀን)</li>
-                          <li>የአዲስ ዓመት ቀን በመስከረም 1 (September 11/12)</li>
-                          <li>የበዓላት ቀናት በኢትዮጵያ ካሌንዳር ይሰላሉ</li>
-                          <li>የጸደቀ የቤተክርስቲያን የቀን መቁጠሪያ ነው</li>
+                          <li>{t.feature1}</li>
+                          <li>{t.feature2}</li>
+                          <li>{t.feature3}</li>
+                          <li>{t.feature4}</li>
                         </ul>
                       </div>
 
@@ -452,7 +436,7 @@ export default function CalendarPage() {
               <TabsContent value="calendar">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">የቤተክርስቲያን የዓመቱ መቁጠሪያ</h3>
+                    <h3 className="text-lg font-semibold">{t.tabs.churchAnnualCalendar}</h3>
                     {currentCalendar && (
                       <Button
                         variant="outline"
@@ -460,13 +444,13 @@ export default function CalendarPage() {
                         onClick={() => window.open(currentCalendar.file_path, "_blank")}
                       >
                         <Download className="h-4 w-4 mr-2" />
-                        Download PDF
+                        {t.downloadPdf}
                       </Button>
                     )}
                   </div>
 
                   {loading ? (
-                    <div className="text-center py-8">Loading calendar...</div>
+                    <div className="text-center py-8">{t.loadingCalendar}</div>
                   ) : currentCalendar ? (
                     <div className="border rounded-lg overflow-hidden">
                       <iframe
@@ -477,7 +461,7 @@ export default function CalendarPage() {
                     </div>
                   ) : (
                     <div className="text-center py-8 text-gray-500">
-                      No calendar available for the current year
+                      {t.noCalendarForYear}
                     </div>
                   )}
                 </div>
@@ -528,7 +512,7 @@ export default function CalendarPage() {
                     </div>
                   )}
 
-                  {selectedEvent.isEthiopianHoliday && <Badge className="bg-red-500">Ethiopian Orthodox Holiday</Badge>}
+                  {selectedEvent.isEthiopianHoliday && <Badge className="bg-red-500">{t.holidayBadge}</Badge>}
 
                   <div className="mt-4 pt-4 border-t">
                     <p className="text-gray-700">{selectedEvent.description}</p>
@@ -565,11 +549,8 @@ export default function CalendarPage() {
                   </div>
 
                   <div className="mt-4 pt-4 border-t">
-                    <h4 className="font-medium mb-2">Significance in Ethiopian Orthodox Tradition</h4>
-                    <p className="text-gray-700">
-                      This holiday holds special significance in the Ethiopian Orthodox Tewahedo Church, with unique
-                      traditions and ceremonies that have been preserved for centuries.
-                    </p>
+                    <h4 className="font-medium mb-2">{t.holidaySignificanceTitle}</h4>
+                    <p className="text-gray-700">{t.holidaySignificanceText}</p>
                   </div>
                 </div>
               </DialogDescription>

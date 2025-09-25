@@ -7,8 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 import { useState } from "react"
+import { useLocale } from "@/contexts/locale-context"
 
 export default function BankDetailsPage() {
+  const { translations } = useLocale()
+  const t = translations.formsLinks.bankDetails
   const [copied, setCopied] = useState<string | null>(null)
 
   const bankDetails = {
@@ -44,7 +47,7 @@ export default function BankDetailsPage() {
     <div className="container mx-auto px-4">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold mb-4">የባንክ አካውንት</h1>
+          <h1 className="text-3xl font-bold mb-4">{t.title}</h1>
           {/* <p className="text-gray-600">
             Please use the following bank details for donations and other financial contributions to our church.
           </p> */}
@@ -84,7 +87,7 @@ export default function BankDetailsPage() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">የባንክ ስም</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.labels.bankName}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.domestic.bankName}</span>
                         <Button
@@ -103,7 +106,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">የአካውንት ስም</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.labels.accountName}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.domestic.accountName}</span>
                         <Button
@@ -122,7 +125,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">IBAN</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.labels.iban}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium tracking-wider">{bankDetails.domestic.iban}</span>
                         <Button
@@ -141,7 +144,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">BIC/SWIFT</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.labels.bic}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.domestic.bic}</span>
                         <Button
@@ -163,7 +166,7 @@ export default function BankDetailsPage() {
 
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">የተቀባዩ አድራሻ</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.labels.beneficiaryAddress}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.domestic.beneficiaryaddress}</span>
                         <Button
@@ -182,7 +185,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">የተቀባዩ ስልክ</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.labels.beneficiaryPhone}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.domestic.beneficialPhone}</span>
                         <Button
@@ -202,7 +205,7 @@ export default function BankDetailsPage() {
 
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">የተቀባዩ ኢሜይል</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.labels.beneficiaryEmail}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.domestic.beneficialEmail}</span>
                         <Button
@@ -240,7 +243,7 @@ export default function BankDetailsPage() {
                   }
                 >
                   <Copy className="mr-2 h-4 w-4" />
-                  {copied === "allDomestic" ? "Copied All Details!" : "Copy All Details"}
+                  {copied === "allDomestic" ? t.copiedAll : t.copyAll}
                 </Button>
               </CardFooter>
             </Card>
@@ -251,15 +254,15 @@ export default function BankDetailsPage() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Landmark className="mr-2 h-5 w-5 text-blue-600" />
-                  ዓለም አቀፍ የባንክ አካውንት መረጃ
+                  {t.intlTitle}
                 </CardTitle>
-                <CardDescription>ከጀርመን ውጭ ለሚሰጡ ቅድሚያዎች ይህን መረጃ ይጠቀሙ</CardDescription>
+                <CardDescription>{t.intlSubtitle}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">የባንክ ስም</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.intlLabels.bankName}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.international.bankName}</span>
                         <Button
@@ -278,7 +281,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">የአካውንት ስም</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.intlLabels.accountName}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.international.accountName}</span>
                         <Button
@@ -297,7 +300,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">የባንክ አድራሻ</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.intlLabels.bankAddress}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.international.address}</span>
                         <Button
@@ -318,7 +321,7 @@ export default function BankDetailsPage() {
 
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">IBAN</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.intlLabels.iban}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium tracking-wider">{bankDetails.international.iban}</span>
                         <Button
@@ -337,7 +340,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">BIC/SWIFT</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.intlLabels.bic}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.international.bic}</span>
                         <Button
@@ -356,7 +359,7 @@ export default function BankDetailsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500 block mb-1">የተጨማሪ ባንክ</label>
+                      <label className="text-sm font-medium text-gray-500 block mb-1">{t.intlLabels.correspondentBank}</label>
                       <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
                         <span className="font-medium">{bankDetails.international.correspondentBank}</span>
                         <Button
@@ -394,7 +397,7 @@ Correspondent Bank: ${bankDetails.international.correspondentBank}`,
                   }
                 >
                   <Copy className="mr-2 h-4 w-4" />
-                  {copied === "allInternational" ? "Copied All Details!" : "Copy All Details"}
+                  {copied === "allInternational" ? t.copiedAll : t.copyAll}
                 </Button>
               </CardFooter>
             </Card>

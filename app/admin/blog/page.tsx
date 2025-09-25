@@ -26,7 +26,7 @@ export default function AdminBlogPage() {
     async function fetchPosts() {
       setLoading(true)
       try {
-        const response = await fetch("/api/news")
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news`)
         if (!response.ok) throw new Error("Failed to fetch blog posts")
         const data = await response.json()
         // Filter by category

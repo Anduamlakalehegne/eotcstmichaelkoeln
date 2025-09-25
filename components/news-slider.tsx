@@ -71,7 +71,7 @@ export default function NewsSlider() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        const response = await fetch("/api/news")
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/news`)
         if (!response.ok) {
           throw new Error("Failed to fetch news")
         }
@@ -158,15 +158,15 @@ export default function NewsSlider() {
   const pageCount = Math.ceil(filteredNews.length / newsPerPage)
 
   if (loading) {
-    return <div className="text-center">Loading news...</div>
+    return <div className="text-center">{translations.home.news.loading}</div>
   }
 
   if (error) {
-    return <div className="text-center text-red-500">Error: {error}</div>
+    return <div className="text-center text-red-500">{translations.home.news.error} {error}</div>
   }
 
   if (news.length === 0) {
-    return <div className="text-center text-gray-500">No news found</div>
+    return <div className="text-center text-gray-500">{translations.home.news.noNews}</div>
   }
 
   return (
@@ -180,9 +180,7 @@ export default function NewsSlider() {
         >
           {years.map((year) => (
             <option key={year} value={year}>
-              {year === "all"
-                ? (locale === "am" ? "ሁሉም ዓመታት" : "All Years")
-                : year}
+              {year === "all" ? translations.home.news.allYears : year}
             </option>
           ))}
         </select>
@@ -193,9 +191,7 @@ export default function NewsSlider() {
         >
           {months.map((month, idx) => (
             <option key={month} value={month}>
-              {month === "all"
-                ? (locale === "am" ? "ሁሉም ወራቶች" : "All Months")
-                : month}
+              {month === "all" ? translations.home.news.allMonths : month}
             </option>
           ))}
         </select>
@@ -204,9 +200,7 @@ export default function NewsSlider() {
       {filteredNews.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-gray-500 text-lg">
-            {locale === "am"
-              ? "ለተመረጡት ማጣሪያዎች የሚገኙ ዜናዎች የሉም"
-              : "No news available for the selected filters"}
+            {translations.home.news.noNewsForFilters}
           </p>
         </div>
       ) : (
@@ -237,14 +231,14 @@ export default function NewsSlider() {
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-3">{item.title}</h3>
                   <p className="text-gray-600 text-sm mb-2">
-                      <span className="font-medium">{locale === "am" ? "ቀን:" : "Date:"}</span> {new Date(item.created_at).toLocaleDateString(locale === "am" ? "am-ET" : undefined)}
+                      <span className="font-medium">{translations.home.news.date}</span> {new Date(item.created_at).toLocaleDateString(locale === "am" ? "am-ET" : undefined)}
                   </p>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">{item.excerpt}</p>
                   <Link
                     href={`/news/church-news/${item.id}`}
                     className="inline-flex text-blue-600 hover:text-blue-700 text-sm font-medium items-center gap-1"
                   >
-                    {locale === "am" ? "ተጨማሪ ያንብቡ" : "Read more"}
+                    {translations.home.news.readMore}
                   </Link>
                 </div>
               </div>
@@ -259,14 +253,14 @@ export default function NewsSlider() {
           <button
             onClick={prevPage}
             className="absolute left-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-50 transition-colors md:left-4"
-            aria-label={locale === "am" ? "ወደ ቀደም ገፅ" : "Previous page"}
+            aria-label={translations.home.news.previousPage}
           >
             <ChevronLeft className="w-5 h-5 text-blue-600 md:w-6 md:h-6" />
           </button>
           <button
             onClick={nextPage}
             className="absolute right-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-50 transition-colors md:right-4"
-            aria-label={locale === "am" ? "ወደ ቀጣይ ገፅ" : "Next page"}
+            aria-label={translations.home.news.nextPage}
           >
             <ChevronRight className="w-5 h-5 text-blue-600 md:w-6 md:h-6" />
           </button>
@@ -282,7 +276,7 @@ export default function NewsSlider() {
               className={`w-2 h-2 rounded-full transition-colors ${
                 currentPage === index ? "bg-blue-600" : "bg-gray-300"
               }`}
-              aria-label={locale === "am" ? `ወደ ገፅ ${index + 1}` : `Go to page ${index + 1}`}
+              aria-label={`${translations.home.news.goToPage} ${index + 1}`}
             />
           ))}
         </div>

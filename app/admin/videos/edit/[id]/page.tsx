@@ -75,14 +75,14 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
   }, [videoInputType])
 
   const fetchFolders = async () => {
-    const res = await fetch("/api/videos/folders")
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/video-folders`)
     const data = await res.json()
     setFolders(data)
   }
 
   async function fetchVideo() {
     try {
-      const res = await fetch(`/api/videos/${params.id}`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/videos/${params.id}`)
       if (!res.ok) throw new Error("Failed to load video")
       const data = await res.json()
       setVideo(data)
@@ -101,7 +101,7 @@ export default function EditVideoPage({ params }: { params: { id: string } }) {
     setError(null)
 
     try {
-      const response = await fetch(`/api/videos/${video.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/videos/${video.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(video),
